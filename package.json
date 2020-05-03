@@ -1,0 +1,23 @@
+{
+  "name": "polyblocks",
+  "version": "0.0.1",
+  "description": "A more simple way to make micro front-end apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lenconda/polyblocks.git"
+  },
+  "keywords": [
+    "Micro",
+    "Frontends"
+  ],
+  "author": "lenconda",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/lenconda/polyblocks/issues"
+  },
+  "homepage": "https://github.com/lenconda/polyblocks#readme"
+}
