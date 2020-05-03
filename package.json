@@ -1,23 +1,61 @@
 {
-  "name": "polyblocks",
+  "name": "polyatomic",
   "version": "0.0.1",
   "description": "A more simple way to make micro front-end apps",
   "main": "index.js",
   "scripts": {
-    "test": "exit 0"
+    "test": "exit 0",
+    "lint": "eslint src",
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup -c"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lenconda/polyblocks.git"
   },
   "keywords": [
-    "Micro",
-    "Frontends"
+    "microfrontends"
   ],
   "author": "lenconda",
   "license": "WTFPL",
   "bugs": {
     "url": "https://github.com/lenconda/polyblocks/issues"
   },
-  "homepage": "https://github.com/lenconda/polyblocks#readme"
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "homepage": "https://github.com/lenconda/polyblocks#readme",
+  "dependencies": {
+    "history": "^4.10.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.9.0",
+    "@types/history": "^4.7.5",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "babel-plugin-dynamic-import-node": "^2.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-alloy": "^3.7.1",
+    "husky": "^4.2.5",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.7.6",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "typescript": "^3.8.3"
+  },
+  "browserslist": [
+    "ie >= 11",
+    "last 4 Safari major versions",
+    "last 10 Chrome major versions",
+    "last 10 Firefox major versions",
+    "last 4 Edge major versions"
+  ],
+  "ignore": [
+    "examples",
+    "docs"
+  ]
 }
