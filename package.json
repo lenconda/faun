@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lenconda/polyblocks.git"
+    "url": "git+https://github.com/lenconda/polyatomic.git"
   },
   "keywords": [
     "microfrontends"
@@ -21,14 +21,14 @@
   "author": "lenconda",
   "license": "WTFPL",
   "bugs": {
-    "url": "https://github.com/lenconda/polyblocks/issues"
+    "url": "https://github.com/lenconda/polyatomic/issues"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"
     }
   },
-  "homepage": "https://github.com/lenconda/polyblocks#readme",
+  "homepage": "https://github.com/lenconda/polyatomic#readme",
   "dependencies": {
     "history": "^4.10.1"
   },
