@@ -1,4 +1,5 @@
 import babel from 'rollup-plugin-babel';
+import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 
 export default (async () => [
@@ -15,6 +16,7 @@ export default (async () => [
       babel({
         exclude: 'node_modules/**',
       }),
+      uglify.uglify(),
     ],
   },
 ]);
