@@ -21,10 +21,12 @@ module.exports = {
     '@typescript-eslint/consistent-type-assertions': 'off',
     '@typescript-eslint/typedef': 'off',
     'comma-dangle': ['error', 'always-multiline'],
+    'semi': 'error',
     '@typescript-eslint/no-empty-interface': 'off',
     'eol-last': 2,
     quotes: [2, 'single'],
     'complexity': 'off',
     '@typescript-eslint/no-this-alias': 'off',
+    '@typescript-eslint/no-require-imports': 'off',
   },
 };

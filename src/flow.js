@@ -25,4 +25,4 @@ function removeAssets(assets) {
 export {
   mountAssets,
   removeAssets,
-}
+};
