@@ -12,12 +12,8 @@ export default function() {
 
   createMountPoint();
 
-  function reroute(location) {
-    if (!location.key || location.pathname === '/') {
-      return;
-    }
-
-    const currentRouteResources = _this.registeredModules[location.pathname || ''];
+  function loadModule(pathname) {
+    const currentRouteResources = _this.registeredModules[pathname || ''];
 
     if (currentRouteResources) {
       if (!document.getElementById(_this.mountPointID)) {
@@ -34,8 +30,38 @@ export default function() {
     }
   }
 
-  reroute(this.history.location);
-  this.history.listen(reroute);
+  function handleRouteChange(location) {
+    const prevPathname = (location.state && location.state.prev && location.state.prev.pathname) || '';
+    const prevPathnameArray = prevPathname.split('/');
+    const nextPathnameArray = location.pathname.split('/');
+
+    prevPathnameArray.shift();
+    nextPathnameArray.shift();
+
+    if (
+      location.pathname === '/'
+      || !location.state
+      || (location.state && prevPathnameArray[0] === nextPathnameArray[0])
+    ) {
+      return;
+    }
+
+    loadModule(`/${nextPathnameArray[0]}`);
+  }
+
+  function initializeRoute(location) {
+    const currentPathnameArray = location.pathname.split('/');
+    currentPathnameArray.shift();
+
+    if (location.pathname === '/') {
+      return;
+    }
+
+    loadModule(`/${currentPathnameArray}`);
+  }
+
+  initializeRoute(this.history.location);
+  this.history.listen(handleRouteChange);
 
   window.addEventListener('click', function(event) {
     const mountPointElement = document.getElementById(_this.mountPointID);
@@ -57,7 +83,7 @@ export default function() {
 
         mountPointElement.remove();
 
-        _this.history.push(`${currentRoutePathname}${currentRouteSearch}`);
+        _this.history.push(`${currentRoutePathname}${currentRouteSearch}`, { prev: _this.history.location });
       } else {
         console.error('Cannot find current route resources');
       }
