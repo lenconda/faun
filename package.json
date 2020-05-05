@@ -2,13 +2,14 @@
   "name": "polyatomic",
   "version": "0.0.1",
   "description": "A more simple way to make micro front-end apps",
-  "main": "index.js",
+  "main": "src/polyatomic.js",
   "scripts": {
     "test": "exit 0",
     "lint": "eslint src",
     "clean": "rimraf dist",
-    "dev": "npm run clean && webpack-dev-server --config build/webpack.dev.js --progress",
-    "build": "npm run clean && webpack --config build/webpack.prod.js --mode=production --progress"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.js --progress",
+    "build": "cross-env NODE_ENV=production npm run clean && webpack --config build/webpack.prod.js --mode=production --progress",
+    "example:framework": "webpack-dev-server --config examples/framework/build/webpack.config.js --mode=development --progress"
   },
   "repository": {
     "type": "git",
