@@ -5,7 +5,7 @@ export default function(tagName, attributes) {
 
   const element = document.createElement(tagName);
   Object.keys(attributes).forEach(key => {
-    element[key] = attributes[key]
+    element[key] = attributes[key];
   });
 
   return element;
