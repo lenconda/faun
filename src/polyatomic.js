@@ -9,6 +9,7 @@ function Polyatomic() {
   this.mountPointID = 'root';
   this.currentRouteScriptElements = [];
   this.currentRouteStyleElements = [];
+  this.currentLocation = {};
 }
 
 Polyatomic.prototype.registerModules = registerModules;

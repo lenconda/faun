@@ -4,14 +4,17 @@ function mountAssets(assets, parent) {
   }
 
   assets.forEach(asset => {
-    if (asset instanceof HTMLElement) {
+    if (
+      asset instanceof HTMLElement
+      && !document.querySelector(`[href='${asset.getAttribute('href')}]'`)
+      && !document.querySelector(`[src='${asset.getAttribute('src')}]'`)
+    ) {
       parent.appendChild(asset);
     }
   });
 }
 
 function removeAssets(assets) {
-  console.log(assets);
   if (!Array.isArray(assets)) {
     return;
   }
