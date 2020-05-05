@@ -76,10 +76,10 @@ export default function() {
       const currentRouteResources = _this.registeredModules[currentRoutePathname];
 
       if (currentRouteResources) {
-        removeAssets({
+        removeAssets([
           ..._this.currentRouteScriptElements,
           ..._this.currentRouteStyleElements,
-        });
+        ]);
 
         mountPointElement.remove();
 

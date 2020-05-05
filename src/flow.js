@@ -11,7 +11,8 @@ function mountAssets(assets, parent) {
 }
 
 function removeAssets(assets) {
-  if (!Array.isArray(assets) || !(parent instanceof HTMLElement)) {
+  console.log(assets);
+  if (!Array.isArray(assets)) {
     return;
   }
 
