@@ -4,11 +4,7 @@ function mountAssets(assets, parent) {
   }
 
   assets.forEach(asset => {
-    if (
-      asset instanceof HTMLElement
-      && !document.querySelector(`[href='${asset.getAttribute('href')}]'`)
-      && !document.querySelector(`[src='${asset.getAttribute('src')}]'`)
-    ) {
+    if (asset instanceof HTMLElement) {
       parent.appendChild(asset);
     }
   });
