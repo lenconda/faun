@@ -1,16 +1,21 @@
 import { mountAssets, removeAssets } from './flow';
 import createElement from './utils/create-element';
+import { cloneDeep } from 'lodash';
 
 export default function() {
-  document.body.appendChild(createElement('div', { id: this.mountPointID }));
-
   const _this = this;
 
   function createMountPoint() {
     return createElement('div', { id: _this.mountPointID });
   }
 
-  createMountPoint();
+  function initLocation(location) {
+    if (!location || !(typeof location === 'object')) {
+      return;
+    }
+
+    Object.assign(_this.currentLocation, cloneDeep(location));
+  }
 
   function loadModule(pathname) {
     const currentRouteResources = _this.registeredModules[pathname || ''];
@@ -30,35 +35,40 @@ export default function() {
     }
   }
 
-  function handleRouteChange(location) {
-    const prevPathname = (location.state && location.state.prev && location.state.prev.pathname) || '';
-    const prevPathnameArray = prevPathname.split('/');
-    const nextPathnameArray = location.pathname.split('/');
+  function handleRouteChange(location, action) {
+    const mountPointElement = document.getElementById(_this.mountPointID);
 
-    prevPathnameArray.shift();
-    nextPathnameArray.shift();
+    const nextPathArray = location.pathname.split('/');
+    const previousPath = _this.currentLocation.pathname || '';
+    const previousPathArray = previousPath.split('/');
 
-    if (
-      location.pathname === '/'
-      || !location.state
-      || (location.state && prevPathnameArray[0] === nextPathnameArray[0])
-    ) {
+    previousPathArray.shift();
+    nextPathArray.shift();
+
+    if (previousPathArray[0] === nextPathArray[0]) {
       return;
     }
 
-    loadModule(`/${nextPathnameArray[0]}`);
+    initLocation(_this.history.location);
+
+    removeAssets([
+      ..._this.currentRouteScriptElements,
+      ..._this.currentRouteStyleElements,
+    ]);
+
+    mountPointElement.remove();
+
+    loadModule(`/${nextPathArray[0]}`);
   }
 
   function initializeRoute(location) {
     const currentPathnameArray = location.pathname.split('/');
     currentPathnameArray.shift();
-
-    if (location.pathname === '/') {
-      return;
-    }
-
+    initLocation(location);
     loadModule(`/${currentPathnameArray}`);
   }
+
+  document.body.appendChild(createMountPoint());
 
   initializeRoute(this.history.location);
   this.history.listen(handleRouteChange);
@@ -76,14 +86,7 @@ export default function() {
       const currentRouteResources = _this.registeredModules[currentRoutePathname];
 
       if (currentRouteResources) {
-        removeAssets([
-          ..._this.currentRouteScriptElements,
-          ..._this.currentRouteStyleElements,
-        ]);
-
-        mountPointElement.remove();
-
-        _this.history.push(`${currentRoutePathname}${currentRouteSearch}`, { prev: _this.history.location });
+        _this.history.push(`${currentRoutePathname}${currentRouteSearch}`);
       } else {
         console.error('Cannot find current route resources');
       }
