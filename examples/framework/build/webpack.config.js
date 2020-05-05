@@ -37,6 +37,7 @@ module.exports = {
     hot: true,
     host: '0.0.0.0',
     inline: true,
+    historyApiFallback: true,
     contentBase: path.resolve(__dirname, '../public'),
   },
 
