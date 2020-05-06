@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/lenconda/polyatomic#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "history": "^4.10.1",
     "lodash": "^4.17.15"
   },
@@ -37,6 +38,7 @@
     "@babel/core": "^7.9.0",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
+    "@types/axios": "^0.14.0",
     "@types/history": "^4.7.5",
     "@types/lodash": "^4.14.150",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
