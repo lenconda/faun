@@ -3,6 +3,7 @@ import axios from 'axios';
 import { mountAssets } from './flow';
 import { isFunction } from 'lodash';
 import overwriteEventListeners from './overwrites/window-listeners';
+import createElement from './utils/create-element';
 
 function Sandbox(name) {
   this.domSnapshot = [];
@@ -36,7 +37,9 @@ Sandbox.prototype.takeWindowSnapshot = function() {
   });
 
   Object.keys(this._modifyPropsMap).forEach(prop => {
-    window[prop] = this._modifyPropsMap[prop];
+    if (Object.getOwnPropertyDescriptor(window, prop).writable) {
+      window[prop] = this._modifyPropsMap[prop];
+    }
   });
 
   this.running = true;
@@ -46,7 +49,9 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
   this._modifyPropsMap = {};
 
   traverseProps(window, prop => {
-    if (window[prop] !== this.windowSnapshot[prop]) {
+    if (
+      window[prop] !== this.windowSnapshot[prop]
+      && Object.getOwnPropertyDescriptor(window, prop).writable) {
       this._modifyPropsMap[prop] = window[prop];
       window[prop] = this.windowSnapshot[prop];
     }
@@ -63,9 +68,9 @@ Sandbox.prototype.create = async function(module) {
   if (module.scripts) {
     for (const bundleURL of module.scripts) {
       this.bundles.push(bundleURL);
-      const { data: bundle } = await axios.get(bundleURL);
-      if (bundle) {
-        this.executors.push(new Function(bundle));
+      const { data } = await axios.get(bundleURL);
+      if (data) {
+        this.executors.push(new Function(data));
       }
     }
   }
@@ -74,17 +79,20 @@ Sandbox.prototype.create = async function(module) {
 };
 
 Sandbox.prototype.mount = function() {
-  this.windowSnapshot && this.restoreWindowSnapshot();
-  this.domSnapshot && this.restoreDOMSnapshot();
-
-  this.disableRewriteEventListeners = overwriteEventListeners();
-
-  this.css && mountAssets(this.css, document.head);
+  this.css && Array.isArray(this.css) && mountAssets(
+    this.css.map(href => createElement('link', { href, rel: 'stylesheet' })),
+    document.head,
+  );
   this.executors && this.executors.forEach(exector => {
     if (isFunction(exector)) {
       exector.call();
     }
   });
+
+  // this.windowSnapshot && this.restoreWindowSnapshot();
+  // this.domSnapshot && this.restoreDOMSnapshot();
+
+  this.disableRewriteEventListeners = overwriteEventListeners();
 };
 
 Sandbox.prototype.unmount = function() {
