@@ -3,41 +3,11 @@
     [
       "@babel/preset-env",
       {
-        "modules": false,
-        "bugfixes": true
+        "exclude": ["transform-regenerator"]
       }
     ]
   ],
-  "env": {
-    "test": {
-      "presets": [
-        [
-          "@babel/preset-env",
-          {
-            "bugfixes": true,
-            "targets": {
-              "browsers": "node >=10"
-            }
-          }
-        ]
-      ],
-      "plugins": [
-        "dynamic-import-node"
-      ]
-    },
-    "esm": {
-      "presets": [
-        [
-          "@babel/preset-env",
-          {
-            "modules": false,
-            "bugfixes": true,
-            "targets": {
-              "esmodules": true
-            }
-          }
-        ]
-      ]
-    }
-  }
+  "plugins": [
+    ["@babel/transform-runtime"]
+  ]
 }
