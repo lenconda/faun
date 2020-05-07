@@ -53,7 +53,7 @@ export default function() {
   function unloadModule(pathname) {
     const currentSandbox = _this.sandboxes[pathname || ''];
 
-    if (!currentSandbox || currentSandbox.running === false) {
+    if (!currentSandbox) {
       return;
     }
 
@@ -79,10 +79,7 @@ export default function() {
 
     refreshLocation(_this.history.location);
 
-    if (_this.sandboxes[previousPathname] && !_this.sandboxes[previousPathname].running) {
-      unloadModule(previousPathname);
-    }
-
+    unloadModule(previousPathname);
     loadModule(nextPathname);
   }
 
