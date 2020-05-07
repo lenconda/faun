@@ -1,6 +1,6 @@
-import { mountAssets, removeAssets } from './flow';
 import createElement from './utils/create-element';
 import { cloneDeep } from 'lodash';
+import Sandbox from './sandbox';
 
 export default function() {
   const _this = this;
@@ -9,7 +9,7 @@ export default function() {
     return createElement('div', { id: _this.mountPointID });
   }
 
-  function initLocation(location) {
+  function refreshLocation(location) {
     if (!location || !(typeof location === 'object')) {
       return;
     }
@@ -17,7 +17,22 @@ export default function() {
     Object.assign(_this.currentLocation, cloneDeep(location));
   }
 
-  function loadModule(pathname) {
+  function initMountPoint() {
+    if (!document.getElementById(_this.mountPointID)) {
+      document.body.appendChild(createMountPoint());
+    }
+  }
+
+  function initSandbox() {
+    if (!_this.defaultSandbox) {
+      _this.defaultSandbox = new Sandbox('default');
+    }
+
+    _this.defaultSandbox.takeDOMSnapshot();
+    _this.defaultSandbox.takeWindowSnapshot();
+  }
+
+  async function loadModule(pathname) {
     const currentRouteResources = _this.registeredModules[pathname || ''];
 
     if (currentRouteResources) {
@@ -25,19 +40,29 @@ export default function() {
         document.body.appendChild(createMountPoint());
       }
 
-      _this.currentRouteScriptElements = currentRouteResources.scripts
-        && currentRouteResources.scripts.map(src => createElement('script', { src }));
-      _this.currentRouteStyleElements = currentRouteResources.styles
-        && currentRouteResources.styles.map(href => createElement('link', { href, rel: 'stylesheet' }));
+      if (!_this.sandboxes[pathname]) {
+        const sandbox = new Sandbox(pathname);
+        await sandbox.create(currentRouteResources);
+        _this.sandboxes[pathname] = sandbox;
+      }
 
-      mountAssets(_this.currentRouteStyleElements, document.head);
-      mountAssets(_this.currentRouteScriptElements, document.body);
+      _this.sandboxes[pathname].mount();
     }
   }
 
-  function handleRouteChange(location, action) {
-    const mountPointElement = document.getElementById(_this.mountPointID);
+  function unloadModule(pathname) {
+    const currentSandbox = _this.sandboxes[pathname || ''];
 
+    if (!currentSandbox || currentSandbox.running === false) {
+      return;
+    }
+
+    currentSandbox.unmount();
+    _this.defaultSandbox.restoreDOMSnapshot();
+    _this.defaultSandbox.restoreWindowSnapshot();
+  }
+
+  function handleRouteChange(location) {
     const nextPathArray = location.pathname.split('/');
     const previousPath = _this.currentLocation.pathname || '';
     const previousPathArray = previousPath.split('/');
@@ -49,40 +74,40 @@ export default function() {
       return;
     }
 
-    initLocation(_this.history.location);
+    const nextPathname = `/${nextPathArray[0]}`;
+    const previousPathname = `/${previousPathArray[0]}`;
 
-    removeAssets([
-      ..._this.currentRouteScriptElements,
-      ..._this.currentRouteStyleElements,
-    ]);
+    refreshLocation(_this.history.location);
 
-    mountPointElement.remove();
+    if (_this.sandboxes[previousPathname] && !_this.sandboxes[previousPathname].running) {
+      unloadModule(previousPathname);
+    }
 
-    loadModule(`/${nextPathArray[0]}`);
+    loadModule(nextPathname);
   }
 
-  function initializeRoute(location) {
+  function initRoute(location) {
     const currentPathnameArray = location.pathname.split('/');
     currentPathnameArray.shift();
-    initLocation(location);
-    loadModule(`/${currentPathnameArray}`);
+    refreshLocation(location);
+    loadModule(`/${currentPathnameArray[0]}`);
   }
 
-  document.body.appendChild(createMountPoint());
+  initMountPoint();
+  initSandbox();
 
-  initializeRoute(this.history.location);
-  this.history.listen(handleRouteChange);
+  initRoute(_this.history.location);
+  _this.history.listen(handleRouteChange);
 
   window.addEventListener('click', function(event) {
-    const mountPointElement = document.getElementById(_this.mountPointID);
-
     if (
       event.target.tagName.toLowerCase() === 'a'
-      && (event.path && event.path.indexOf(mountPointElement) === -1)
+      && event.target.hasAttribute('data-polyatomic')
       && event.target.host === window.location.host
     ) {
-      const currentRoutePathname = event.target.pathname || '';
-      const currentRouteSearch = event.target.search || '';
+      const { pathname, search } = event.target;
+      const currentRoutePathname = pathname || '';
+      const currentRouteSearch = search || '';
       const currentRouteResources = _this.registeredModules[currentRoutePathname];
 
       if (currentRouteResources) {

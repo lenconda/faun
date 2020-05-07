@@ -2,24 +2,26 @@ import Polyatomic from '../../../src/polyatomic';
 
 const app = new Polyatomic();
 app
-  .setMountPoint('root')
+  .setMountPoint('app')
   .registerModules({
     '/a': {
       scripts: [
-        '//lenconda.top/static/js/main.533e50d53e34501c0453.bundle.js',
-        '//lenconda.top/static/js/vendors.80aed72de2ee559981d4.chunk.js',
+        '//demo.lenconda.top/vue/static/js/manifest.a01aa52dcf96ddb64f09.js',
+        '//demo.lenconda.top/vue/static/js/vendor.4ad267b4786a3ebd3327.js',
+        '//demo.lenconda.top/vue/static/js/app.b22ce679862c47a75225.js',
       ],
       styles: [
-        '//lenconda.top/static/css/main.3b02ea5f20a71172ee1e.css',
+        '//demo.lenconda.top/vue/static/css/app.30790115300ab27614ce176899523b62.css',
       ],
     },
     '/b': {
       scripts: [
-        '//lenconda.top/static/js/main.533e50d53e34501c0453.bundle.js',
-        '//lenconda.top/static/js/vendors.80aed72de2ee559981d4.chunk.js',
+        '//demo.lenconda.top/vue/static/js/manifest.a01aa52dcf96ddb64f09.js',
+        '//demo.lenconda.top/vue/static/js/vendor.4ad267b4786a3ebd3327.js',
+        '//demo.lenconda.top/vue/static/js/app.b22ce679862c47a75225.js',
       ],
       styles: [
-        '//lenconda.top/static/css/main.3b02ea5f20a71172ee1e.css',
+        '//demo.lenconda.top/vue/static/css/app.30790115300ab27614ce176899523b62.css',
       ],
     },
   })
