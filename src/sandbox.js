@@ -1,9 +1,8 @@
 import traverseProps from '../src/utils/traverse-props';
 import axios from 'axios';
-import { mountAssets } from './flow';
+import { appendCssLinks } from './flow';
 import { isFunction } from 'lodash';
 import overwriteEventListeners from './overwrites/window-listeners';
-import createElement from './utils/create-element';
 
 function Sandbox(name) {
   this.domSnapshot = [];
@@ -79,20 +78,18 @@ Sandbox.prototype.create = async function(module) {
 };
 
 Sandbox.prototype.mount = function() {
-  this.css && Array.isArray(this.css) && mountAssets(
-    this.css.map(href => createElement('link', { href, rel: 'stylesheet' })),
-    document.head,
-  );
+  this.disableRewriteEventListeners = overwriteEventListeners();
+
+  this.css && Array.isArray(this.css) && appendCssLinks(this.css, document.head);
+
   this.executors && this.executors.forEach(exector => {
     if (isFunction(exector)) {
       exector.call();
     }
   });
 
-  // this.windowSnapshot && this.restoreWindowSnapshot();
-  // this.domSnapshot && this.restoreDOMSnapshot();
-
-  this.disableRewriteEventListeners = overwriteEventListeners();
+  !!this.windowSnapshot.length && this.restoreWindowSnapshot();
+  !!this.domSnapshot.length && this.restoreDOMSnapshot();
 };
 
 Sandbox.prototype.unmount = function() {

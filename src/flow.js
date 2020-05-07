@@ -1,28 +1,17 @@
-function mountAssets(assets, parent) {
-  if (!Array.isArray(assets) || !(parent instanceof HTMLElement)) {
+import createElement from './utils/create-element';
+
+function appendCssLinks(css, parent) {
+  if (!Array.isArray(css) || !(parent instanceof HTMLElement)) {
     return;
   }
 
-  assets.forEach(asset => {
-    if (asset instanceof HTMLElement) {
-      parent.appendChild(asset);
+  css.forEach(href => {
+    if (href && !!href.length && !document.querySelector(`[href='${href}']`)) {
+      parent.appendChild(createElement('link', { href, rel: 'stylesheet' }));
     }
   });
-}
-
-function removeAssets(assets) {
-  if (!Array.isArray(assets)) {
-    return;
-  }
-
-  assets.forEach(asset => {
-    if (asset instanceof HTMLElement) {
-      asset.remove();
-    }
-  });
-}
+};
 
 export {
-  mountAssets,
-  removeAssets,
+  appendCssLinks,
 };
