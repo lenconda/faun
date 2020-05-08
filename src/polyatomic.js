@@ -18,11 +18,6 @@ function Polyatomic() {
 Polyatomic.prototype.registerModules = registerModules;
 Polyatomic.prototype.setMountPoint = setMountPoint;
 Polyatomic.prototype.run = run;
-Polyatomic.push = function() {
-  return this.history.push.call(this);
-};
-Polyatomic.prototype.push = function() {
-  return this.history.push.call(this);
-};
+Polyatomic.history = createBrowserHistory();
 
 export default Polyatomic;
