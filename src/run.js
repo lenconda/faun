@@ -36,9 +36,7 @@ export default function() {
     const currentRouteResources = _this.registeredModules[pathname || ''];
 
     if (currentRouteResources) {
-      if (!document.getElementById(_this.mountPointID)) {
-        document.body.appendChild(createMountPoint());
-      }
+      initMountPoint();
 
       if (!_this.sandboxes[pathname]) {
         const sandbox = new Sandbox(pathname);
@@ -58,6 +56,7 @@ export default function() {
     }
 
     currentSandbox.unmount();
+    document.getElementById(_this.mountPointID).remove();
     _this.defaultSandbox.restoreDOMSnapshot();
     _this.defaultSandbox.restoreWindowSnapshot();
   }

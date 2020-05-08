@@ -1,11 +1,11 @@
 import traverseProps from '../src/utils/traverse-props';
 import axios from 'axios';
-import { appendCssLinks } from './flow';
 import { isFunction } from 'lodash';
 import overwriteEventListeners from './overwrites/window-listeners';
+import createElement from './utils/create-element';
 
 function Sandbox(name) {
-  this.domSnapshot = [];
+  this.domSnapshot = '';
   this.windowSnapshot = {};
   this._modifyPropsMap = {};
   this.proxy = window;
@@ -13,19 +13,17 @@ function Sandbox(name) {
   this.running = false;
   this.bundles = [];
   this.css = [];
-  this.executors = [];
+  this.bundleExecutors = [];
+  this.styleElements = [];
   this.disableRewriteEventListeners = null;
 }
 
 Sandbox.prototype.takeDOMSnapshot = function() {
-  const _this = this;
-  document.documentElement.childNodes.forEach(element => _this.domSnapshot.push(element));
+  this.domSnapshot = document.head.innerHTML;
 };
 
 Sandbox.prototype.restoreDOMSnapshot = function() {
-  document.documentElement.remove();
-  document.appendChild(document.createElement('html'));
-  this.domSnapshot.forEach(element => document.documentElement.appendChild(element));
+  document.head.innerHTML = this.domSnapshot;
 };
 
 Sandbox.prototype.takeWindowSnapshot = function() {
@@ -69,20 +67,32 @@ Sandbox.prototype.create = async function(module) {
       this.bundles.push(bundleURL);
       const { data } = await axios.get(bundleURL);
       if (data) {
-        this.executors.push(new Function(data));
+        this.bundleExecutors.push(new Function(data));
       }
     }
   }
 
-  module.styles && module.styles.forEach(href => this.css.push(href));
+  if (module.styles) {
+    for (const stylesURL of module.styles) {
+      this.css.push(stylesURL);
+      const { data } = await axios.get(stylesURL);
+      if (data) {
+        const currentStyleElement = createElement('style', { type: 'text/css' });
+        currentStyleElement.innerHTML = data;
+        this.styleElements.push(currentStyleElement);
+      }
+    }
+  }
 };
 
 Sandbox.prototype.mount = function() {
   this.disableRewriteEventListeners = overwriteEventListeners();
 
-  this.css && Array.isArray(this.css) && appendCssLinks(this.css, document.head);
+  if (this.styleElements && Array.isArray(this.styleElements) && this.domSnapshot.length === 0) {
+    this.styleElements.forEach(element => document.head.appendChild(element));
+  }
 
-  this.executors && this.executors.forEach(executor => {
+  this.bundleExecutors && this.bundleExecutors.forEach(executor => {
     if (isFunction(executor)) {
       executor.call();
     }
