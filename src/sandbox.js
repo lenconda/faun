@@ -82,9 +82,9 @@ Sandbox.prototype.mount = function() {
 
   this.css && Array.isArray(this.css) && appendCssLinks(this.css, document.head);
 
-  this.executors && this.executors.forEach(exector => {
-    if (isFunction(exector)) {
-      exector.call();
+  this.executors && this.executors.forEach(executor => {
+    if (isFunction(executor)) {
+      executor.call();
     }
   });
 
