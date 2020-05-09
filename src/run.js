@@ -22,10 +22,13 @@ export default function(properties) {
     loadModule(properties, pathname);
   });
 
-  this.history.listen(location => handleRouteChange.call(properties, location, function(prev, next) {
-    unloadModule.call(properties, prev);
-    loadModule(properties, next);
-  }));
+  this.history.listen(function(location) {
+    handleRouteChange(properties, location, function(prev, next) {
+      refreshLocation.call(properties, _this.history.location);
+      unloadModule(properties, prev);
+      loadModule(properties, next);
+    });
+  });
 
   window.addEventListener('click', function(event) {
     handleClick(event, properties, _this.history);
