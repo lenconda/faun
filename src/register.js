@@ -8,6 +8,4 @@ export default function(moduleInfo) {
   Object.assign(this.registeredModules, {
     ...cloneDeep(moduleInfo),
   });
-
-  return this;
 }
