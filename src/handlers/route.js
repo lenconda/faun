@@ -1,9 +1,8 @@
 import { isFunction } from 'lodash';
 
-export const handleRouteChange = function(location, callback) {
-  console.log(this);
+export const handleRouteChange = function(properties, location, callback) {
   const nextPathArray = location.pathname.split('/');
-  const previousPath = this.currentLocation.pathname || '';
+  const previousPath = properties.currentLocation.pathname || '';
   const previousPathArray = previousPath.split('/');
 
   previousPathArray.shift();

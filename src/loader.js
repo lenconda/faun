@@ -17,15 +17,15 @@ export const loadModule = async function(properties, pathname) {
   }
 };
 
-export const unloadModule = function(pathname) {
-  const currentSandbox = this.sandboxes[pathname || ''];
+export const unloadModule = function(properties, pathname) {
+  const currentSandbox = properties.sandboxes[pathname || ''];
 
   if (!currentSandbox) {
     return;
   }
 
   currentSandbox.unmount();
-  document.getElementById(this.mountPointID).remove();
-  this.defaultSandbox.restoreDOMSnapshot();
-  this.defaultSandbox.restoreWindowSnapshot();
+  document.getElementById(properties.mountPointID).remove();
+  properties.defaultSandbox.restoreDOMSnapshot();
+  properties.defaultSandbox.restoreWindowSnapshot();
 };
