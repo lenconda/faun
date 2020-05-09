@@ -1,25 +1,24 @@
 import { createBrowserHistory } from 'history';
 import registerModules from './register';
-import setMountPoint from './mountpoint';
 import run from './run';
 import Sandbox from './sandbox';
 import eventBus from './event-bus';
 
-function Polyatomic() {
-  this.registeredModules = {};
-  this.currentLocation = {};
-  this.sandboxes = {};
-  this.defaultSandbox = new Sandbox('default');
+function Polyatomic(mountPointID) {
+  const properties = {
+    registeredModules: {},
+    currentLocation: {},
+    sandboxes: {},
+    mountPointID: mountPointID || 'root',
+    defaultSandbox: new Sandbox('default'),
+  };
+
+  this.run = () => run.call(this, properties);
+  this.registerModules = modules => registerModules.call(properties, modules);
 }
 
-Polyatomic.prototype.registerModules = registerModules;
-Polyatomic.prototype.setMountPoint = setMountPoint;
-Polyatomic.prototype.run = run;
-
-Polyatomic.history = createBrowserHistory();
-Polyatomic.prototype.history = Polyatomic.history;
-Polyatomic.prototype.mountPointID = 'root';
 Polyatomic.prototype.bus = eventBus;
 Polyatomic.bus = eventBus;
+Polyatomic.prototype.history = Polyatomic.history = createBrowserHistory();
 
 export default Polyatomic;
