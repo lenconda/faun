@@ -11,7 +11,7 @@ export const loadModule = async function(props, pathname, context) {
     if (!props.sandboxes[pathname]) {
       const sandbox = new Sandbox(pathname);
       // loading
-      hooks && hooks.loading && hooks.loading.call(context);
+      hooks && hooks.loading && hooks.loading.call(context, pathname);
       await sandbox.create(currentRouteResources);
       props.sandboxes[pathname] = sandbox;
       // loaded
