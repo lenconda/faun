@@ -25,9 +25,10 @@ export default function(props) {
   this.history.listen(function(location) {
     handleRouteChange(props, location, function(prev, next) {
       refreshLocation.call(props, _this.history.location);
-      if (unloadModule(props, prev, next, _this)) {
-        loadModule(props, next, _this);
+      if (!unloadModule(props, prev, next, _this)) {
+        return;
       }
+      loadModule(props, next, _this);
     });
   });
 
