@@ -9,7 +9,14 @@
     "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.js --progress",
     "build": "cross-env NODE_ENV=production npm run clean && webpack --config build/webpack.prod.js --mode=production --progress",
-    "example:framework": "webpack-dev-server --config examples/framework/build/webpack.config.js --mode=development --progress"
+    "install:framework": "cd examples/framework && npm i",
+    "install:vue": "cd examples/vue && npm i",
+    "install:react": "cd examples/react && npm i",
+    "example:install": "npm-run-all --serial install:*",
+    "start:framework": "webpack-dev-server --config examples/framework/build/webpack.config.js --mode=development --progress",
+    "start:vue": "cd examples/vue && npm start",
+    "start:react": "cd examples/react && npm start",
+    "example:start": "npm-run-all --parallel start:*"
   },
   "repository": {
     "type": "git",
@@ -51,6 +58,7 @@
     "eslint": "^6.8.0",
     "eslint-config-alloy": "^3.7.1",
     "husky": "^4.2.5",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "terser-webpack-plugin": "^3.0.0",
     "typescript": "^3.8.3",
