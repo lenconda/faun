@@ -1,5 +1,16 @@
+/**
+ * @file route.js
+ * @author lenconda<i@lenconda.top>
+ */
+
 import { isFunction } from 'lodash';
 
+/**
+ * handle history change
+ * @param {Object} props
+ * @param {History<LocationState>} location
+ * @param {function} callback
+ */
 export const handleRouteChange = function(props, location, callback) {
   const nextPathArray = location.pathname.split('/');
   const previousPath = props.currentLocation.pathname || '';
