@@ -3,6 +3,7 @@ import registerModules from './register';
 import run from './run';
 import Sandbox from './sandbox';
 import eventBus from './event-bus';
+import createHooks from './hooks';
 
 function Polyatomic(mountPointID) {
   const props = {
@@ -20,5 +21,6 @@ function Polyatomic(mountPointID) {
 Polyatomic.prototype.bus = eventBus;
 Polyatomic.bus = eventBus;
 Polyatomic.prototype.history = Polyatomic.history = createBrowserHistory();
+Polyatomic.prototype.hooks = createHooks();
 
 export default Polyatomic;
