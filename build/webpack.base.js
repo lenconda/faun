@@ -1,5 +1,3 @@
-const webpack = require('webpack');
-const env = require('./utils/env');
 const path = require('path');
 
 module.exports = {
