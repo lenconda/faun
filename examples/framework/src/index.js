@@ -3,24 +3,19 @@ import Polyatomic from '../../../src/polyatomic';
 const app = new Polyatomic('app');
 
 app.registerModules({
-  '/a': {
+  '/vue': {
     scripts: [
-      '//demo.lenconda.top/vue/static/js/manifest.a01aa52dcf96ddb64f09.js',
-      '//demo.lenconda.top/vue/static/js/vendor.4ad267b4786a3ebd3327.js',
-      '//demo.lenconda.top/vue/static/js/app.b22ce679862c47a75225.js',
+      '//localhost:8181/app.js',
     ],
-    styles: [
-      '//demo.lenconda.top/vue/static/css/app.30790115300ab27614ce176899523b62.css',
-    ],
+    styles: [],
   },
-  '/b': {
+  '/react': {
     scripts: [
-      '//demo.lenconda.top/vue/static/js/manifest.a01aa52dcf96ddb64f09.js',
-      '//demo.lenconda.top/vue/static/js/vendor.4ad267b4786a3ebd3327.js',
-      '//demo.lenconda.top/vue/static/js/app.b22ce679862c47a75225.js',
+      '//localhost:8182/static/js/main.bundle.js',
+      '//localhost:8182/static/js/vendors.chunk.js',
     ],
     styles: [
-      '//demo.lenconda.top/vue/static/css/app.30790115300ab27614ce176899523b62.css',
+      '//localhost:8182/static/css/main.css',
     ],
   },
 });
