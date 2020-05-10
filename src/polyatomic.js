@@ -5,7 +5,7 @@ import Sandbox from './sandbox';
 import eventBus from './event-bus';
 
 function Polyatomic(mountPointID) {
-  const properties = {
+  const props = {
     registeredModules: {},
     currentLocation: {},
     sandboxes: {},
@@ -13,8 +13,8 @@ function Polyatomic(mountPointID) {
     defaultSandbox: new Sandbox('default'),
   };
 
-  this.run = () => run.call(this, properties);
-  this.registerModules = modules => registerModules.call(properties, modules);
+  this.run = () => run.call(this, props);
+  this.registerModules = modules => registerModules.call(props, modules);
 }
 
 Polyatomic.prototype.bus = eventBus;

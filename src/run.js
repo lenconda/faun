@@ -11,26 +11,26 @@ import {
 import { handleRouteChange } from './handlers';
 import { handleClick } from './listeners';
 
-export default function(properties) {
+export default function(props) {
   const _this = this;
 
-  initMountPoint(properties.mountPointID);
-  initSandbox.call(properties);
+  initMountPoint(props.mountPointID);
+  initSandbox.call(props);
 
   initRoute(this.history.location, function(location, pathname) {
-    refreshLocation.call(properties, location);
-    loadModule(properties, pathname);
+    refreshLocation.call(props, location);
+    loadModule(props, pathname);
   });
 
   this.history.listen(function(location) {
-    handleRouteChange(properties, location, function(prev, next) {
-      refreshLocation.call(properties, _this.history.location);
-      unloadModule(properties, prev);
-      loadModule(properties, next);
+    handleRouteChange(props, location, function(prev, next) {
+      refreshLocation.call(props, _this.history.location);
+      unloadModule(props, prev);
+      loadModule(props, next);
     });
   });
 
   window.addEventListener('click', function(event) {
-    handleClick(event, properties, _this.history);
+    handleClick(event, props, _this.history);
   });
 }
