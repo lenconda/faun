@@ -1,31 +1,31 @@
 import { initMountPoint } from './initialization';
 import Sandbox from './sandbox';
 
-export const loadModule = async function(properties, pathname) {
-  const currentRouteResources = properties.registeredModules[pathname || ''];
+export const loadModule = async function(props, pathname) {
+  const currentRouteResources = props.registeredModules[pathname || ''];
 
   if (currentRouteResources) {
-    initMountPoint(properties.mountPointID);
+    initMountPoint(props.mountPointID);
 
-    if (!properties.sandboxes[pathname]) {
+    if (!props.sandboxes[pathname]) {
       const sandbox = new Sandbox(pathname);
       await sandbox.create(currentRouteResources);
-      properties.sandboxes[pathname] = sandbox;
+      props.sandboxes[pathname] = sandbox;
     }
 
-    properties.sandboxes[pathname].mount();
+    props.sandboxes[pathname].mount();
   }
 };
 
-export const unloadModule = function(properties, pathname) {
-  const currentSandbox = properties.sandboxes[pathname || ''];
+export const unloadModule = function(props, pathname) {
+  const currentSandbox = props.sandboxes[pathname || ''];
 
   if (!currentSandbox) {
     return;
   }
 
   currentSandbox.unmount();
-  document.getElementById(properties.mountPointID).remove();
-  properties.defaultSandbox.restoreDOMSnapshot();
-  properties.defaultSandbox.restoreWindowSnapshot();
+  document.getElementById(props.mountPointID).remove();
+  props.defaultSandbox.restoreDOMSnapshot();
+  props.defaultSandbox.restoreWindowSnapshot();
 };
