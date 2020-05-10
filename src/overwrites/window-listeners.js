@@ -1,8 +1,18 @@
+/**
+ * @file window-listener.js
+ * @author lenconda<i@lenconda.top>
+ * @author Kuitos
+ */
+
 import { noop } from 'lodash';
 
 const originalAddEventListener = window.addEventListener;
 const originalRemoveEventListener = window.removeEventListener;
 
+/**
+ * rewrite event listener functions on window
+ * @returns {function(): (...args: any[]) => void}
+ */
 export default function rewriteEventListener() {
   const listenerMap = new Map();
 
@@ -20,6 +30,9 @@ export default function rewriteEventListener() {
     return originalRemoveEventListener.call(window, type, listener, options);
   };
 
+  /**
+   * remove listeners and rewrites
+   */
   return function free() {
     listenerMap.forEach((listeners, type) =>
       [...listeners].forEach(listener => window.removeEventListener(type, listener)),

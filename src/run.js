@@ -1,3 +1,8 @@
+/**
+ * @file run.js
+ * @author lenconda<i@lenconda.top>
+ */
+
 import {
   initMountPoint,
   initSandbox,
@@ -11,6 +16,11 @@ import {
 import { handleRouteChange } from './handlers';
 import { handleClick } from './listeners';
 
+/**
+ * essential method to start the application
+ * contains the whole lifecycles, includes initialization
+ * @param props
+ */
 export default function(props) {
   const _this = this;
 
@@ -22,6 +32,7 @@ export default function(props) {
     loadModule(props, pathname, _this);
   });
 
+  // listen history change to load and unload sandboxes
   this.history.listen(function(location) {
     handleRouteChange(props, location, function(prev, next) {
       refreshLocation.call(props, _this.history.location);
@@ -32,6 +43,7 @@ export default function(props) {
     });
   });
 
+  // intercept all click events
   window.addEventListener('click', function(event) {
     handleClick(event, props, _this.history);
   });

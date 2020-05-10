@@ -1,3 +1,8 @@
+/**
+ * @file event-bus.js
+ * @author lenconda<i@lenconda.top>
+ */
+
 import Event from './utils/event';
 import { setGlobalObject, getGlobalObject } from './utils/global-namespace';
 

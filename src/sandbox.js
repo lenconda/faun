@@ -1,9 +1,20 @@
+/**
+ * @file sandbox.js
+ * @author lenconda<i@lenconda.top>
+ */
+
 import traverseProps from '../src/utils/traverse-props';
 import axios from 'axios';
 import { isFunction } from 'lodash';
 import overwriteEventListeners from './overwrites/window-listeners';
 import createElement from './utils/create-element';
 
+/**
+ * sandbox constructor
+ * @class
+ * @param name
+ * @constructor
+ */
 function Sandbox(name) {
   this.domSnapshot = '';
   this.windowSnapshot = {};
@@ -18,14 +29,26 @@ function Sandbox(name) {
   this.disableRewriteEventListeners = null;
 }
 
+/**
+ * take a snapshot for document.head
+ * @public
+ */
 Sandbox.prototype.takeDOMSnapshot = function() {
   this.domSnapshot = document.head.innerHTML;
 };
 
+/**
+ * restore snapshot to document.head
+ * @public
+ */
 Sandbox.prototype.restoreDOMSnapshot = function() {
   document.head.innerHTML = this.domSnapshot;
 };
 
+/**
+ * take window snapshot based on diff
+ * @public
+ */
 Sandbox.prototype.takeWindowSnapshot = function() {
   this.windowSnapshot = {};
 
@@ -42,6 +65,10 @@ Sandbox.prototype.takeWindowSnapshot = function() {
   this.running = true;
 };
 
+/**
+ * restore window snapshot to window
+ * @public
+ */
 Sandbox.prototype.restoreWindowSnapshot = function() {
   this._modifyPropsMap = {};
 
@@ -57,6 +84,12 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
   this.running = false;
 };
 
+/**
+ * create sandbox when passing a module config
+ * @public
+ * @param module
+ * @returns {Promise<void>}
+ */
 Sandbox.prototype.create = async function(module) {
   if (!module) {
     return;
@@ -65,8 +98,11 @@ Sandbox.prototype.create = async function(module) {
   if (module.scripts) {
     for (const bundleURL of module.scripts) {
       this.bundles.push(bundleURL);
+      // make an ajax to load the module bundles
       const { data } = await axios.get(bundleURL);
       if (data) {
+        // wrap bundle code into a function
+        // when mount method called, execute the functions
         this.bundleExecutors.push(new Function(data));
       }
     }
@@ -75,6 +111,7 @@ Sandbox.prototype.create = async function(module) {
   if (module.styles) {
     for (const stylesURL of module.styles) {
       this.css.push(stylesURL);
+      // make an ajax to load styles
       const { data } = await axios.get(stylesURL);
       if (data) {
         const currentStyleElement = createElement('style', { type: 'text/css' });
@@ -85,6 +122,10 @@ Sandbox.prototype.create = async function(module) {
   }
 };
 
+/**
+ * mount the sandbox
+ * @public
+ */
 Sandbox.prototype.mount = function() {
   this.disableRewriteEventListeners = overwriteEventListeners();
 
@@ -102,6 +143,10 @@ Sandbox.prototype.mount = function() {
   !!this.domSnapshot.length && this.restoreDOMSnapshot();
 };
 
+/**
+ * unmount the sandbox
+ * @public
+ */
 Sandbox.prototype.unmount = function() {
   this.takeDOMSnapshot();
   this.takeWindowSnapshot();

@@ -1,4 +1,13 @@
+/**
+ * click mouse event handler
+ * @param {MouseEvent} event
+ * @param {Object} props
+ * @param {History} history
+ * @returns {boolean}
+ */
+
 export const handleClick = function(event, props, history) {
+  // interceptor the a tags with attribute data-polyatomic
   if (
     event.target.tagName.toLowerCase() === 'a'
     && event.target.hasAttribute('data-polyatomic')
@@ -12,7 +21,7 @@ export const handleClick = function(event, props, history) {
     if (currentRouteResources) {
       history.push(`${currentRoutePathname}${currentRouteSearch}`);
     } else {
-      console.error('Cannot find current route resources');
+      throw new ReferenceError(`[Polyatomic] Cannot find current route resources: ${currentRoutePathname}`);
     }
 
     event.preventDefault();
