@@ -25,4 +25,8 @@ app.registerModules({
   },
 });
 
+app.hooks.loading = function() {
+  console.log(111);
+};
+
 app.run();
