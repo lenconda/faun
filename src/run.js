@@ -19,14 +19,15 @@ export default function(props) {
 
   initRoute(this.history.location, function(location, pathname) {
     refreshLocation.call(props, location);
-    loadModule(props, pathname);
+    loadModule(props, pathname, _this);
   });
 
   this.history.listen(function(location) {
     handleRouteChange(props, location, function(prev, next) {
       refreshLocation.call(props, _this.history.location);
-      unloadModule(props, prev);
-      loadModule(props, next);
+      if (unloadModule(props, prev, next, _this)) {
+        loadModule(props, next, _this);
+      }
     });
   });
 
