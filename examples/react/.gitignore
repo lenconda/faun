@@ -1,0 +1,18 @@
+# ignore text editors
+.vscode
+.idea
+.atom
+
+# ignore modules
+node_modules
+
+# esling cache file
+.eslintcache
+
+# ignore test dir
+.test
+
+# macOS file
+.DS_Store
+
+dist

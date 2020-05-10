@@ -5,7 +5,7 @@
   "main": "src/polyatomic.js",
   "scripts": {
     "test": "exit 0",
-    "lint": "eslint ./src ./examples",
+    "lint": "eslint ./src",
     "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.js --progress",
     "build": "cross-env NODE_ENV=production npm run clean && webpack --config build/webpack.prod.js --mode=production --progress",
