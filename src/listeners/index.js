@@ -1,0 +1,1 @@
+export { handleClick } from './click';
