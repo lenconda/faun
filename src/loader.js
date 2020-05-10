@@ -30,7 +30,7 @@ export const unloadModule = function(props, prev, next, context) {
   const hooks = context.hooks || null;
 
   if (!currentSandbox) {
-    return;
+    return true;
   }
 
   // beforeUnmount
