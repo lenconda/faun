@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from './utils/lodash';
 
 /**
  * register modules, context is `props` in constructor
