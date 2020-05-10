@@ -5,7 +5,7 @@
 
 import createElement from './utils/create-element';
 import Sandbox from './sandbox';
-import { isFunction } from 'lodash';
+import { isFunction } from './utils/lodash';
 
 /**
  * initialize the mount point element

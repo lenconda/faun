@@ -4,7 +4,7 @@
  * @author Kuitos
  */
 
-import { noop } from 'lodash';
+import { noop } from '../utils/lodash';
 
 const originalAddEventListener = window.addEventListener;
 const originalRemoveEventListener = window.removeEventListener;
