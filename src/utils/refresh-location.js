@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from './lodash';
 
 /**
  * refresh location on context when the route changes

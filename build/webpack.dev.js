@@ -1,6 +1,7 @@
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.base');
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(baseConfig, {
   output: {
@@ -16,5 +17,6 @@ module.exports = merge(baseConfig, {
 
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new BundleAnalyzerPlugin(),
   ],
 });

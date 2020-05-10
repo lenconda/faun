@@ -4,8 +4,8 @@
  */
 
 import traverseProps from '../src/utils/traverse-props';
-import axios from 'axios';
-import { isFunction } from 'lodash';
+import fetch from './fetch';
+import { isFunction } from './utils/lodash';
 import overwriteEventListeners from './overwrites/window-listeners';
 import createElement from './utils/create-element';
 
@@ -99,7 +99,7 @@ Sandbox.prototype.create = async function(module) {
     for (const bundleURL of module.scripts) {
       this.bundles.push(bundleURL);
       // make an ajax to load the module bundles
-      const { data } = await axios.get(bundleURL);
+      const data = await fetch(bundleURL);
       if (data) {
         // wrap bundle code into a function
         // when mount method called, execute the functions
@@ -112,7 +112,7 @@ Sandbox.prototype.create = async function(module) {
     for (const stylesURL of module.styles) {
       this.css.push(stylesURL);
       // make an ajax to load styles
-      const { data } = await axios.get(stylesURL);
+      const data = await fetch(stylesURL);
       if (data) {
         const currentStyleElement = createElement('style', { type: 'text/css' });
         currentStyleElement.innerHTML = data;

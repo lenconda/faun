@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import { isFunction } from 'lodash';
+import { isFunction } from '../utils/lodash';
 
 /**
  * handle history change
