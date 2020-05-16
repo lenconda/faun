@@ -10,6 +10,10 @@ module.exports = {
       jsx: true
     },
   },
+  plugins: ['jest'],
+  env: {
+    jest: true,
+  },
   rules: {
     indent: [
       'error',
