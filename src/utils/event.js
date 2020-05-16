@@ -60,8 +60,11 @@ function Event() {
    * @param {string} key
    * @returns {boolean}
    */
-  this.has = function(key) {
+  this.has = function(key, callback) {
     const currentSubscribers = subscribers[key];
+    if (callback) {
+      return Array.isArray(currentSubscribers) && currentSubscribers.includes(callback);
+    }
     return Array.isArray(currentSubscribers) && currentSubscribers.length > 0;
   };
 }
