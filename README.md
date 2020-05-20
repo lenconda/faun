@@ -23,6 +23,6 @@ To avoid making the rules for every applications repeatedly, we made a common ru
 
 ## Installation
 
-> The package is now under development mode, if you seriously want to play with it, just read (Getting Started)[#getting-started]
+> The package is now under development mode, if you seriously want to play with it, just read [Getting Started](#getting-started)
 
 ## Getting Started
