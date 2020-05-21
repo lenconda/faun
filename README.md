@@ -1,5 +1,10 @@
 # Polyatomic
 
+![Travis Build](https://img.shields.io/travis/lenconda/polyatomic)
+![License](https://img.shields.io/github/license/lenconda/polyatomic)
+![GitHub Version](https://img.shields.io/github/package-json/v/lenconda/polyatomic)
+
+
 `Polyatomic` is a light-weight library to easily make [micro-frontend](https://micro-frontends.org/) applications.
 
 ## Introduction
