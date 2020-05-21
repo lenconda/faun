@@ -141,13 +141,13 @@ Normally, when developing a new feature, you should checkout a new branch from `
 
 ### Issues
 
-As said above, before you starting your work, you should check [issue list](https://github.com/lenconda/neon/issues) first. The issue list of this project can probably contains known bugs, problems, new demands and future development plans. If you can find an issue or many issues that solves the same problem, it would be great if you can join them to solve the problem.
+As said above, before you starting your work, you should check [Issues](https://github.com/lenconda/polyatomic/issues) first. The issue list of this project can probably contains known bugs, problems, new demands and future development plans. If you can find an issue or many issues that solves the same problem, it would be great if you can join them to solve the problem.
 
 ### Fork & Pull Requests
 
 You should fork this repository if you want to contribute your code into this project.
 
-If you want to commit your changes, you are supposed to make an [pull request](https://help.github.com/articles/about-pull-requests/), once you submit the request, the review process will start, if the code meets the requirements, the pull request will pass, and then your code will be in the project. If the request does not be passed, please contact [i@lenconda.top](mailto:i@lenconda.top) or [prexustech@gmail.com](mailto:prexustech@gmail.com).
+If you want to commit your changes, you are supposed to make a [Pull Request](https://help.github.com/articles/about-pull-requests/), once you submit the request, the review process will start, if the code meets the requirements, the pull request will pass, and then your code will be in the project. If the request does not be passed, please contact [i@lenconda.top](mailto:i@lenconda.top) or [prexustech@gmail.com](mailto:prexustech@gmail.com).
 
 ## Acknowledgements
 
