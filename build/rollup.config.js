@@ -1,5 +1,5 @@
 const path = require('path');
-import resolve from 'rollup-plugin-node-resolve';
+const resolve = require('rollup-plugin-node-resolve');
 const { babel } = require('@rollup/plugin-babel');
 const babelOptions = require('../.babelrc.js');
 const terser = require('rollup-plugin-terser');
