@@ -1,9 +1,9 @@
 const path = require('path');
-const resolve = require('rollup-plugin-node-resolve');
+const resolve = require('@rollup/plugin-node-resolve').default;
 const { babel } = require('@rollup/plugin-babel');
 const babelOptions = require('../.babelrc.js');
 const terser = require('rollup-plugin-terser');
-const commonjs = require('rollup-plugin-commonjs');
+const commonjs = require('@rollup/plugin-commonjs');
 const packageJson = require('../package.json');
 const globals = require('rollup-plugin-node-globals');
 
