@@ -1,7 +1,7 @@
 const path = require('path');
 const resolve = require('@rollup/plugin-node-resolve').default;
 const { babel } = require('@rollup/plugin-babel');
-const babelOptions = require('../.babelrc.js');
+const originalBabelConfig = require('../.babelrc.js');
 const terser = require('rollup-plugin-terser');
 const commonjs = require('@rollup/plugin-commonjs');
 const packageJson = require('../package.json');
@@ -20,7 +20,7 @@ function generateBanner() {
   return `/* polyatomic@${packageJson.version} */`;
 }
 
-Object.assign(babelOpts, babelOptions);
+Object.assign(babelOpts, originalBabelConfig);
 
 module.exports = [
   {
