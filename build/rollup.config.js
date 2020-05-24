@@ -24,7 +24,7 @@ Object.assign(babelOpts, originalBabelConfig);
 
 module.exports = [
   {
-    input: resolveFile('src/polyatomic.js'),
+    input: resolveFile('src/index.js'),
     output: {
       file: resolveFile('dist/polyatomic.min.js'),
       format: 'umd',
