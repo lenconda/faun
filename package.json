@@ -2,7 +2,7 @@
   "name": "polyatomic",
   "version": "0.0.1",
   "description": "A more simple way to make micro front-end apps",
-  "main": "src/polyatomic.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "NODE_ENV=test jest",
     "lint": "eslint ./src",

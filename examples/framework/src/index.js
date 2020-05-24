@@ -1,4 +1,4 @@
-import Polyatomic from '../../../src/polyatomic';
+import Polyatomic from '../../../src';
 import axios from 'axios';
 
 const app = new Polyatomic('app');
