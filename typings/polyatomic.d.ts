@@ -11,6 +11,11 @@ declare interface IModuleInfo {
   styles: Array<string>;
 }
 
+declare interface IDependenceInfo {
+  name: string;
+  dep: any;
+}
+
 declare interface IModules {
   [key: string]: Partial<IModuleInfo>
 }
@@ -22,6 +27,7 @@ export interface Polyatomic {
 
   run: () => void;
   registerModules: (modules: IModules) => this | void;
+  addGlobalDependence: (name: string, dep: any) => void;
 }
 
 export const Polyatomic: PolyatomicConstructor;
