@@ -7,6 +7,7 @@ import {
   initMountPoint,
   initSandbox,
   initRoute,
+  initGlobalDependencies,
 } from './initialization';
 import refreshLocation from './utils/refresh-location';
 import {
@@ -21,8 +22,12 @@ import { handleClick } from './listeners';
  * contains the whole lifecycles, includes initialization
  * @param props
  */
-export default function(props) {
+export default function(props, deps) {
   const _this = this;
+
+  if (Array.isArray(deps) && deps.length) {
+    initGlobalDependencies(deps);
+  }
 
   initMountPoint(props.mountPointID);
   initSandbox.call(props);

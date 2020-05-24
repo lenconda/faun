@@ -32,12 +32,15 @@ function Polyatomic(mountPointID) {
     defaultSandbox: new Sandbox('default'),
   };
 
+  // global dependencies
+  const deps = [];
+
   /**
    * `run` method, be called only when the app is prepared
    * @public
    * @returns {function}
    */
-  this.run = () => run.call(this, props);
+  this.run = () => run.call(this, props, deps);
 
   /**
    * get remote module resources and call this method
@@ -45,6 +48,18 @@ function Polyatomic(mountPointID) {
    * @returns {function}
    */
   this.registerModules = modules => registerModules.call(props, modules);
+
+  /**
+   * set global deps to window
+   * @public
+   * @param {string}
+   * @param {any}
+   */
+  this.addGlobalDependence = function(name, dep) {
+    if (name && dep) {
+      deps.push({ name, dep });
+    }
+  };
 }
 
 /**

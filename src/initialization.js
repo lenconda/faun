@@ -45,3 +45,32 @@ export const initRoute = function(location, callback) {
 
   callback && isFunction(callback) && callback(location, pathname);
 };
+
+/**
+ * initialize the global dependencies
+ * @param {object[]} deps
+ */
+export const initGlobalDependencies = function(deps) {
+  if (!Array.isArray) {
+    throw new TypeError('[Polyatomic] Param `deps` should be an array');
+  }
+
+  const globalDeps = deps.reduce((current, next) => {
+    const { name, dep } = next;
+
+    if (!name || !dep || typeof name !== 'string') {
+      throw new TypeError('[Polyatomic] Params is in a wrong type');
+    }
+
+    if (window[name]) {
+      throw new ReferenceError(`[Polyatomic] Dependence \`${name}\` already exist on \`window\``);
+    }
+
+    current[name] = dep;
+
+    return current;
+  }, {});
+
+  Object.assign(window, globalDeps);
+  return globalDeps;
+};

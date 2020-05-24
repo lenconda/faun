@@ -1,6 +1,9 @@
 import Polyatomic from '../../../src/polyatomic';
+import axios from 'axios';
 
 const app = new Polyatomic('app');
+
+app.addGlobalDependence('axios', axios);
 
 app.registerModules({
   '/vue': {
