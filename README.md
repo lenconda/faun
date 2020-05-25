@@ -28,13 +28,14 @@ To avoid making the rules for every applications repeatedly, we made a common ru
 
 ## Features
 
-- Load resources based on JavaScript entries
-- JavaScript sandboxes supported
-- Control the sub-applications through sandboxes and snapshots
-- Routing cache supported
+- Light weight: only 17 kB with terser
+- COMPLETELY framework-independent
+- Control the sub-applications by sandboxes and snapshots
+- Load sub-applications based on JavaScript entries
 - Style isolation supported
+- History routing cache supported
 - Lifecycle hooks integration
-- Global event bus integration
+- Global event bus integration for communication
 
 ## Installation
 
@@ -104,9 +105,10 @@ You just open the browser and visit the framework's address.
 ## Todo
 
 - [ ] Global key-value storage support
-- [ ] Development kit to help increase efficiency
 - [ ] More lifecycle hooks integration
-- [ ] Custom hooks and plugins support
+- [ ] Custom plugins support
+- [ ] Global interceptors support
+- [ ] Development kit support
 
 ## FAQ
 
@@ -132,4 +134,4 @@ Grazie to all contributors!
 
 ## License
 
-[WTFPL](LICENSE)
+`Polyatomic` is licensed under [WTFPL](LICENSE).
