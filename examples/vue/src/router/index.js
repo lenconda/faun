@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/views/Home';
-import Foo from '@/views/Foo';
-import Bar from '@/views/Bar';
 
 Vue.use(Router);
 
@@ -16,12 +14,12 @@ export default new Router({
         {
           path: '/foo',
           name: 'Foo',
-          component: Foo,
+          component: () => import('@/views/Foo'),
         },
         {
           path: '/bar',
           name: 'Bar',
-          component: Bar,
+          component: () => import('@/views/Bar'),
         },
       ],
     },

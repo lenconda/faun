@@ -25,6 +25,15 @@ import { handleClick } from './listeners';
 export default function(props, deps) {
   const _this = this;
 
+  window.__APPEND_CHILD__ = Element.prototype.appendChild;
+  Element.prototype.appendChild = function(element) {
+    const childNodes = Array.prototype.slice.call(this.children);
+    if (childNodes.find(node => element.isEqualNode(node))) {
+      return;
+    };
+    return window.__APPEND_CHILD__.call(this, element);
+  };
+
   if (Array.isArray(deps) && deps.length) {
     initGlobalDependencies(deps);
   }
