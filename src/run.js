@@ -27,7 +27,7 @@ export default function(props, deps) {
 
   window.__APPEND_CHILD__ = Element.prototype.appendChild;
   Element.prototype.appendChild = function(element) {
-    const childNodes = Array.prototype.slice.call(this.children);
+    const childNodes = Array.prototype.slice.call(this.childNodes);
     if (childNodes.find(node => element.isEqualNode(node))) {
       return;
     };

@@ -134,15 +134,18 @@ Sandbox.prototype.mount = function() {
     this.styleElements.forEach(element => document.head.appendChild(element));
   }
 
+  !!this.windowSnapshot.length && this.restoreWindowSnapshot();
+  if (this.domSnapshot.length) {
+    this.restoreDOMSnapshot();
+  } else {
+    this.takeDOMSnapshot();
+  }
+
   this.bundleExecutors && this.bundleExecutors.forEach(executor => {
     if (isFunction(executor)) {
       executor.call();
     }
   });
-
-  !!this.windowSnapshot.length && this.restoreWindowSnapshot();
-  !!this.domSnapshot.length && this.restoreDOMSnapshot();
-  !!this.takeDOMSnapshot && this.takeDOMSnapshot();
 };
 
 /**
