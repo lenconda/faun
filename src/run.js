@@ -16,6 +16,7 @@ import {
 } from './loader';
 import { handleRouteChange } from './handlers';
 import { handleClick } from './listeners';
+import overwriteAppendChild from './overwrites/append-child';
 
 /**
  * essential method to start the application
@@ -24,6 +25,8 @@ import { handleClick } from './listeners';
  */
 export default function(props, deps) {
   const _this = this;
+
+  overwriteAppendChild();
 
   if (Array.isArray(deps) && deps.length) {
     initGlobalDependencies(deps);

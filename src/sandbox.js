@@ -16,7 +16,7 @@ import createElement from './utils/create-element';
  * @constructor
  */
 function Sandbox(name) {
-  this.domSnapshot = '';
+  this.domSnapshot = [];
   this.windowSnapshot = {};
   this._modifyPropsMap = {};
   this.proxy = window;
@@ -34,7 +34,7 @@ function Sandbox(name) {
  * @public
  */
 Sandbox.prototype.takeDOMSnapshot = function() {
-  this.domSnapshot = document.head.innerHTML;
+  this.domSnapshot = Array.prototype.slice.call(document.head.childNodes);
 };
 
 /**
@@ -42,7 +42,8 @@ Sandbox.prototype.takeDOMSnapshot = function() {
  * @public
  */
 Sandbox.prototype.restoreDOMSnapshot = function() {
-  document.head.innerHTML = this.domSnapshot;
+  document.head.childNodes.forEach(childNode => childNode.remove());
+  this.domSnapshot.forEach(node => document.head.appendChild(node));
 };
 
 /**
@@ -129,8 +130,15 @@ Sandbox.prototype.create = async function(module) {
 Sandbox.prototype.mount = function() {
   this.disableRewriteEventListeners = overwriteEventListeners();
 
-  if (this.styleElements && Array.isArray(this.styleElements) && this.domSnapshot.length === 0) {
+  if (this.styleElements && Array.isArray(this.styleElements)) {
     this.styleElements.forEach(element => document.head.appendChild(element));
+  }
+
+  !!this.windowSnapshot.length && this.restoreWindowSnapshot();
+  if (this.domSnapshot.length) {
+    this.restoreDOMSnapshot();
+  } else {
+    this.takeDOMSnapshot();
   }
 
   this.bundleExecutors && this.bundleExecutors.forEach(executor => {
@@ -138,9 +146,6 @@ Sandbox.prototype.mount = function() {
       executor.call();
     }
   });
-
-  !!this.windowSnapshot.length && this.restoreWindowSnapshot();
-  !!this.domSnapshot.length && this.restoreDOMSnapshot();
 };
 
 /**
@@ -148,9 +153,9 @@ Sandbox.prototype.mount = function() {
  * @public
  */
 Sandbox.prototype.unmount = function() {
-  this.takeDOMSnapshot();
   this.takeWindowSnapshot();
   this.disableRewriteEventListeners && this.disableRewriteEventListeners();
+  document.head.childNodes.forEach(childNode => childNode.remove());
 };
 
 export default Sandbox;
