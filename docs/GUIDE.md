@@ -74,9 +74,38 @@ All the features are updated in [here](https://github.com/lenconda/polyatomic/tr
 
 ## Quick Start
 
-> The project is still under development, it is not real to use it by npm, but you can clone this project from GitHub and bundle it into your project.
+> The project is still under development, it is unrealistic to install it from npm, but you can clone this project from GitHub and bundle it into your project.
 
-Import Polyatomic in your project:
+### Framework
+
+The simplest HTML structure Polyatomic required is:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+  </head>
+  <body></body>
+</html>
+```
+
+Route links that could be intercepted by Polyatomic should be added a `data-polyatomic` attribute:
+
+In HTML/Vue template/JSX/TSX:
+
+```html
+<!-- It will be intercepted by Polyatomic -->
+<a href="/foo" data-polyatomic>Foo</a>
+
+<!-- It will not be intercepted by Polyatomic, just jump to /foo/index.html -->
+<a href="/foo"></a>
+```
+
+Import Polyatomic in your framework:
 
 ```javascript
 import Polyatomic from '/path/to/polyatomic';
