@@ -95,7 +95,7 @@ The simplest HTML structure Polyatomic required is:
 
 Route links that could be intercepted by Polyatomic should be added a `data-polyatomic` attribute:
 
-In HTML/Vue template/JSX/TSX:
+In HTML/Vue template/JSX:
 
 ```html
 <!-- It will be intercepted by Polyatomic -->
@@ -113,7 +113,7 @@ import Polyatomic from '/path/to/polyatomic';
 <script src="/path/to/polyatomic.min.js"></script>
 ```
 
-Initialize with:
+Initialize the framework application with:
 
 ```javascript
 const app = new Polyatomic('root');
@@ -149,7 +149,7 @@ it is also easy to load route configuration from a remote server:
 fetch('https://foo.com/api/routes').then(routes => app.registerModules(routes.json()));
 ```
 
-Listen to a hook:
+Create a listener for hooks:
 
 ```javascript
 app.hook.unmounted = function(prev, next, sandbox) {
@@ -164,4 +164,21 @@ Finally, run the framework:
 
 ```javascript
 app.run();
+```
+
+
+
+### Sub Application
+
+Since Polyatomic is low invasive, we can just make a few modifications on sub-applications. The simplest change to make sub-applications work is changing bundle prefix. For example, if using Webpack as bundler, just:
+
+```javascript
+module.exports = {
+  // ...
+  output: {
+    // ...
+    // When in production mode, use an absolute prefix
+    publicPath: process.NODE_ENV === 'production' ? '//example.com' : '/',
+  },
+}
 ```
