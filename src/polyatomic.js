@@ -24,12 +24,12 @@ function Polyatomic(mountPointID) {
     registeredModules: {},
     // current location object
     currentLocation: {},
-    // all the sandboxes the app ever used
-    sandboxes: {},
+    // sandboxes stack
+    sandboxes: [new Sandbox('@@default')],
+    // stack top position
+    position: 0,
     // mount point element id, default='root', the module will be mount to this element
     mountPointID: mountPointID || 'root',
-    // the default sandbox stores pure window and dom structure
-    defaultSandbox: new Sandbox('default'),
   };
 
   // global dependencies

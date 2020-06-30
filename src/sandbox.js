@@ -137,9 +137,9 @@ Sandbox.prototype.mount = function() {
   !!this.windowSnapshot.length && this.restoreWindowSnapshot();
   if (this.domSnapshot.length) {
     this.restoreDOMSnapshot();
-  } else {
-    this.takeDOMSnapshot();
   }
+
+  this.takeDOMSnapshot();
 
   this.bundleExecutors && this.bundleExecutors.forEach(executor => {
     if (isFunction(executor)) {

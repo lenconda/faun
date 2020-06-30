@@ -34,5 +34,6 @@ module.exports = {
     '@typescript-eslint/no-this-alias': 'off',
     '@typescript-eslint/no-require-imports': 'off',
     '@typescript-eslint/prefer-optional-chain': 'off',
+    'max-params': 'off',
   },
 };

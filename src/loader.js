@@ -13,7 +13,7 @@ import Sandbox from './sandbox';
  * @param {Object} context
  * @returns {Promise<void>}
  */
-export const loadModule = async function(props, pathname, context) {
+export const loadModule = async function(props, pathname, context, action) {
   const currentRouteResources = props.registeredModules[pathname || ''];
   const hooks = context && context.hooks || null;
 
@@ -24,22 +24,41 @@ export const loadModule = async function(props, pathname, context) {
     // if not exists, then create it
     initMountPoint(props.mountPointID);
 
-    // if there are no sandbox matches current pathname
-    // which means the module is first loaded
-    // and it will create a new sandbox to load current module
-    if (!props.sandboxes[pathname]) {
-      const sandbox = new Sandbox(pathname);
+    const actionLowerCase = action && action.toLowerCase() || '';
+    let sandbox;
+
+    if (actionLowerCase === 'push') {
+      sandbox = new Sandbox(pathname);
       // call loading hook
       hooks && hooks.loading && hooks.loading.call(context, pathname);
       await sandbox.create(currentRouteResources);
-      props.sandboxes[pathname] = sandbox;
-      // call loaded hook
-      hooks && hooks.loaded && hooks.loaded.call(context, pathname, sandbox);
+      props.sandboxes.splice(props.position + 1, props.sandboxes.length - props.position - 1);
+      props.sandboxes.push(sandbox);
+      props.position = props.sandboxes.length - 1;
     }
 
-    props.sandboxes[pathname].mount();
+    if (actionLowerCase === 'pop') {
+      const sandboxIndex = props.sandboxes.length - props.sandboxes.reverse().findIndex(item => item.name === pathname) - 1;
+      props.sandboxes.reverse();
+
+      if (sandboxIndex && sandboxIndex !== -1) {
+        const currentSandbox = props.sandboxes[sandboxIndex];
+
+        if (!currentSandbox) {
+          return;
+        }
+
+        props.position = sandboxIndex;
+        sandbox = currentSandbox;
+      }
+    }
+
+    // call loaded hook
+    hooks && hooks.loaded && hooks.loaded.call(context, pathname, sandbox);
+
+    sandbox.mount();
     // call mounted hook
-    hooks && hooks.mounted && hooks.mounted.call(context, pathname, props.sandboxes[pathname]);
+    hooks && hooks.mounted && hooks.mounted.call(context, pathname, sandbox);
   }
 };
 
@@ -53,7 +72,7 @@ export const loadModule = async function(props, pathname, context) {
  */
 // eslint-disable-next-line max-params
 export const unloadModule = function(props, prev, next, context) {
-  const currentSandbox = props.sandboxes[prev || ''];
+  const currentSandbox = props.sandboxes[props.position];
   const hooks = context.hooks || null;
 
   if (!currentSandbox) {
@@ -72,9 +91,10 @@ export const unloadModule = function(props, prev, next, context) {
   hooks && hooks.unmounted && hooks.unmounted.call(context, prev, next, currentSandbox);
 
   // restore window and dom
-  document.getElementById(props.mountPointID).remove();
-  props.defaultSandbox.restoreDOMSnapshot();
-  props.defaultSandbox.restoreWindowSnapshot();
+  const mountpointElement = document.getElementById(props.mountPointID);
+  mountpointElement && mountpointElement.remove();
+  props.sandboxes[0].restoreDOMSnapshot();
+  props.sandboxes[0].restoreWindowSnapshot();
 
   return true;
 };

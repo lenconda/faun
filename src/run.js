@@ -14,8 +14,7 @@ import {
   loadModule,
   unloadModule,
 } from './loader';
-import { handleRouteChange } from './handlers';
-import { handleClick } from './listeners';
+import { handleRouteChange, handleClick } from './handlers';
 import overwriteAppendChild from './overwrites/append-child';
 
 /**
@@ -37,17 +36,17 @@ export default function(props, deps) {
 
   initRoute(this.history.location, function(location, pathname) {
     refreshLocation.call(props, location);
-    loadModule(props, pathname, _this);
+    loadModule(props, pathname, _this, 'PUSH');
   });
 
   // listen history change to load and unload sandboxes
-  this.history.listen(function(location) {
+  this.history.listen(function(location, action) {
     handleRouteChange(props, location, function(prev, next) {
       refreshLocation.call(props, _this.history.location);
       if (!unloadModule(props, prev, next, _this)) {
         return;
       }
-      loadModule(props, next, _this);
+      loadModule(props, next, _this, action);
     });
   });
 
