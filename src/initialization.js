@@ -25,12 +25,13 @@ export const initMountPoint = function(mountPointID) {
  * initialize the default sandbox on context
  */
 export const initSandbox = function() {
-  if (!this.defaultSandbox) {
-    this.defaultSandbox = new Sandbox('default');
+  if (!this.sandboxes[0]) {
+    this.sandboxes.push(new Sandbox('default'));
   }
 
-  this.defaultSandbox.takeDOMSnapshot();
-  this.defaultSandbox.takeWindowSnapshot();
+  const defaultSandbox = this.sandboxes[0];
+  defaultSandbox.takeDOMSnapshot();
+  defaultSandbox.takeWindowSnapshot();
 };
 
 /**
