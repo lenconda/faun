@@ -14,8 +14,7 @@ import {
   loadModule,
   unloadModule,
 } from './loader';
-import { handleRouteChange } from './handlers';
-import { handleClick } from './listeners';
+import { handleRouteChange, handleClick } from './handlers';
 import overwriteAppendChild from './overwrites/append-child';
 
 /**

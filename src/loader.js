@@ -91,7 +91,8 @@ export const unloadModule = function(props, prev, next, context) {
   hooks && hooks.unmounted && hooks.unmounted.call(context, prev, next, currentSandbox);
 
   // restore window and dom
-  document.getElementById(props.mountPointID).remove();
+  const mountpointElement = document.getElementById(props.mountPointID);
+  mountpointElement && mountpointElement.remove();
   props.sandboxes[0].restoreDOMSnapshot();
   props.sandboxes[0].restoreWindowSnapshot();
 

@@ -4,3 +4,4 @@
  */
 
 export { handleRouteChange } from './route';
+export { handleClick } from './click';
