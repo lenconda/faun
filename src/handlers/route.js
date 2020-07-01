@@ -19,7 +19,10 @@ export const handleRouteChange = function(props, location, callback) {
   previousPathArray.shift();
   nextPathArray.shift();
 
-  if (previousPathArray[0] === nextPathArray[0]) {
+  if (
+    previousPathArray[0] === nextPathArray[0]
+    && JSON.stringify(location) === JSON.stringify(props.currentLocation)
+  ) {
     return;
   }
 

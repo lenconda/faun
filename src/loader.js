@@ -11,6 +11,7 @@ import Sandbox from './sandbox';
  * @param {Object} props
  * @param {string} pathname
  * @param {Object} context
+ * @param {string} action
  * @returns {Promise<void>}
  */
 export const loadModule = async function(props, pathname, context, action) {
@@ -25,21 +26,19 @@ export const loadModule = async function(props, pathname, context, action) {
     initMountPoint(props.mountPointID);
 
     const actionLowerCase = action && action.toLowerCase() || '';
-    let sandbox;
 
     if (actionLowerCase === 'push') {
-      sandbox = new Sandbox(pathname);
+      const sandbox = new Sandbox(pathname);
       // call loading hook
       hooks && hooks.loading && hooks.loading.call(context, pathname);
-      await sandbox.create(currentRouteResources);
+      await sandbox.create(currentRouteResources, props.currentLocation.state);
       props.sandboxes.splice(props.position + 1, props.sandboxes.length - props.position - 1);
       props.sandboxes.push(sandbox);
       props.position = props.sandboxes.length - 1;
     }
 
     if (actionLowerCase === 'pop') {
-      const sandboxIndex = props.sandboxes.length - props.sandboxes.reverse().findIndex(item => item.name === pathname) - 1;
-      props.sandboxes.reverse();
+      const sandboxIndex = props.sandboxes.findIndex(item => item.name === pathname && item.timestamp === props.currentLocation.state);
 
       if (sandboxIndex && sandboxIndex !== -1) {
         const currentSandbox = props.sandboxes[sandboxIndex];
@@ -49,16 +48,20 @@ export const loadModule = async function(props, pathname, context, action) {
         }
 
         props.position = sandboxIndex;
-        sandbox = currentSandbox;
       }
     }
 
-    // call loaded hook
-    hooks && hooks.loaded && hooks.loaded.call(context, pathname, sandbox);
+    const currentSandbox = props.sandboxes[props.position];
 
-    sandbox.mount();
+    if (props.currentLocation.state !== currentSandbox.timestamp) {
+      Object.assign(currentSandbox, { timestamp: props.currentLocation.state });
+    }
+
+    // call loaded hook
+    hooks && hooks.loaded && hooks.loaded.call(context, pathname, currentSandbox);
+    currentSandbox.mount();
     // call mounted hook
-    hooks && hooks.mounted && hooks.mounted.call(context, pathname, sandbox);
+    hooks && hooks.mounted && hooks.mounted.call(context, pathname, currentSandbox);
   }
 };
 

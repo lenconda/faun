@@ -19,7 +19,7 @@ export const handleClick = function(event, props, history) {
     const currentRouteResources = props.registeredModules[currentRoutePathname];
 
     if (currentRouteResources) {
-      history.push(`${currentRoutePathname}${currentRouteSearch}`);
+      history.push(`${currentRoutePathname}${currentRouteSearch}`, Date.now());
     } else {
       throw new ReferenceError(`[Polyatomic] Cannot find current route resources: ${currentRoutePathname}`);
     }
