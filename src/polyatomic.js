@@ -7,8 +7,10 @@ import { createBrowserHistory } from 'history';
 import registerModules from './register';
 import run from './run';
 import Sandbox from './sandbox';
-import eventBus from './event-bus';
 import createHooks from './hooks';
+
+// internal plugins
+import Events from './plugins/events';
 
 /**
  * @class
@@ -63,11 +65,22 @@ function Polyatomic(mountPointID) {
 }
 
 /**
- * event bus, to make communication easier between framework and modules
- * @type {Object}
+ * use a Polyatomic plugin
+ * the plugin should contain an `install` method
+ * @param {Object} plugin
+ * @param {Object|null} options
  */
-Polyatomic.prototype.bus = Polyatomic.bus = eventBus;
+Polyatomic.use = async function(plugin, options) {
+  if (!plugin) {
+    return;
+  }
 
+  if (!plugin.install || typeof plugin.install !== 'function') {
+    return console.error('[Polyatomic] Plugin should have an `install` method, which is a instance of `Function`');
+  }
+
+  await plugin.install(Polyatomic, options);
+};
 
 /**
  * call `history` with Polyatomic.history or app.history or this.history
@@ -85,4 +98,8 @@ Polyatomic.prototype.history = Polyatomic.history = createBrowserHistory();
  */
 Polyatomic.prototype.hooks = createHooks();
 
+// install plugin `Events`
+Polyatomic.use(Events);
+
 export default Polyatomic;
+
