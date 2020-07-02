@@ -21,6 +21,7 @@ function Sandbox(name) {
   this._modifyPropsMap = {};
   this.proxy = window;
   this.name = name || '';
+  this.timestamp = 0;
   this.running = false;
   this.bundles = [];
   this.css = [];
@@ -91,10 +92,12 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
  * @param module
  * @returns {Promise<void>}
  */
-Sandbox.prototype.create = async function(module) {
+Sandbox.prototype.create = async function(module, timestamp) {
   if (!module) {
     return;
   }
+
+  this.timestamp = timestamp || 0;
 
   if (module.scripts) {
     for (const bundleURL of module.scripts) {

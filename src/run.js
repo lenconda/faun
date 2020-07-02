@@ -36,17 +36,22 @@ export default function(props, deps) {
 
   initRoute(this.history.location, function(location, pathname) {
     refreshLocation.call(props, location);
-    loadModule(props, pathname, _this, 'PUSH');
+    loadModule(props, pathname, _this, 'PUSH', _this.history.location);
   });
 
   // listen history change to load and unload sandboxes
   this.history.listen(function(location, action) {
+    if (!location.state) {
+      const { pathname = '', search = '', hash = '' } = location;
+      _this.history.replace(`${pathname}${search}${hash}`, Date.now());
+    }
+
     handleRouteChange(props, location, function(prev, next) {
       refreshLocation.call(props, _this.history.location);
       if (!unloadModule(props, prev, next, _this)) {
         return;
       }
-      loadModule(props, next, _this, action);
+      loadModule(props, next, _this, action, _this.history.location);
     });
   });
 
