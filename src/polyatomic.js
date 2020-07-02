@@ -11,6 +11,7 @@ import createHooks from './hooks';
 
 // internal plugins
 import Events from './plugins/events';
+import Store from './plugins/store';
 
 /**
  * @class
@@ -100,6 +101,8 @@ Polyatomic.prototype.hooks = createHooks();
 
 // install plugin `Events`
 Polyatomic.use(Events);
+// install plugin `Store`
+Polyatomic.use(Store);
 
 export default Polyatomic;
 
