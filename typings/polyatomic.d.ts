@@ -17,17 +17,24 @@ declare interface IDependenceInfo {
 }
 
 declare interface IModules {
-  [key: string]: Partial<IModuleInfo>
+  [key: string]: Partial<IModuleInfo>;
+}
+
+declare interface IPlugin {
+  install: Function;
+  [key: string]: any;
 }
 
 export interface Polyatomic {
-  readonly bus: IEvent;
+  readonly events: IEvent;
   readonly history: History<LocationState>;
   readonly hooks: IHooks;
 
   run: () => void;
+  use: (plugin: IPlugin, options?: Record<string, any>) => void;
   registerModules: (modules: IModules) => this | void;
   addGlobalDependence: (name: string, dep: any) => void;
 }
 
 export const Polyatomic: PolyatomicConstructor;
+
