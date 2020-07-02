@@ -1,5 +1,5 @@
 /**
- * @file events.js
+ * @file index.js
  * @author lenconda<i@lenconda.top>
  */
 
@@ -22,4 +22,3 @@ export const install = async function(Polyatomic) {
 export default {
   install,
 };
-
