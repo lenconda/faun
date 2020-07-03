@@ -25,10 +25,6 @@ function Store() {
       return console.error('[Polyatomic] Param `key` must be a string or an object');
     }
 
-    if (!value) {
-      return console.error('[Polyatomic] Param `value` is required');
-    }
-
     if (isObject(key)) {
       Object.keys(key).forEach(k => {
         const currentValue = key[k];
@@ -41,6 +37,9 @@ function Store() {
         storeEvent.emit(k, currentValue);
       });
     } else if (typeof key === 'string') {
+      if (!value) {
+        return console.error('[Polyatomic] Param `value` is required');
+      }
       Object.assign(store, { [key]: value });
       storeEvent.emit(key, value);
     }
