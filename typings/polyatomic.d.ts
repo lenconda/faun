@@ -1,6 +1,7 @@
 import { IEvent } from './event';
 import { History, LocationState } from 'history';
 import { IHooks } from './hooks';
+import { IStore } from './store';
 
 declare interface PolyatomicConstructor {
   mountPointID: string;
@@ -29,6 +30,7 @@ export interface Polyatomic {
   readonly events: IEvent;
   readonly history: History<LocationState>;
   readonly hooks: IHooks;
+  readonly store: IStore;
 
   run: () => void;
   use: (plugin: IPlugin, options?: Record<string, any>) => void;
