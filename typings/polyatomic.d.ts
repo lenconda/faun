@@ -37,4 +37,3 @@ export interface Polyatomic {
 }
 
 export const Polyatomic: PolyatomicConstructor;
-

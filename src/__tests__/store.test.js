@@ -22,4 +22,3 @@ test('Store.prototype.set should set values to store properly', async () => {
   expect(store.get('b')).toEqual(2);
   expect(store.get('c')).toEqual(3);
 });
-

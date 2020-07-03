@@ -22,4 +22,3 @@ export const install = async function(Polyatomic) {
 export default {
   install,
 };
-
