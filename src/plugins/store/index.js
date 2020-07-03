@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import Store from './store';
+import Store from '../../store';
 import { setGlobalObject, getGlobalObject } from '../../utils/global-namespace';
 
 const storeNamespace = '@@__POLYATOMIC_STORE__';
@@ -22,3 +22,4 @@ export const install = async function(Polyatomic) {
 export default {
   install,
 };
+

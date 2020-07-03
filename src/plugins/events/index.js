@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import Event from './event';
+import Event from '../../event';
 import { setGlobalObject, getGlobalObject } from '../../utils/global-namespace';
 
 const eventsNamespace = '@@__POLYATOMIC_EVENTS__';
@@ -22,3 +22,4 @@ export const install = async function(Polyatomic) {
 export default {
   install,
 };
+

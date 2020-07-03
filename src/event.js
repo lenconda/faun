@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import { isFunction } from '../../utils/lodash';
+import { isFunction } from './utils/lodash';
 
 /**
  * an event emitter based on publisher-subscriber pattern
