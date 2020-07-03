@@ -4,7 +4,8 @@ module.exports = {
       '@babel/preset-env',
       {
         exclude: ['transform-regenerator']
-      }
+      },
+      '@babel/preset-flow'
     ]
   ],
   plugins: [
