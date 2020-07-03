@@ -23,4 +23,3 @@ test('Event.prototype.off should remove the specified subscriber', async () => {
   event.off('test', subscriber);
   expect(event.has('test', subscriber)).toBe(false);
 });
-

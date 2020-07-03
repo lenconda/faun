@@ -8,7 +8,8 @@ notifications:
     on_success: always
     on_failure: always
 node_js:
-  - 'lts/*'
+  - 10
+  - 12
 deploy:
   provider: npm
   email: 'i@lenconda.top'
