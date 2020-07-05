@@ -8,6 +8,8 @@ import fetch from './fetch';
 import { isFunction } from './utils/lodash';
 import overwriteEventListeners from './overwrites/window-listeners';
 import createElement from './utils/create-element';
+import cssPrefix from './utils/css';
+import random from './utils/random';
 
 /**
  * sandbox constructor
@@ -21,6 +23,7 @@ function Sandbox(name) {
   this._modifyPropsMap = {};
   this.proxy = window;
   this.name = name || '';
+  this.prefix = random();
   this.timestamp = 0;
   this.running = false;
   this.bundles = [];
@@ -28,6 +31,7 @@ function Sandbox(name) {
   this.bundleExecutors = [];
   this.styleElements = [];
   this.disableRewriteEventListeners = null;
+  this.rootElement = document.getElementsByTagName('html')[0];
 }
 
 /**
@@ -99,7 +103,7 @@ Sandbox.prototype.create = async function(module, timestamp) {
 
   this.timestamp = timestamp || 0;
 
-  if (module.scripts) {
+  if (module.scripts && module.scripts.length) {
     for (const bundleURL of module.scripts) {
       this.bundles.push(bundleURL);
       // make an ajax to load the module bundles
@@ -112,14 +116,15 @@ Sandbox.prototype.create = async function(module, timestamp) {
     }
   }
 
-  if (module.styles) {
+  if (module.styles && module.styles.length) {
     for (const stylesURL of module.styles) {
       this.css.push(stylesURL);
       // make an ajax to load styles
       const data = await fetch(stylesURL);
       if (data) {
+        const prefixedData = cssPrefix(data, this.prefix);
         const currentStyleElement = createElement('style', { type: 'text/css' });
-        currentStyleElement.innerHTML = data;
+        currentStyleElement.innerHTML = prefixedData;
         this.styleElements.push(currentStyleElement);
       }
     }
@@ -131,6 +136,8 @@ Sandbox.prototype.create = async function(module, timestamp) {
  * @public
  */
 Sandbox.prototype.mount = function() {
+  this.rootElement.classList = [...this.rootElement.classList, this.prefix].join(' ');
+
   this.disableRewriteEventListeners = overwriteEventListeners();
 
   if (this.styleElements && Array.isArray(this.styleElements)) {
@@ -156,6 +163,8 @@ Sandbox.prototype.mount = function() {
  * @public
  */
 Sandbox.prototype.unmount = function() {
+  this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' ');
+
   this.takeWindowSnapshot();
   this.disableRewriteEventListeners && this.disableRewriteEventListeners();
   document.head.childNodes.forEach(childNode => childNode.remove());
