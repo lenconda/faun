@@ -11,8 +11,8 @@ import {
 } from './initialization';
 import refreshLocation from './utils/refresh-location';
 import {
-  loadModule,
-  unloadModule,
+  loadSubApplication,
+  unloadSubApplication,
 } from './loader';
 import { handleRouteChange, handleClick } from './handlers';
 import overwriteAppendChild from './overwrites/append-child';
@@ -36,7 +36,7 @@ export default function(props, deps) {
 
   initRoute(this.history.location, function(location, pathname) {
     refreshLocation.call(props, location);
-    loadModule(props, pathname, _this, 'PUSH', _this.history.location);
+    loadSubApplication(props, pathname, _this, 'PUSH', _this.history.location);
   });
 
   // listen history change to load and unload sandboxes
@@ -48,10 +48,10 @@ export default function(props, deps) {
 
     handleRouteChange(props, location, function(prev, next) {
       refreshLocation.call(props, _this.history.location);
-      if (!unloadModule(props, prev, next, _this)) {
+      if (!unloadSubApplication(props, prev, next, _this)) {
         return;
       }
-      loadModule(props, next, _this, action, _this.history.location);
+      loadSubApplication(props, next, _this, action, _this.history.location);
     });
   });
 
