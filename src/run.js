@@ -4,7 +4,6 @@
  */
 
 import {
-  initMountPoint,
   initSandbox,
   initRoute,
   initGlobalDependencies,
@@ -31,7 +30,6 @@ export default function(props, deps) {
     initGlobalDependencies(deps);
   }
 
-  initMountPoint(props.mountPointID);
   initSandbox.call(props);
 
   initRoute(this.history.location, function(location, pathname) {

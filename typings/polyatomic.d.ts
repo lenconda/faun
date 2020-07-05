@@ -3,9 +3,7 @@ import { History, LocationState } from 'history';
 import { IHooks } from './hooks';
 import { IStore } from './store';
 
-declare interface PolyatomicConstructor {
-  mountPointID: string;
-}
+declare interface PolyatomicConstructor {}
 
 declare interface ISubApplicationConfig {
   scripts: Array<string>;

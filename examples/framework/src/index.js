@@ -1,7 +1,7 @@
 import Polyatomic from '../../../src';
 import axios from 'axios';
 
-const app = new Polyatomic('app');
+const app = new Polyatomic();
 
 app.addGlobalDependence('axios', axios);
 
@@ -11,6 +11,7 @@ app.registerSubApplications({
       '//localhost:8181/app.js',
     ],
     styles: [],
+    mountPointID: 'app',
   },
   '/react': {
     scripts: [
@@ -20,6 +21,7 @@ app.registerSubApplications({
     styles: [
       '//localhost:8182/static/css/main.css',
     ],
+    mountPointID: 'root',
   },
 });
 
@@ -55,4 +57,3 @@ app.hooks.unmounted = function(prev, next, sandbox) {
 };
 
 app.run();
-
