@@ -3,7 +3,6 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import { initMountPoint } from './initialization';
 import Sandbox from './sandbox';
 
 /**
@@ -21,10 +20,6 @@ export const loadSubApplication = async function(props, pathname, context, actio
   // only if the sub-application resources are found in context
   // the loadSubApplication method will work
   if (currentRouteResources) {
-    // check if the mount point exists
-    // if not exists, then create it
-    initMountPoint(props.mountPointID);
-
     const actionLowerCase = action && action.toLowerCase() || '';
 
     if (actionLowerCase === 'push') {
@@ -93,9 +88,6 @@ export const unloadSubApplication = function(props, prev, next, context) {
   // call unmounted hook
   hooks && hooks.unmounted && hooks.unmounted.call(context, prev, next, currentSandbox);
 
-  // restore window and dom
-  const mountpointElement = document.getElementById(props.mountPointID);
-  mountpointElement && mountpointElement.remove();
   props.sandboxes[0].restoreDOMSnapshot();
   props.sandboxes[0].restoreWindowSnapshot();
 

@@ -19,6 +19,8 @@ import random from './utils/random';
  */
 function Sandbox(name) {
   this.domSnapshot = [];
+  this.mountPoint = null;
+  this.mountPointID = '';
   this.windowSnapshot = {};
   this._modifyPropsMap = {};
   this.proxy = window;
@@ -98,11 +100,14 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
  * @returns {Promise<void>}
  */
 Sandbox.prototype.create = async function(subApplicationConfig, timestamp) {
-  if (!subApplicationConfig) {
+  const { mountPointID } = subApplicationConfig;
+  if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
   }
 
   this.timestamp = timestamp || 0;
+  this.mountPointID = mountPointID;
+  this.mountPoint = createElement('div', { id: this.mountPointID });
 
   if (subApplicationConfig.scripts && subApplicationConfig.scripts.length) {
     for (const bundleURL of subApplicationConfig.scripts) {
@@ -138,8 +143,13 @@ Sandbox.prototype.create = async function(subApplicationConfig, timestamp) {
  */
 Sandbox.prototype.mount = function() {
   this.rootElement.classList = [...this.rootElement.classList, this.prefix].join(' ');
-
   this.disableRewriteEventListeners = overwriteEventListeners();
+
+  const checkExistElement = document.getElementById(this.mountPointID);
+  if (checkExistElement) {
+    checkExistElement.remove();
+  }
+  document.body.appendChild(Array.prototype.slice.call([this.mountPoint])[0]);
 
   if (this.styleElements && Array.isArray(this.styleElements)) {
     this.styleElements.forEach(element => document.head.appendChild(element));
@@ -164,6 +174,8 @@ Sandbox.prototype.mount = function() {
  * @public
  */
 Sandbox.prototype.unmount = function() {
+  const currentMountPointElement = document.getElementById(this.mountPointID);
+  currentMountPointElement && currentMountPointElement.remove();
   this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' ');
 
   this.takeWindowSnapshot();

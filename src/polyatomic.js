@@ -15,11 +15,10 @@ import Store from './plugins/store';
 
 /**
  * @class
- * @param {string} mountPointID
  * @constructor
  * Constructor of Polyatomic
  */
-function Polyatomic(mountPointID) {
+function Polyatomic() {
   // defines the application properties
   // which will be passed when `run` and `registerSubApplications` is called
   const props = {
@@ -31,8 +30,6 @@ function Polyatomic(mountPointID) {
     sandboxes: [new Sandbox('@@default')],
     // stack top position
     position: 0,
-    // mount point element id, default='root', the sub-application will be mount to this element
-    mountPointID: mountPointID || 'root',
   };
 
   // global dependencies
