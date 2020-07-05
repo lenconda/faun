@@ -3,23 +3,8 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import createElement from './utils/create-element';
 import Sandbox from './sandbox';
 import { isFunction } from './utils/lodash';
-
-/**
- * initialize the mount point element
- * @param {string} mountPointID
- */
-export const initMountPoint = function(mountPointID) {
-  if (!mountPointID) return;
-
-  // if there is not mount point element, create it
-  if (!document.getElementById(mountPointID)) {
-    const mountPointElement = createElement('div', { id: mountPointID });
-    document.body.appendChild(mountPointElement);
-  }
-};
 
 /**
  * initialize the default sandbox on context
