@@ -16,7 +16,7 @@ export const handleClick = function(event, props, history) {
     const { pathname, search } = event.target;
     const currentRoutePathname = pathname || '';
     const currentRouteSearch = search || '';
-    const currentRouteResources = props.registeredModules[currentRoutePathname];
+    const currentRouteResources = props.registeredSubApplications[currentRoutePathname];
 
     if (currentRouteResources) {
       history.push(`${currentRoutePathname}${currentRouteSearch}`, Date.now());

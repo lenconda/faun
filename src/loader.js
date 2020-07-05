@@ -7,19 +7,19 @@ import { initMountPoint } from './initialization';
 import Sandbox from './sandbox';
 
 /**
- * load module from context
+ * load sub-application from context
  * @param {Object} props
  * @param {string} pathname
  * @param {Object} context
  * @param {string} action
  * @returns {Promise<void>}
  */
-export const loadModule = async function(props, pathname, context, action) {
-  const currentRouteResources = props.registeredModules[pathname || ''];
+export const loadSubApplication = async function(props, pathname, context, action) {
+  const currentRouteResources = props.registeredSubApplications[pathname || ''];
   const hooks = context && context.hooks || null;
 
-  // only if the module resources are found in context
-  // the loadModule method will work
+  // only if the sub-application resources are found in context
+  // the loadSubApplication method will work
   if (currentRouteResources) {
     // check if the mount point exists
     // if not exists, then create it
@@ -66,7 +66,7 @@ export const loadModule = async function(props, pathname, context, action) {
 };
 
 /**
- * unload module
+ * unload sub-application
  * @param {Object} props
  * @param {string} prev
  * @param {string} next
@@ -74,7 +74,7 @@ export const loadModule = async function(props, pathname, context, action) {
  * @returns {boolean}
  */
 // eslint-disable-next-line max-params
-export const unloadModule = function(props, prev, next, context) {
+export const unloadSubApplication = function(props, prev, next, context) {
   const currentSandbox = props.sandboxes[props.position];
   const hooks = context.hooks || null;
 

@@ -4,7 +4,7 @@
  */
 
 import { createBrowserHistory } from 'history';
-import registerModules from './register';
+import registerSubApplications from './register';
 import run from './run';
 import Sandbox from './sandbox';
 import createHooks from './hooks';
@@ -21,17 +21,17 @@ import Store from './plugins/store';
  */
 function Polyatomic(mountPointID) {
   // defines the application properties
-  // which will be passed when `run` and `registerModules` is called
+  // which will be passed when `run` and `registerSubApplications` is called
   const props = {
-    // registered modules information
-    registeredModules: {},
+    // registered sub-applications information
+    registeredSubApplications: {},
     // current location object
     currentLocation: {},
     // sandboxes stack
     sandboxes: [new Sandbox('@@default')],
     // stack top position
     position: 0,
-    // mount point element id, default='root', the module will be mount to this element
+    // mount point element id, default='root', the sub-application will be mount to this element
     mountPointID: mountPointID || 'root',
   };
 
@@ -46,11 +46,11 @@ function Polyatomic(mountPointID) {
   this.run = () => run.call(this, props, deps);
 
   /**
-   * get remote module resources and call this method
-   * @param modules
+   * get remote sub-applications resources and call this method
+   * @param config
    * @returns {function}
    */
-  this.registerModules = modules => registerModules.call(props, modules);
+  this.registerSubApplications = config => registerSubApplications.call(props, config);
 
   /**
    * set global deps to window
@@ -85,7 +85,7 @@ Polyatomic.use = async function(plugin, options) {
 
 /**
  * call `history` with Polyatomic.history or app.history or this.history
- * use browser history instead of hash history for modules would be a hash-routed application
+ * use browser history instead of hash history for sub-applications would be a hash-routed application
  * @type {History<LocationState>}
  */
 Polyatomic.prototype.history = Polyatomic.history = createBrowserHistory();

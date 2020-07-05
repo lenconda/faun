@@ -7,7 +7,7 @@ declare interface PolyatomicConstructor {
   mountPointID: string;
 }
 
-declare interface IModuleInfo {
+declare interface ISubApplicationConfig {
   scripts: Array<string>;
   styles: Array<string>;
 }
@@ -17,8 +17,8 @@ declare interface IDependenceInfo {
   dep: any;
 }
 
-declare interface IModules {
-  [key: string]: Partial<IModuleInfo>;
+declare interface ISubApplications {
+  [key: string]: Partial<ISubApplicationConfig>;
 }
 
 declare interface IPlugin {
@@ -34,7 +34,7 @@ export interface Polyatomic {
 
   run: () => void;
   use: (plugin: IPlugin, options?: Record<string, any>) => void;
-  registerModules: (modules: IModules) => this | void;
+  registerModules: (modules: ISubApplications) => this | void;
   addGlobalDependence: (name: string, dep: any) => void;
 }
 

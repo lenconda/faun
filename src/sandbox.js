@@ -91,22 +91,23 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
 };
 
 /**
- * create sandbox when passing a module config
+ * create sandbox when passing a sub-application config
  * @public
- * @param module
+ * @param {ISubApplicationConfig} subApplicationConfig
+ * @param {number} timestamp
  * @returns {Promise<void>}
  */
-Sandbox.prototype.create = async function(module, timestamp) {
-  if (!module) {
+Sandbox.prototype.create = async function(subApplicationConfig, timestamp) {
+  if (!subApplicationConfig) {
     return;
   }
 
   this.timestamp = timestamp || 0;
 
-  if (module.scripts && module.scripts.length) {
-    for (const bundleURL of module.scripts) {
+  if (subApplicationConfig.scripts && subApplicationConfig.scripts.length) {
+    for (const bundleURL of subApplicationConfig.scripts) {
       this.bundles.push(bundleURL);
-      // make an ajax to load the module bundles
+      // make an ajax to load the sub-application bundles
       const data = await fetch(bundleURL);
       if (data) {
         // wrap bundle code into a function
@@ -116,8 +117,8 @@ Sandbox.prototype.create = async function(module, timestamp) {
     }
   }
 
-  if (module.styles && module.styles.length) {
-    for (const stylesURL of module.styles) {
+  if (subApplicationConfig.styles && subApplicationConfig.styles.length) {
+    for (const stylesURL of subApplicationConfig.styles) {
       this.css.push(stylesURL);
       // make an ajax to load styles
       const data = await fetch(stylesURL);

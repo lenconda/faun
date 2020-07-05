@@ -6,18 +6,18 @@
 import { cloneDeep } from './utils/lodash';
 
 /**
- * register modules, context is `props` in constructor
- * @param moduleInfo
+ * register sub-applications, context is `props` in constructor
+ * @param subApplicationInfo
  * @returns {"default"}
  */
-export default function(moduleInfo) {
+export default function(subApplicationInfo) {
   // only accept Object and NOT Array
-  if (typeof moduleInfo !== 'object' || Array.isArray(moduleInfo)) {
+  if (typeof subApplicationInfo !== 'object' || Array.isArray(subApplicationInfo)) {
     return this;
   }
 
-  // assign module configs to context
-  Object.assign(this.registeredModules, {
-    ...cloneDeep(moduleInfo),
+  // assign sub-application configs to context
+  Object.assign(this.registeredSubApplications, {
+    ...cloneDeep(subApplicationInfo),
   });
 }

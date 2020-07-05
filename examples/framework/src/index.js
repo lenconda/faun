@@ -5,7 +5,7 @@ const app = new Polyatomic('app');
 
 app.addGlobalDependence('axios', axios);
 
-app.registerModules({
+app.registerSubApplications({
   '/vue': {
     scripts: [
       '//localhost:8181/app.js',
