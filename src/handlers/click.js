@@ -6,6 +6,8 @@
  * @returns {boolean}
  */
 
+import generateRandomString from '../utils/random';
+
 export const handleClick = function(event, props, history) {
   // interceptor the a tags with attribute data-polyatomic
   if (
@@ -19,7 +21,7 @@ export const handleClick = function(event, props, history) {
     const currentRouteResources = props.registeredSubApplications[currentRoutePathname];
 
     if (currentRouteResources) {
-      history.push(`${currentRoutePathname}${currentRouteSearch}`, Date.now());
+      history.push(`${currentRoutePathname}${currentRouteSearch}`, generateRandomString());
     } else {
       throw new ReferenceError(`[Polyatomic] Cannot find current route resources: ${currentRoutePathname}`);
     }
