@@ -8,6 +8,7 @@ declare interface PolyatomicConstructor {}
 declare interface ISubApplicationConfig {
   scripts: Array<string>;
   styles: Array<string>;
+  mountPointID: string;
 }
 
 declare interface IDependenceInfo {

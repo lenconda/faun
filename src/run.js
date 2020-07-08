@@ -15,6 +15,7 @@ import {
 } from './loader';
 import { handleRouteChange, handleClick } from './handlers';
 import overwriteAppendChild from './overwrites/append-child';
+import generateRandomString from './utils/random';
 
 /**
  * essential method to start the application
@@ -41,7 +42,7 @@ export default function(props, deps) {
   this.history.listen(function(location, action) {
     if (!location.state) {
       const { pathname = '', search = '', hash = '' } = location;
-      _this.history.replace(`${pathname}${search}${hash}`, Date.now());
+      _this.history.replace(`${pathname}${search}${hash}`, generateRandomString());
     }
 
     handleRouteChange(props, location, function(prev, next) {

@@ -10,8 +10,8 @@ const generateRandomString = (() => {
   const cache = {};
 
   return () => {
-    const randomString = Math.random().toString(36).slice(-9, -1);
-    if (!cache[randomString] && /^[a-z]/.test(randomString)) {
+    const randomString = (Math.random() / Date.now()).toString(36).slice(-9, -1);
+    if (!cache[randomString] && /^[a-zA-Z]/.test(randomString)) {
       cache[randomString] = 1;
       return randomString;
     } else {

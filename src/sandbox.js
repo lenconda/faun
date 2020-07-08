@@ -26,7 +26,7 @@ function Sandbox(name) {
   this.proxy = window;
   this.name = name || '';
   this.prefix = random();
-  this.timestamp = 0;
+  this.key = '';
   this.running = false;
   this.bundles = [];
   this.css = [];
@@ -96,16 +96,16 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
  * create sandbox when passing a sub-application config
  * @public
  * @param {ISubApplicationConfig} subApplicationConfig
- * @param {number} timestamp
+ * @param {string} key
  * @returns {Promise<void>}
  */
-Sandbox.prototype.create = async function(subApplicationConfig, timestamp) {
+Sandbox.prototype.create = async function(subApplicationConfig, key) {
   const { mountPointID } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
   }
 
-  this.timestamp = timestamp || 0;
+  this.key = key || 0;
   this.mountPointID = mountPointID;
   this.mountPoint = createElement('div', { id: this.mountPointID });
 

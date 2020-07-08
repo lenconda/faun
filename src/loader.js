@@ -33,7 +33,7 @@ export const loadSubApplication = async function(props, pathname, context, actio
     }
 
     if (actionLowerCase === 'pop') {
-      const sandboxIndex = props.sandboxes.findIndex(item => item.name === pathname && item.timestamp === props.currentLocation.state);
+      const sandboxIndex = props.sandboxes.findIndex(item => item.name === pathname && item.key === props.currentLocation.state);
 
       if (sandboxIndex && sandboxIndex !== -1) {
         const currentSandbox = props.sandboxes[sandboxIndex];
@@ -48,8 +48,8 @@ export const loadSubApplication = async function(props, pathname, context, actio
 
     const currentSandbox = props.sandboxes[props.position];
 
-    if (props.currentLocation.state !== currentSandbox.timestamp) {
-      Object.assign(currentSandbox, { timestamp: props.currentLocation.state });
+    if (props.currentLocation.state !== currentSandbox.key) {
+      Object.assign(currentSandbox, { key: props.currentLocation.state });
     }
 
     // call loaded hook
