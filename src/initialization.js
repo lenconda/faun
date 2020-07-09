@@ -11,7 +11,7 @@ import { isFunction } from './utils/lodash';
  */
 export const initSandbox = function() {
   if (!this.sandboxes[0]) {
-    this.sandboxes.push(new Sandbox('default'));
+    this.sandboxes.push(new Sandbox('@@default'));
   }
 
   const defaultSandbox = this.sandboxes[0];
