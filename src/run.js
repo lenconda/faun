@@ -43,6 +43,7 @@ export default function(props, deps) {
     if (!location.state) {
       const { pathname = '', search = '', hash = '' } = location;
       _this.history.replace(`${pathname}${search}${hash}`, generateRandomString());
+      return;
     }
 
     handleRouteChange(props, location, function(prev, next) {
