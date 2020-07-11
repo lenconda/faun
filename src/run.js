@@ -15,7 +15,7 @@ import {
 } from './loader';
 import { handleRouteChange, handleClick } from './handlers';
 import overwriteAppendChild from './overwrites/append-child';
-import generateRandomString from './utils/random';
+import './overwrites/direction';
 
 /**
  * essential method to start the application
@@ -40,12 +40,6 @@ export default function(props, deps) {
 
   // listen history change to load and unload sandboxes
   this.history.listen(function(location, action) {
-    if (!location.state) {
-      const { pathname = '', search = '', hash = '' } = location;
-      _this.history.replace(`${pathname}${search}${hash}`, generateRandomString());
-      return;
-    }
-
     handleRouteChange(props, location, function(prev, next) {
       refreshLocation.call(props, _this.history.location);
       if (!unloadSubApplication(props, prev, next, _this)) {
@@ -58,5 +52,12 @@ export default function(props, deps) {
   // intercept all click events
   window.addEventListener('click', function(event) {
     handleClick(event, props, _this.history);
+  });
+
+  window.addEventListener('forward', event => {
+    props.direction = 'forward';
+  });
+  window.addEventListener('back', event => {
+    props.direction = 'backward';
   });
 }

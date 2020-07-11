@@ -4,6 +4,7 @@
  */
 
 import Sandbox from './sandbox';
+import { findLastIndex } from './utils/lodash';
 
 /**
  * load sub-application from context
@@ -33,7 +34,17 @@ export const loadSubApplication = async function(props, pathname, context, actio
     }
 
     if (actionLowerCase === 'pop') {
-      const sandboxIndex = props.sandboxes.findIndex(item => item.name === pathname && item.key === props.currentLocation.state);
+      let sandboxIndex;
+      if (props.direction === 'forward') {
+        sandboxIndex = props.sandboxes.findIndex((item, index) => {
+          return item.name === pathname && index >= props.position;
+        });
+      }
+      if (props.direction === 'backward') {
+        sandboxIndex = findLastIndex(props.sandboxes, (item, index) => {
+          return item.name === pathname && index <= props.position;
+        });
+      }
 
       if (sandboxIndex && sandboxIndex !== -1) {
         const currentSandbox = props.sandboxes[sandboxIndex];
