@@ -93,13 +93,13 @@ The simplest HTML structure Polyatomic required is:
 </html>
 ```
 
-Route links that could be intercepted by Polyatomic should be added a `data-polyatomic` attribute:
+Route links that could be intercepted by Polyatomic should be added a `data-p-link` attribute:
 
 In HTML/Vue template/JSX:
 
 ```html
 <!-- It will be intercepted by Polyatomic -->
-<a href="/foo" data-polyatomic>Foo</a>
+<a href="/foo" data-p-link>Foo</a>
 
 <!-- It will not be intercepted by Polyatomic, just jump to /foo/index.html -->
 <a href="/foo"></a>

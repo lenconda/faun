@@ -25,8 +25,6 @@ import './overwrites/direction';
 export default function(props, deps) {
   const _this = this;
 
-  overwriteAppendChild();
-
   if (Array.isArray(deps) && deps.length) {
     initGlobalDependencies(deps);
   }

@@ -1,5 +1,5 @@
 import { noop } from 'lodash';
-import { IModuleInfo } from './polyatomic';
+import { ISubApplicationConfig } from './polyatomic';
 
 export interface ISandbox {
   readonly domSnapshot: string;
@@ -14,11 +14,11 @@ export interface ISandbox {
   readonly styleElements: Array<HTMLElement>;
   readonly disableRewriteEventListeners: () => typeof noop;
 
-  takeDOMSnapshot: () => void;
+  // takeDOMSnapshot: () => void;
   restoreDOMSnapshot: () => void;
   takeWindowSnapshot: () => void;
   restoreWindowSnapshot: () => void;
-  create: (module: IModuleInfo) => void | null;
+  create: (module: ISubApplicationConfig) => void | null;
   mount: () => void;
   unmount: () => void;
 }
