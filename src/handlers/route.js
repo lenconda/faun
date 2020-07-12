@@ -12,9 +12,6 @@ import { isFunction } from '../utils/lodash';
  * @param {function} callback
  */
 export const handleRouteChange = function(props, location, callback) {
-  if (!location.state) {
-    return;
-  }
   const nextPathArray = location.pathname.split('/');
   const previousPath = props.currentLocation.pathname || '';
   const previousPathArray = previousPath.split('/');
@@ -22,10 +19,7 @@ export const handleRouteChange = function(props, location, callback) {
   previousPathArray.shift();
   nextPathArray.shift();
 
-  if (
-    previousPathArray[0] === nextPathArray[0]
-    && JSON.stringify(location) === JSON.stringify(props.currentLocation)
-  ) {
+  if (previousPathArray[0] === nextPathArray[0]) {
     return;
   }
 

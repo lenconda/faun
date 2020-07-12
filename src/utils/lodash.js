@@ -4,7 +4,9 @@
  */
 
 import noop from 'lodash/noop';
-export { noop };
+import findLastIndex from 'lodash/findLastIndex';
+
+export { noop, findLastIndex };
 
 /**
  * check if param is a function

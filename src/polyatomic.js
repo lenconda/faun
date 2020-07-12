@@ -30,6 +30,8 @@ function Polyatomic() {
     sandboxes: [new Sandbox('@@default')],
     // stack top position
     position: 0,
+    // stack cursor direction
+    direction: 'forward',
   };
 
   // global dependencies
