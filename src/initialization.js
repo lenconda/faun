@@ -13,9 +13,7 @@ export const initSandbox = function() {
   if (!this.sandboxes[0]) {
     this.sandboxes.push(new Sandbox('@@default'));
   }
-
   const defaultSandbox = this.sandboxes[0];
-  defaultSandbox.takeDOMSnapshot();
   defaultSandbox.takeWindowSnapshot();
 };
 

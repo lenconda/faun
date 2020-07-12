@@ -10,6 +10,9 @@ import overwriteEventListeners from './overwrites/window-listeners';
 import createElement from './utils/create-element';
 import cssPrefix from './utils/css';
 import random from './utils/random';
+import appendChildOverwrites from './overwrites/append-child';
+
+const appendChildManager = appendChildOverwrites();
 
 /**
  * sandbox constructor
@@ -36,20 +39,12 @@ function Sandbox(name) {
 }
 
 /**
- * take a snapshot for document.head
- * @public
- */
-Sandbox.prototype.takeDOMSnapshot = function() {
-  this.domSnapshot = Array.prototype.slice.call(document.head.childNodes);
-};
-
-/**
  * restore snapshot to document.head
  * @public
  */
 Sandbox.prototype.restoreDOMSnapshot = function() {
-  document.head.childNodes.forEach(childNode => childNode.remove());
-  this.domSnapshot.forEach(node => document.head.appendChild(node));
+  this.domSnapshot.forEach(node => node && node.remove());
+  this.styleElements.forEach(element => element && element.remove());
 };
 
 /**
@@ -140,6 +135,7 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
  * @public
  */
 Sandbox.prototype.mount = function() {
+  appendChildManager.overwriteAppendChild(this.domSnapshot);
   this.rootElement.classList = [...this.rootElement.classList, this.prefix].join(' ');
   this.disableRewriteEventListeners = overwriteEventListeners();
 
@@ -154,11 +150,6 @@ Sandbox.prototype.mount = function() {
   }
 
   !!this.windowSnapshot.length && this.restoreWindowSnapshot();
-  if (this.domSnapshot.length) {
-    this.restoreDOMSnapshot();
-  }
-
-  this.takeDOMSnapshot();
 
   this.bundleExecutors && this.bundleExecutors.forEach(executor => {
     if (isFunction(executor)) {
@@ -175,10 +166,10 @@ Sandbox.prototype.unmount = function() {
   const currentMountPointElement = document.getElementById(this.mountPointID);
   currentMountPointElement && currentMountPointElement.remove();
   this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' ');
-
   this.takeWindowSnapshot();
   this.disableRewriteEventListeners && this.disableRewriteEventListeners();
-  document.head.childNodes.forEach(childNode => childNode.remove());
+  appendChildManager.restoreAppendChild();
+  this.restoreDOMSnapshot();
 };
 
 export default Sandbox;

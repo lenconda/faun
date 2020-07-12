@@ -9,10 +9,10 @@
 import generateRandomString from '../utils/random';
 
 export const handleClick = function(event, props, history) {
-  // interceptor the a tags with attribute data-polyatomic
+  // interceptor the a tags with attribute data-p-link
   if (
     event.target.tagName.toLowerCase() === 'a'
-    && event.target.hasAttribute('data-polyatomic')
+    && event.target.hasAttribute('data-p-link')
     && event.target.host === window.location.host
   ) {
     const { pathname, search } = event.target;
