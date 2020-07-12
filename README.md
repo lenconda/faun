@@ -28,7 +28,7 @@ To avoid making the rules for every applications repeatedly, we made a common ru
 
 ## Features
 
-- Light weight: only 17 kB with terser
+- Light weight: only 47 kB with terser
 - COMPLETELY framework-independent
 - Control the sub-applications by sandboxes and snapshots
 - Load sub-applications based on JavaScript entries
