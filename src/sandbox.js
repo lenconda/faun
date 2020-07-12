@@ -26,7 +26,6 @@ function Sandbox(name) {
   this.proxy = window;
   this.name = name || '';
   this.prefix = random();
-  this.key = '';
   this.running = false;
   this.bundles = [];
   this.css = [];
@@ -99,13 +98,12 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
  * @param {string} key
  * @returns {Promise<void>}
  */
-Sandbox.prototype.create = async function(subApplicationConfig, key) {
+Sandbox.prototype.create = async function(subApplicationConfig) {
   const { mountPointID } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
   }
 
-  this.key = key || 0;
   this.mountPointID = mountPointID;
   this.mountPoint = createElement('div', { id: this.mountPointID });
 

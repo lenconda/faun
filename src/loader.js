@@ -27,7 +27,7 @@ export const loadSubApplication = async function(props, pathname, context, actio
       const sandbox = new Sandbox(pathname);
       // call loading hook
       hooks && hooks.loading && hooks.loading.call(context, pathname);
-      await sandbox.create(currentRouteResources, props.currentLocation.state);
+      await sandbox.create(currentRouteResources);
       props.sandboxes.splice(props.position + 1, props.sandboxes.length - props.position - 1);
       props.sandboxes.push(sandbox);
       props.position = props.sandboxes.length - 1;
@@ -58,10 +58,6 @@ export const loadSubApplication = async function(props, pathname, context, actio
     }
 
     const currentSandbox = props.sandboxes[props.position];
-
-    if (props.currentLocation.state !== currentSandbox.key) {
-      Object.assign(currentSandbox, { key: props.currentLocation.state });
-    }
 
     // call loaded hook
     hooks && hooks.loaded && hooks.loaded.call(context, pathname, currentSandbox);
