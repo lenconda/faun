@@ -41,7 +41,7 @@ export const loadSubApplication = async function(props, pathname, context, actio
         });
       }
       if (props.direction === 'backward') {
-        sandboxIndex = findLastIndex(props.sandboxes, (item, index) => {
+        sandboxIndex = findLastIndex(props.sandboxes.slice(0, props.position), (item, index) => {
           return item.name === pathname && index <= props.position;
         });
       }
