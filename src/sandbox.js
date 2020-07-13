@@ -170,6 +170,7 @@ Sandbox.prototype.unmount = function() {
   this.disableRewriteEventListeners && this.disableRewriteEventListeners();
   appendChildManager.restoreAppendChild();
   this.restoreDOMSnapshot();
+  this.domSnapshot.splice(0, this.domSnapshot.length);
 };
 
 export default Sandbox;
