@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Polyatomic is an implementation of concepts from [Micro Frontends](https://micro-frontends.org/). It was designed to make it easier to build new micro-frontend applications and at the same time be less intrusive migrating existed project to micro-frontend.
+Destruction is an implementation of concepts from [Micro Frontends](https://micro-frontends.org/). It was designed to make it easier to build new micro-frontend applications and at the same time be less intrusive migrating existed project to micro-frontend.
 
 ### Concepts and Technical Terms
 
@@ -40,37 +40,37 @@ Use Browser Events for communication instead of building a global PubSub system.
 
 Your feature should be useful, even if JavaScript failed or hasn’t executed yet. Use Universal Rendering and Progressive Enhancement to improve perceived performance.
 
-### What's Different in Polyatomic
+### What's Different in Destruction
 
-The only difference between Polyatomic and principles in [Micro Frontends](https://micro-frontends.org/) is, as it will probably always be, Polyatomic uses global states, methods, dependencies, event buses to make it easier for communication between framework and sub-applications, or between sub-applications.
+The only difference between Destruction and principles in [Micro Frontends](https://micro-frontends.org/) is, as it will probably always be, Destruction uses global states, methods, dependencies, event buses to make it easier for communication between framework and sub-applications, or between sub-applications.
 
-### Why it's Called "Polyatomic"
+### Why it's Called "Destruction"
 
 As we all know, in the chemical world, the smallest divisible unit of matter is an atom, such as a hydrogen atom, an oxygen atom, and so on. Atoms can be formed into molecules, for example, two hydrogen atoms and one oxygen atom could be constituted into a water molecule. On the other hand, atoms can exist independently and constitute certain substances. At this time, we call them *monoatomic molecules*, for example, helium (gas) is a gaseous single substance composed of helium atoms.
 
-A project with micro-frontend technology could be considered as a *molecule* application, and the sub-applications that constitute with framework to form the whole project, could be considered as *atom* applications. That is, the whole project is a molecule consisted with poly atoms, that is why we named our micro-frontend technology as *Polyatomic*
+A project with micro-frontend technology could be considered as a *molecule* application, and the sub-applications that constitute with framework to form the whole project, could be considered as *atom* applications. That is, the whole project is a molecule consisted with poly atoms, that is why we named our micro-frontend technology as *Destruction*
 
-### How Does Polyatomic Works
+### How Does Destruction Works
 
-To get understand of how it works, here we put an image to show the main processes of what will Polyatomic do when starting a micro-frontend-powered application:
+To get understand of how it works, here we put an image to show the main processes of what will Destruction do when starting a micro-frontend-powered application:
 
-![polyatomic](_media/polyatomic.svg)
+![destruction](_media/destruction.svg)
 
-Sandbox is the core of Polyatomic, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the route configuration for this application. Then it would load sandbox with the top-level route path. For example, if a user request a route like `https://foo.com/bar/baz` while base path was set as `http://foo.com/`, if `/bar` hits the route config and there is no sandbox with the same path exist in sandboxes map, Polyatomic will create a new sandbox to load resources, and take snapshots from `window` and `document.head`. If `/bar` matches one of the sandbox in sandboxes map, Polyatomic will use that sandbox and restore the snapshots to `window` and `document.head`.
+Sandbox is the core of Destruction, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the route configuration for this application. Then it would load sandbox with the top-level route path. For example, if a user request a route like `https://foo.com/bar/baz` while base path was set as `http://foo.com/`, if `/bar` hits the route config and there is no sandbox with the same path exist in sandboxes map, Destruction will create a new sandbox to load resources, and take snapshots from `window` and `document.head`. If `/bar` matches one of the sandbox in sandboxes map, Destruction will use that sandbox and restore the snapshots to `window` and `document.head`.
 
-It is worth paying attention that Polyatomic will only match the first level of the route: if get a path like `/bar/baz`, it will only take `/bar` to find a matching route config. Downward routes, like `/baz`, would be taken over by sub-applications.
+It is worth paying attention that Destruction will only match the first level of the route: if get a path like `/bar/baz`, it will only take `/bar` to find a matching route config. Downward routes, like `/baz`, would be taken over by sub-applications.
 
 After finishing loading resources, sandbox will execute the bundle by `new Function()`, and the other resources by appending child nodes into targeted parent nodes.
 
-Polyatomic uses `history` to manage the top level routes, especially listen route changes. All the route and sandbox changes would be managed by `history` listener.
+Destruction uses `history` to manage the top level routes, especially listen route changes. All the route and sandbox changes would be managed by `history` listener.
 
 When the top level route changing, the former sandbox will unmount, then mount next sandbox with the new path. The `loading`, `loaded`, `mounted`, `beforeUnmount` and `umounted` lifecycle hooks will be triggered when changing route.
 
-Polyatomic overwrites `Element.prototype.appendChild` to prevent appending duplicated element to document, and overwrites `Window.prototype.addEventListener` to record the listeners that are created by sandboxes, for cleaning the listeners when umounting current sandbox.
+Destruction overwrites `Element.prototype.appendChild` to prevent appending duplicated element to document, and overwrites `Window.prototype.addEventListener` to record the listeners that are created by sandboxes, for cleaning the listeners when umounting current sandbox.
 
 ### Features
 
-All the features are updated in [here](https://github.com/lenconda/polyatomic/tree/docs#features)
+All the features are updated in [here](https://github.com/lenconda/destruction/tree/docs#features)
 
 ## Quick Start
 
@@ -78,7 +78,7 @@ All the features are updated in [here](https://github.com/lenconda/polyatomic/tr
 
 ### Framework
 
-The simplest HTML structure Polyatomic required is:
+The simplest HTML structure Destruction required is:
 
 ```html
 <!DOCTYPE html>
@@ -93,30 +93,30 @@ The simplest HTML structure Polyatomic required is:
 </html>
 ```
 
-Route links that could be intercepted by Polyatomic should be added a `data-p-link` attribute:
+Route links that could be intercepted by Destruction should be added a `data-p-link` attribute:
 
 In HTML/Vue template/JSX:
 
 ```html
-<!-- It will be intercepted by Polyatomic -->
+<!-- It will be intercepted by Destruction -->
 <a href="/foo" data-p-link>Foo</a>
 
-<!-- It will not be intercepted by Polyatomic, just jump to /foo/index.html -->
+<!-- It will not be intercepted by Destruction, just jump to /foo/index.html -->
 <a href="/foo"></a>
 ```
 
-Import Polyatomic in your framework:
+Import Destruction in your framework:
 
 ```javascript
-import Polyatomic from '/path/to/polyatomic';
+import Destruction from '/path/to/destruction';
 // or by UMD
-<script src="/path/to/polyatomic.min.js"></script>
+<script src="/path/to/destruction.min.js"></script>
 ```
 
 Initialize the framework application with:
 
 ```javascript
-const app = new Polyatomic('root');
+const app = new Destruction('root');
 ```
 
 `root` is the mount point ID which sub-applications will mount onto.
@@ -170,7 +170,7 @@ app.run();
 
 ### Sub Application
 
-Since Polyatomic is low invasive, we can just make a few modifications on sub-applications. The simplest change to make sub-applications work is changing bundle prefix. For example, if using Webpack as bundler, just:
+Since Destruction is low invasive, we can just make a few modifications on sub-applications. The simplest change to make sub-applications work is changing bundle prefix. For example, if using Webpack as bundler, just:
 
 ```javascript
 module.exports = {

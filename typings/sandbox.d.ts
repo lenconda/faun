@@ -1,5 +1,5 @@
 import { noop } from 'lodash';
-import { ISubApplicationConfig } from './polyatomic';
+import { ISubApplicationConfig } from './destruction';
 
 export interface ISandbox {
   readonly domSnapshot: string;

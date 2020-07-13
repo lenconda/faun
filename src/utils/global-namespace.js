@@ -24,6 +24,6 @@ export const setGlobalObject = (key, value) => {
  * @returns {*}
  */
 export const getGlobalObject = key => {
-  const polyatomic = window[NAMESPACE];
-  return polyatomic && polyatomic[key] ? polyatomic[key] : null;
+  const destruction = window[NAMESPACE];
+  return destruction && destruction[key] ? destruction[key] : null;
 };

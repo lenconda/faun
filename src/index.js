@@ -3,5 +3,5 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import Polyatomic from './polyatomic';
-export default Polyatomic;
+import Destruction from './destruction';
+export default Destruction;

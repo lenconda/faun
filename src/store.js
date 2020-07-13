@@ -22,7 +22,7 @@ function Store() {
    */
   this.set = function(key, value) {
     if (typeof key !== 'string' && typeof key !== 'object') {
-      return console.error('[Polyatomic] Param `key` must be a string or an object');
+      return console.error('[Destruction] Param `key` must be a string or an object');
     }
 
     if (isObject(key)) {
@@ -30,7 +30,7 @@ function Store() {
         const currentValue = key[k];
 
         if (!currentValue) {
-          return console.error('[Polyatomic] Param `value` is required');
+          return console.error('[Destruction] Param `value` is required');
         }
 
         Object.assign(store, { [k]: currentValue });
@@ -38,7 +38,7 @@ function Store() {
       });
     } else if (typeof key === 'string') {
       if (!value) {
-        return console.error('[Polyatomic] Param `value` is required');
+        return console.error('[Destruction] Param `value` is required');
       }
       Object.assign(store, { [key]: value });
       storeEvent.emit(key, value);

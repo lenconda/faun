@@ -1,13 +1,13 @@
-import { Polyatomic } from './polyatomic';
+import { Destruction } from './destruction';
 
-export default Polyatomic;
+export default Destruction;
 
 export {
   ISubApplications,
   IPlugin,
   IDependenceInfo,
   ISubApplicationConfig,
-} from './polyatomic';
+} from './destruction';
 export { IEvent } from './event';
 export { IHooks } from './hooks';
 export { ISandbox } from './sandbox';

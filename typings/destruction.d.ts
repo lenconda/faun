@@ -25,7 +25,7 @@ declare interface IPlugin {
   [key: string]: any;
 }
 
-export interface Polyatomic {
+export interface Destruction {
   readonly events: IEvent;
   readonly history: History<LocationState>;
   readonly hooks: IHooks;
@@ -37,4 +37,4 @@ export interface Polyatomic {
   addGlobalDependence: (name: string, dep: any) => void;
 }
 
-export const Polyatomic: PolyatomicConstructor;
+export const Destruction: PolyatomicConstructor;

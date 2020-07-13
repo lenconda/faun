@@ -1,5 +1,5 @@
 /**
- * @file polyatomic.js
+ * @file destruction.js
  * @author lenconda<i@lenconda.top>
  */
 
@@ -16,9 +16,9 @@ import Store from './plugins/store';
 /**
  * @class
  * @constructor
- * Constructor of Polyatomic
+ * Constructor of Destruction
  */
-function Polyatomic() {
+function Destruction() {
   // defines the application properties
   // which will be passed when `run` and `registerSubApplications` is called
   const props = {
@@ -65,29 +65,29 @@ function Polyatomic() {
 }
 
 /**
- * use a Polyatomic plugin
+ * use a Destruction plugin
  * the plugin should contain an `install` method
  * @param {Object} plugin
  * @param {Object|null} options
  */
-Polyatomic.use = async function(plugin, options) {
+Destruction.use = async function(plugin, options) {
   if (!plugin) {
     return;
   }
 
   if (!plugin.install || typeof plugin.install !== 'function') {
-    return console.error('[Polyatomic] Plugin should have an `install` method, which is a instance of `Function`');
+    return console.error('[Destruction] Plugin should have an `install` method, which is a instance of `Function`');
   }
 
-  await plugin.install(Polyatomic, options);
+  await plugin.install(Destruction, options);
 };
 
 /**
- * call `history` with Polyatomic.history or app.history or this.history
+ * call `history` with Destruction.history or app.history or this.history
  * use browser history instead of hash history for sub-applications would be a hash-routed application
  * @type {History<LocationState>}
  */
-Polyatomic.prototype.history = Polyatomic.history = createBrowserHistory();
+Destruction.prototype.history = Destruction.history = createBrowserHistory();
 
 /**
  * create the lifecycle hooks of the application
@@ -96,11 +96,11 @@ Polyatomic.prototype.history = Polyatomic.history = createBrowserHistory();
  * @public
  * @type {Proxy}
  */
-Polyatomic.prototype.hooks = createHooks();
+Destruction.prototype.hooks = createHooks();
 
 // install plugin `Events`
-Polyatomic.use(Events);
+Destruction.use(Events);
 // install plugin `Store`
-Polyatomic.use(Store);
+Destruction.use(Store);
 
-export default Polyatomic;
+export default Destruction;

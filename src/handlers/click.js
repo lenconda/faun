@@ -23,7 +23,7 @@ export const handleClick = function(event, props, history) {
     if (currentRouteResources) {
       history.push(`${currentRoutePathname}${currentRouteSearch}`, generateRandomString());
     } else {
-      throw new ReferenceError(`[Polyatomic] Cannot find current route resources: ${currentRoutePathname}`);
+      throw new ReferenceError(`[Destruction] Cannot find current route resources: ${currentRoutePathname}`);
     }
 
     event.preventDefault();

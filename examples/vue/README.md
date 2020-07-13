@@ -1,4 +1,4 @@
-# polyatomic-vue-module
+# destruction-vue-module
 
 > A Vue.js project
 
