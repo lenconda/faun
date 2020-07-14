@@ -19,12 +19,12 @@ export default function() {
     set: function(target, property, value, receiver) {
       // check if the hook name is in _HOOKS
       if (_HOOKS.indexOf(property) === -1) {
-        throw new ReferenceError(`[Destruction] Hook with name \`${property}\` is not allowed`);
+        throw new ReferenceError(`[Faun] Hook with name \`${property}\` is not allowed`);
       }
 
       // check the value is a function or not
       if (!isFunction(value)) {
-        throw new TypeError('[Destruction] A hook should be a function');
+        throw new TypeError('[Faun] A hook should be a function');
       }
 
       Reflect.set(target, property, value);

@@ -15,8 +15,8 @@ if (!store) {
   setGlobalObject(storeNamespace, store);
 }
 
-export const install = async function(Destruction) {
-  Destruction.prototype.store = store;
+export const install = async function(Faun) {
+  Faun.prototype.store = store;
 };
 
 export default {

@@ -1,17 +1,15 @@
-# Destruction
+# Faun
 
 ![Travis Build](https://img.shields.io/travis/lenconda/destruction)
 ![License](https://img.shields.io/github/license/lenconda/destruction)
 ![GitHub Version](https://img.shields.io/github/package-json/v/lenconda/destruction)
 
 
-`Destruction` is a light-weight library to easily make [micro-frontend](https://micro-frontends.org/) applications.
+`Faun` is a light-weight library to easily make [micro-frontend](https://micro-frontends.org/) applications.
 
 ## Introduction
 
-`Destruction` means an object composed with multiple atoms, which is called *molecule*. The molecule could be divided into multiple atoms, and atoms could work relatively dependently.
-
-Therefore, if we treat a huge front-end application as a molecule application, we can just make several atomic applications, and then gather them together with some proper combinations and make it sense to constitute the molecule application. It is what [micro-frontend](https://micro-frontends.org/) aims for.
+If we treat a huge front-end application as a molecule application, we can just make several atomic applications, and then gather them together with some proper combinations and make it sense to constitute the molecule application. It is what [micro-frontend](https://micro-frontends.org/) aims for.
 
 Yet, when we trying to break down a huge application into several independent sub-applications, we might stuck in trouble with some annoying problems, such as:
 
@@ -22,9 +20,9 @@ Yet, when we trying to break down a huge application into several independent su
   - When route changes, what should be load, and what should be unload
   - How to clean up the global variables, event listeners, and so on
 
-To avoid making the rules for every applications repeatedly, we made a common rule for building micro-frontend applications, and abstracted them into a library, named `Destruction`.
+To avoid making the rules for every applications repeatedly, we made a common rule for building micro-frontend applications, and abstracted them into a library, named `Faun`.
 
-> [NOTE] `Destruction` is only an implementation of the rules we made and the definition from [Micro Frontend](https://micro-frontends.org/), which does not mean `Destruction` could be used as a production-ready micro-frontend framework.
+> [NOTE] `Faun` is only an implementation of the rules we made and the definition from [Micro Frontend](https://micro-frontends.org/), which does not mean `Faun` could be used as a production-ready micro-frontend framework.
 
 ## Features
 
@@ -134,4 +132,4 @@ Grazie to all contributors!
 
 ## License
 
-`Destruction` is licensed under [WTFPL](LICENSE).
+`Faun` is licensed under [WTFPL](LICENSE).

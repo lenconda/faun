@@ -3,5 +3,5 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import Destruction from './destruction';
-export default Destruction;
+import Faun from './faun';
+export default Faun;

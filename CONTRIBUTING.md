@@ -8,7 +8,7 @@ We are grateful for your selfless contribution to the project. We hope that cont
 - Suggestions for new feature(s)
 - Becoming a maintainer (for this project)
 
-The following content is a serial of guidelines for contributing to `Destruction`. Before starting your work, you are supposed to read the following advice:
+The following content is a serial of guidelines for contributing to `Faun`. Before starting your work, you are supposed to read the following advice:
 
 - Understand what changes you want to make
 - Look through the issue list and check if there's an issue to solve the same problem

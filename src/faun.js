@@ -1,5 +1,5 @@
 /**
- * @file destruction.js
+ * @file faun.js
  * @author lenconda<i@lenconda.top>
  */
 
@@ -16,9 +16,9 @@ import Store from './plugins/store';
 /**
  * @class
  * @constructor
- * Constructor of Destruction
+ * Constructor of Faun
  */
-function Destruction() {
+function Faun() {
   // defines the application properties
   // which will be passed when `run` and `registerSubApplications` is called
   const props = {
@@ -65,29 +65,29 @@ function Destruction() {
 }
 
 /**
- * use a Destruction plugin
+ * use a Faun plugin
  * the plugin should contain an `install` method
  * @param {Object} plugin
  * @param {Object|null} options
  */
-Destruction.use = async function(plugin, options) {
+Faun.use = async function(plugin, options) {
   if (!plugin) {
     return;
   }
 
   if (!plugin.install || typeof plugin.install !== 'function') {
-    return console.error('[Destruction] Plugin should have an `install` method, which is a instance of `Function`');
+    return console.error('[Faun] Plugin should have an `install` method, which is a instance of `Function`');
   }
 
-  await plugin.install(Destruction, options);
+  await plugin.install(Faun, options);
 };
 
 /**
- * call `history` with Destruction.history or app.history or this.history
+ * call `history` with Faun.history or app.history or this.history
  * use browser history instead of hash history for sub-applications would be a hash-routed application
  * @type {History<LocationState>}
  */
-Destruction.prototype.history = Destruction.history = createBrowserHistory();
+Faun.prototype.history = Faun.history = createBrowserHistory();
 
 /**
  * create the lifecycle hooks of the application
@@ -96,11 +96,11 @@ Destruction.prototype.history = Destruction.history = createBrowserHistory();
  * @public
  * @type {Proxy}
  */
-Destruction.prototype.hooks = createHooks();
+Faun.prototype.hooks = createHooks();
 
 // install plugin `Events`
-Destruction.use(Events);
+Faun.use(Events);
 // install plugin `Store`
-Destruction.use(Store);
+Faun.use(Store);
 
-export default Destruction;
+export default Faun;

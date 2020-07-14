@@ -17,7 +17,7 @@ const babelOpts = {
 };
 
 function generateBanner() {
-  return `/* destruction@${packageJson.version} */`;
+  return `/* faun@${packageJson.version} */`;
 }
 
 Object.assign(babelOpts, originalBabelConfig);
@@ -26,9 +26,9 @@ module.exports = [
   {
     input: resolveFile('src/index.js'),
     output: {
-      file: resolveFile('dist/destruction.min.js'),
+      file: resolveFile('dist/faun.min.js'),
       format: 'umd',
-      name: 'Destruction',
+      name: 'Faun',
       banner: generateBanner(),
     },
     plugins: [

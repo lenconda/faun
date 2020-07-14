@@ -1,13 +1,13 @@
-import { Destruction } from './destruction';
+import { Faun } from './faun';
 
-export default Destruction;
+export default Faun;
 
 export {
   ISubApplications,
   IPlugin,
   IDependenceInfo,
   ISubApplicationConfig,
-} from './destruction';
+} from './faun';
 export { IEvent } from './event';
 export { IHooks } from './hooks';
 export { ISandbox } from './sandbox';
