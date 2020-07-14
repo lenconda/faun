@@ -15,8 +15,8 @@ if (!events) {
   setGlobalObject(eventsNamespace, events);
 }
 
-export const install = async function(Polyatomic) {
-  Polyatomic.prototype.events = events;
+export const install = async function(Faun) {
+  Faun.prototype.events = events;
 };
 
 export default {

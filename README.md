@@ -1,17 +1,15 @@
-# Polyatomic
+# Faun
 
-![Travis Build](https://img.shields.io/travis/lenconda/polyatomic)
-![License](https://img.shields.io/github/license/lenconda/polyatomic)
-![GitHub Version](https://img.shields.io/github/package-json/v/lenconda/polyatomic)
+![Travis Build](https://img.shields.io/travis/lenconda/destruction)
+![License](https://img.shields.io/github/license/lenconda/destruction)
+![GitHub Version](https://img.shields.io/github/package-json/v/lenconda/destruction)
 
 
-`Polyatomic` is a light-weight library to easily make [micro-frontend](https://micro-frontends.org/) applications.
+`Faun` is a light-weight library to easily make [micro-frontend](https://micro-frontends.org/) applications.
 
 ## Introduction
 
-`Polyatomic` means an object composed with multiple atoms, which is called *molecule*. The molecule could be divided into multiple atoms, and atoms could work relatively dependently.
-
-Therefore, if we treat a huge front-end application as a molecule application, we can just make several atomic applications, and then gather them together with some proper combinations and make it sense to constitute the molecule application. It is what [micro-frontend](https://micro-frontends.org/) aims for.
+If we treat a huge front-end application as a molecule application, we can just make several atomic applications, and then gather them together with some proper combinations and make it sense to constitute the molecule application. It is what [micro-frontend](https://micro-frontends.org/) aims for.
 
 Yet, when we trying to break down a huge application into several independent sub-applications, we might stuck in trouble with some annoying problems, such as:
 
@@ -22,9 +20,9 @@ Yet, when we trying to break down a huge application into several independent su
   - When route changes, what should be load, and what should be unload
   - How to clean up the global variables, event listeners, and so on
 
-To avoid making the rules for every applications repeatedly, we made a common rule for building micro-frontend applications, and abstracted them into a library, named `Polyatomic`.
+To avoid making the rules for every applications repeatedly, we made a common rule for building micro-frontend applications, and abstracted them into a library, named `Faun`.
 
-> [NOTE] `Polyatomic` is only an implementation of the rules we made and the definition from [Micro Frontend](https://micro-frontends.org/), which does not mean `Polyatomic` could be used as a production-ready micro-frontend framework.
+> [NOTE] `Faun` is only an implementation of the rules we made and the definition from [Micro Frontend](https://micro-frontends.org/), which does not mean `Faun` could be used as a production-ready micro-frontend framework.
 
 ## Features
 
@@ -50,13 +48,13 @@ Coming soon...
 To run the project and the examples, you should clone the repository from GitHub:
 
 ```bash
-$ git clone https://github.com/lenconda/polyatomic.git
+$ git clone https://github.com/lenconda/destruction.git
 ```
 
 Then install the dependencies. The repository's dependencies are managed by `npm`:
 
 ```bash
-$ cd polyatomic
+$ cd destruction
 $ npm i
 ```
 
@@ -120,7 +118,7 @@ Coming soon...
 
 ## Contributing
 
-Just tell us what can we do for you! Before contributing, please check the [Issues](https://github.com/lenconda/polyatomic/issues) first for existing bugs and/or suggestions.
+Just tell us what can we do for you! Before contributing, please check the [Issues](https://github.com/lenconda/destruction/issues) first for existing bugs and/or suggestions.
 
 Want to be a contributor? Please refer to our [Contribution Guide](CONTRIBUTING.md).
 
@@ -134,4 +132,4 @@ Grazie to all contributors!
 
 ## License
 
-`Polyatomic` is licensed under [WTFPL](LICENSE).
+`Faun` is licensed under [WTFPL](LICENSE).

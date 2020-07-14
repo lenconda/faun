@@ -17,7 +17,7 @@ const babelOpts = {
 };
 
 function generateBanner() {
-  return `/* polyatomic@${packageJson.version} */`;
+  return `/* faun@${packageJson.version} */`;
 }
 
 Object.assign(babelOpts, originalBabelConfig);
@@ -26,9 +26,9 @@ module.exports = [
   {
     input: resolveFile('src/index.js'),
     output: {
-      file: resolveFile('dist/polyatomic.min.js'),
+      file: resolveFile('dist/faun.min.js'),
       format: 'umd',
-      name: 'Polyatomic',
+      name: 'Faun',
       banner: generateBanner(),
     },
     plugins: [

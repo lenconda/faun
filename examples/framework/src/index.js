@@ -1,7 +1,7 @@
-import Polyatomic from '../../../src';
+import Faun from '../../../src';
 import axios from 'axios';
 
-const app = new Polyatomic();
+const app = new Faun();
 
 app.addGlobalDependence('axios', axios);
 

@@ -1,10 +1,10 @@
 <!-- _coverpage.md -->
 
-# polyatomic
+# destruction
 
 > 📦 Fast, light-weight library for building micro-frontend apps.
 
-[GitHub](https://github.com/lenconda/polyatomic/)
+[GitHub](https://github.com/lenconda/destruction/)
 [Get Started](/guide)
 
 ![color](#ffffff)

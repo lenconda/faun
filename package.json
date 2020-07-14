@@ -1,5 +1,5 @@
 {
-  "name": "polyatomic",
+  "name": "destruction",
   "version": "0.0.1",
   "description": "A more simple way to make micro front-end apps",
   "main": "src/index.js",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lenconda/polyatomic.git"
+    "url": "git+https://github.com/lenconda/destruction.git"
   },
   "files": [
     "src",
@@ -32,14 +32,14 @@
   "author": "lenconda",
   "license": "WTFPL",
   "bugs": {
-    "url": "https://github.com/lenconda/polyatomic/issues"
+    "url": "https://github.com/lenconda/destruction/issues"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"
     }
   },
-  "homepage": "https://github.com/lenconda/polyatomic#readme",
+  "homepage": "https://github.com/lenconda/destruction#readme",
   "dependencies": {
     "css": "^3.0.0",
     "history": "^4.10.1",

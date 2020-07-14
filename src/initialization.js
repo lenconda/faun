@@ -36,18 +36,18 @@ export const initRoute = function(location, callback) {
  */
 export const initGlobalDependencies = function(deps) {
   if (!Array.isArray) {
-    throw new TypeError('[Polyatomic] Param `deps` should be an array');
+    throw new TypeError('[Faun] Param `deps` should be an array');
   }
 
   const globalDeps = deps.reduce((current, next) => {
     const { name, dep } = next;
 
     if (!name || !dep || typeof name !== 'string') {
-      throw new TypeError('[Polyatomic] Params is in a wrong type');
+      throw new TypeError('[Faun] Params is in a wrong type');
     }
 
     if (window[name]) {
-      throw new ReferenceError(`[Polyatomic] Dependence \`${name}\` already exist on \`window\``);
+      throw new ReferenceError(`[Faun] Dependence \`${name}\` already exist on \`window\``);
     }
 
     current[name] = dep;

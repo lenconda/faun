@@ -8,7 +8,7 @@ We are grateful for your selfless contribution to the project. We hope that cont
 - Suggestions for new feature(s)
 - Becoming a maintainer (for this project)
 
-The following content is a serial of guidelines for contributing to `Polyatomic`. Before starting your work, you are supposed to read the following advice:
+The following content is a serial of guidelines for contributing to `Faun`. Before starting your work, you are supposed to read the following advice:
 
 - Understand what changes you want to make
 - Look through the issue list and check if there's an issue to solve the same problem
@@ -54,7 +54,7 @@ The follow tips help you get familiar to make a Pull Request:
 
 ## Report Bugs and Suggestions Using Issues
 
-We are using [Issues](https://github.com/lenconda/polyatomic/issues) to track bugs and suggestions. As mentioned above, before starting your work, please check [Issues](https://github.com/lenconda/polyatomic/issues) first. Known bugs, problems and coming, under-developing features would possibly shown in issues.
+We are using [Issues](https://github.com/lenconda/destruction/issues) to track bugs and suggestions. As mentioned above, before starting your work, please check [Issues](https://github.com/lenconda/destruction/issues) first. Known bugs, problems and coming, under-developing features would possibly shown in issues.
 
 ## Bug Reports Should be Readable
 

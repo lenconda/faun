@@ -3,5 +3,5 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import Polyatomic from './polyatomic';
-export default Polyatomic;
+import Faun from './faun';
+export default Faun;
