@@ -54,7 +54,7 @@ The follow tips help you get familiar to make a Pull Request:
 
 ## Report Bugs and Suggestions Using Issues
 
-We are using [Issues](https://github.com/lenconda/destruction/issues) to track bugs and suggestions. As mentioned above, before starting your work, please check [Issues](https://github.com/lenconda/destruction/issues) first. Known bugs, problems and coming, under-developing features would possibly shown in issues.
+We are using [Issues](https://github.com/lenconda/faun/issues) to track bugs and suggestions. As mentioned above, before starting your work, please check [Issues](https://github.com/lenconda/faun/issues) first. Known bugs, problems and coming, under-developing features would possibly shown in issues.
 
 ## Bug Reports Should be Readable
 
