@@ -1,4 +1,4 @@
-# destruction-vue-module
+# faun-vue-module
 
 > A Vue.js project
 

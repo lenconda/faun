@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-const NAMESPACE = 'POLYATOMIC';
+const NAMESPACE = '@@__FAUN__';
 
 /**
  * set a global object with namespace
@@ -24,6 +24,6 @@ export const setGlobalObject = (key, value) => {
  * @returns {*}
  */
 export const getGlobalObject = key => {
-  const destruction = window[NAMESPACE];
-  return destruction && destruction[key] ? destruction[key] : null;
+  const faun = window[NAMESPACE];
+  return faun && faun[key] ? faun[key] : null;
 };

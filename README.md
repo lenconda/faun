@@ -1,8 +1,8 @@
 # Faun
 
-![Travis Build](https://img.shields.io/travis/lenconda/destruction)
-![License](https://img.shields.io/github/license/lenconda/destruction)
-![GitHub Version](https://img.shields.io/github/package-json/v/lenconda/destruction)
+![Travis Build](https://img.shields.io/travis/lenconda/faun)
+![License](https://img.shields.io/github/license/lenconda/faun)
+![GitHub Version](https://img.shields.io/github/package-json/v/lenconda/faun)
 
 
 `Faun` is a light-weight library to easily make [micro-frontend](https://micro-frontends.org/) applications.
@@ -48,13 +48,13 @@ Coming soon...
 To run the project and the examples, you should clone the repository from GitHub:
 
 ```bash
-$ git clone https://github.com/lenconda/destruction.git
+$ git clone https://github.com/lenconda/faun.git
 ```
 
 Then install the dependencies. The repository's dependencies are managed by `npm`:
 
 ```bash
-$ cd destruction
+$ cd faun
 $ npm i
 ```
 
@@ -118,7 +118,7 @@ Coming soon...
 
 ## Contributing
 
-Just tell us what can we do for you! Before contributing, please check the [Issues](https://github.com/lenconda/destruction/issues) first for existing bugs and/or suggestions.
+Just tell us what can we do for you! Before contributing, please check the [Issues](https://github.com/lenconda/faun/issues) first for existing bugs and/or suggestions.
 
 Want to be a contributor? Please refer to our [Contribution Guide](CONTRIBUTING.md).
 
