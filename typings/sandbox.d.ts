@@ -14,7 +14,6 @@ export interface ISandbox {
   readonly styleElements: Array<HTMLElement>;
   readonly disableRewriteEventListeners: () => typeof noop;
 
-  // takeDOMSnapshot: () => void;
   restoreDOMSnapshot: () => void;
   takeWindowSnapshot: () => void;
   restoreWindowSnapshot: () => void;
