@@ -124,6 +124,8 @@ app.registerModules({
       '//localhost:8181/app.js',
     ],
     styles: [],
+    mountPointID: 'app',
+    useCSSPrefix: false,
   },
   '/react': {
     scripts: [
@@ -133,6 +135,7 @@ app.registerModules({
     styles: [
       '//localhost:8182/static/css/main.css',
     ],
+    mountPointID: 'root',
   },
 });
 ```
