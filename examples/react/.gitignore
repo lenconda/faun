@@ -15,7 +15,4 @@ node_modules
 # macOS file
 .DS_Store
 
-# production
 dist
-
-report

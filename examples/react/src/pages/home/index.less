@@ -1,0 +1,27 @@
+@import '../../global.less';
+
+.navigation {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  & > div {
+    text-align: center;
+  }
+
+  a {
+    display: inline-block;
+    font-size: 14px;
+    color: #333;
+    margin: 15px;
+    text-align: center;
+    text-decoration: none;
+    transition: all @transition-duration;
+
+    &:hover {
+      transform: scale(1.2);
+      transition: all @transition-duration;
+    }
+  }
+}
