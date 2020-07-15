@@ -10,7 +10,7 @@ export default function() {
     overwriteAppendChild(domSnapshot) {
       Element.prototype.appendChild = function(element) {
         const nodeName = element.nodeName;
-        if (/^STYLE$|^SCRIPT$|^LINK/.test(nodeName)) {
+        if (/^STYLE$|^SCRIPT$|^LINK$/.test(nodeName)) {
           domSnapshot && domSnapshot.push(element);
         }
         return appendChild.call(this, element);

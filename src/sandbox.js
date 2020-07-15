@@ -17,10 +17,11 @@ const appendChildManager = appendChildOverwrites();
 /**
  * sandbox constructor
  * @class
- * @param name
+ * @param {string} name
+ * @param {boolean} usePrefix
  * @constructor
  */
-function Sandbox(name) {
+function Sandbox(name, usePrefix = true) {
   this.domSnapshot = [];
   this.mountPoint = null;
   this.mountPointID = '';
@@ -36,6 +37,7 @@ function Sandbox(name) {
   this.styleElements = [];
   this.disableRewriteEventListeners = null;
   this.rootElement = document.getElementsByTagName('html')[0];
+  this.usePrefix = usePrefix;
 }
 
 /**
@@ -90,7 +92,6 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
  * create sandbox when passing a sub-application config
  * @public
  * @param {ISubApplicationConfig} subApplicationConfig
- * @param {string} key
  * @returns {Promise<void>}
  */
 Sandbox.prototype.create = async function(subApplicationConfig) {
@@ -121,9 +122,9 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
       // make an ajax to load styles
       const data = await fetch(stylesURL);
       if (data) {
-        const prefixedData = cssPrefix(data, this.prefix);
+        const styleData = this.usePrefix ? cssPrefix(data, this.prefix) : data;
         const currentStyleElement = createElement('style', { type: 'text/css' });
-        currentStyleElement.innerHTML = prefixedData;
+        currentStyleElement.innerHTML = styleData;
         this.styleElements.push(currentStyleElement);
       }
     }
@@ -136,7 +137,7 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
  */
 Sandbox.prototype.mount = function() {
   appendChildManager.overwriteAppendChild(this.domSnapshot);
-  this.rootElement.classList = [...this.rootElement.classList, this.prefix].join(' ');
+  this.usePrefix && (this.rootElement.classList = [...this.rootElement.classList, this.prefix].join(' '));
   this.disableRewriteEventListeners = overwriteEventListeners();
 
   const checkExistElement = document.getElementById(this.mountPointID);
@@ -165,7 +166,7 @@ Sandbox.prototype.mount = function() {
 Sandbox.prototype.unmount = function() {
   const currentMountPointElement = document.getElementById(this.mountPointID);
   currentMountPointElement && currentMountPointElement.remove();
-  this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' ');
+  this.usePrefix && (this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' '));
   this.takeWindowSnapshot();
   this.disableRewriteEventListeners && this.disableRewriteEventListeners();
   appendChildManager.restoreAppendChild();

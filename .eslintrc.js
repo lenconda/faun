@@ -1,13 +1,13 @@
 module.exports = {
   extends: [
     'alloy',
-    'alloy/typescript'
+    'alloy/typescript',
   ],
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
   },
   plugins: ['jest'],
@@ -17,7 +17,7 @@ module.exports = {
   rules: {
     indent: [
       'error',
-      2
+      2,
     ],
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/explicit-member-accessibility': 'off',

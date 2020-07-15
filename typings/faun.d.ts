@@ -9,6 +9,7 @@ declare interface ISubApplicationConfig {
   scripts: Array<string>;
   styles: Array<string>;
   mountPointID: string;
+  useCSSPrefix?: boolean;
 }
 
 declare interface IDependenceInfo {
