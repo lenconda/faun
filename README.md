@@ -102,9 +102,9 @@ You just open the browser and visit the framework's address.
 
 ## Todo
 
-- [ ] Global key-value storage support
+- [x] Global key-value storage support
 - [ ] More lifecycle hooks integration
-- [ ] Custom plugins support
+- [x] Custom plugins support
 - [ ] Global interceptors support
 - [ ] Development kit support
 
