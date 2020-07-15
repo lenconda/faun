@@ -2,8 +2,8 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <ul>
-      <li><router-link to="/foo">/foo</router-link></li>
-      <li><router-link to="/bar">/bar</router-link></li>
+      <li><router-link to="/vue/foo">/foo</router-link></li>
+      <li><router-link to="/vue/bar">/bar</router-link></li>
     </ul>
     <router-view></router-view>
   </div>

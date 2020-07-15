@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './App.less';
 import history from './utils/route';
-import { Router, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route, Link } from 'react-router-dom';
 
 import HomePage from './pages/home';
 import FooPage from './pages/foo';
@@ -9,7 +9,7 @@ import BarPage from './pages/bar';
 
 const App: React.FC = () => {
   return (
-    <>
+    <Router history={history}>
       <h1 className={styles.title}>React.js App</h1>
       <svg xmlns="http://www.w3.org/2000/svg" height="200" viewBox="175.7 78 490.6 436.9" width="200">
         <g fill="#61dafb">
@@ -18,17 +18,15 @@ const App: React.FC = () => {
         </g>
       </svg>
       <div>
-        <a href="#/foo">/foo</a>&nbsp;&nbsp;
-        <a href="#/bar">/bar</a>
+        <Link to="/react/foo">/foo</Link>&nbsp;&nbsp;
+        <Link to="/react/bar">/foo</Link>
       </div>
-      <Router history={history}>
-        <Switch>
-          <Route path="/" component={HomePage} exact />
-          <Route path="/foo" component={FooPage} />
-          <Route path="/bar" component={BarPage} />
-        </Switch>
-      </Router>
-    </>
+      <Switch>
+        <Route path="/" component={HomePage} exact />
+        <Route path="/react/foo" component={FooPage} />
+        <Route path="/react/bar" component={BarPage} />
+      </Switch>
+    </Router>
   );
 };
 

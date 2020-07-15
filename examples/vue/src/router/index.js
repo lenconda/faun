@@ -5,19 +5,20 @@ import Home from '@/views/Home';
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/vue',
       name: 'HelloWorld',
       component: Home,
       children: [
         {
-          path: '/foo',
+          path: '/vue/foo',
           name: 'Foo',
           component: () => import('@/views/Foo'),
         },
         {
-          path: '/bar',
+          path: '/vue/bar',
           name: 'Bar',
           component: () => import('@/views/Bar'),
         },
