@@ -14,7 +14,6 @@ import {
   unloadSubApplication,
 } from './loader';
 import { handleRouteChange, handleClick } from './handlers';
-import overwriteAppendChild from './overwrites/append-child';
 import './overwrites/direction';
 
 /**
