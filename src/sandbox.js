@@ -26,11 +26,8 @@ function Sandbox(name, usePrefix = true) {
   this.mountPoint = null;
   this.mountPointID = '';
   this.windowSnapshot = {};
-  this._modifyPropsMap = {};
-  this.proxy = window;
   this.name = name || '';
   this.prefix = random();
-  this.running = false;
   this.bundles = [];
   this.css = [];
   this.bundleExecutors = [];
@@ -38,6 +35,21 @@ function Sandbox(name, usePrefix = true) {
   this.disableRewriteEventListeners = null;
   this.rootElement = document.getElementsByTagName('html')[0];
   this.usePrefix = usePrefix;
+  this._modifyPropsMap = {};
+  this._observer = null;
+
+  if (!this._observer && !!MutationObserver) {
+    this._observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        const currentAddedNodes = mutation.addedNodes;
+        currentAddedNodes.forEach(node => {
+          if (node && /^style$|^link$|^script$/.test(node.nodeName.toLowerCase())) {
+            this.domSnapshot.push(node);
+          }
+        });
+      });
+    });
+  }
 }
 
 /**
@@ -65,8 +77,6 @@ Sandbox.prototype.takeWindowSnapshot = function() {
       window[prop] = this._modifyPropsMap[prop];
     }
   });
-
-  this.running = true;
 };
 
 /**
@@ -84,8 +94,6 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
       window[prop] = this.windowSnapshot[prop];
     }
   });
-
-  this.running = false;
 };
 
 /**
@@ -136,7 +144,17 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
  * @public
  */
 Sandbox.prototype.mount = function() {
-  appendChildManager.overwriteAppendChild(this.domSnapshot);
+  if (!MutationObserver) {
+    appendChildManager.overwriteAppendChild(this.domSnapshot);
+  } else {
+    this._observer && this._observer.observe(document.documentElement, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  // appendChildManager.overwriteAppendChild(this.domSnapshot);
   this.usePrefix && (this.rootElement.classList = [...this.rootElement.classList, this.prefix].join(' '));
   this.disableRewriteEventListeners = overwriteEventListeners();
 
@@ -169,9 +187,14 @@ Sandbox.prototype.unmount = function() {
   this.usePrefix && (this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' '));
   this.takeWindowSnapshot();
   this.disableRewriteEventListeners && this.disableRewriteEventListeners();
-  appendChildManager.restoreAppendChild();
   this.restoreDOMSnapshot();
   this.domSnapshot.splice(0, this.domSnapshot.length);
+
+  if (!MutationObserver) {
+    appendChildManager.restoreAppendChild();
+  } else {
+    this._observer && this._observer.disconnect && this._observer.disconnect();
+  }
 };
 
 export default Sandbox;
