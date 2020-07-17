@@ -6,7 +6,7 @@
 import Event from '../../event';
 import { setGlobalObject, getGlobalObject } from '../../utils/global-namespace';
 
-const eventsNamespace = '@@__POLYATOMIC_EVENTS__';
+const eventsNamespace = '__FAUN_EVENTS__';
 
 let events = getGlobalObject(eventsNamespace);
 
