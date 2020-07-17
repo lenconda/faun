@@ -6,7 +6,7 @@
 import Store from '../../store';
 import { setGlobalObject, getGlobalObject } from '../../utils/global-namespace';
 
-const storeNamespace = '@@__POLYATOMIC_STORE__';
+const storeNamespace = '__FAUN_STORE__';
 
 let store = getGlobalObject(storeNamespace);
 

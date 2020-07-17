@@ -44,6 +44,7 @@
     "css": "^3.0.0",
     "history": "^4.10.1",
     "lodash": "^4.17.15",
+    "mutation-observer": "^1.0.3",
     "unfetch": "^4.1.0"
   },
   "devDependencies": {
