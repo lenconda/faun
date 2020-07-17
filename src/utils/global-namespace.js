@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-const NAMESPACE = '@@__FAUN__';
+const NAMESPACE = '__FAUN__';
 
 /**
  * set a global object with namespace
