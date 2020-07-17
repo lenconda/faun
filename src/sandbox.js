@@ -10,9 +10,7 @@ import overwriteEventListeners from './overwrites/window-listeners';
 import createElement from './utils/create-element';
 import cssPrefix from './utils/css';
 import random from './utils/random';
-import appendChildOverwrites from './overwrites/append-child';
-
-const appendChildManager = appendChildOverwrites();
+import PolyfilledMutationObserver from 'mutation-observer';
 
 /**
  * sandbox constructor
@@ -38,8 +36,8 @@ function Sandbox(name, usePrefix = true) {
   this._modifyPropsMap = {};
   this._observer = null;
 
-  if (!this._observer && !!MutationObserver) {
-    this._observer = new MutationObserver(mutations => {
+  if (!this._observer) {
+    this._observer = new PolyfilledMutationObserver(mutations => {
       mutations.forEach(mutation => {
         const currentAddedNodes = mutation.addedNodes;
         currentAddedNodes.forEach(node => {
@@ -144,15 +142,11 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
  * @public
  */
 Sandbox.prototype.mount = function() {
-  if (!MutationObserver) {
-    appendChildManager.overwriteAppendChild(this.domSnapshot);
-  } else {
-    this._observer && this._observer.observe(document.documentElement, {
-      attributes: true,
-      childList: true,
-      subtree: true,
-    });
-  }
+  this._observer && this._observer.observe(document.documentElement, {
+    attributes: true,
+    childList: true,
+    subtree: true,
+  });
 
   // appendChildManager.overwriteAppendChild(this.domSnapshot);
   this.usePrefix && (this.rootElement.classList = [...this.rootElement.classList, this.prefix].join(' '));
@@ -189,12 +183,7 @@ Sandbox.prototype.unmount = function() {
   this.disableRewriteEventListeners && this.disableRewriteEventListeners();
   this.restoreDOMSnapshot();
   this.domSnapshot.splice(0, this.domSnapshot.length);
-
-  if (!MutationObserver) {
-    appendChildManager.restoreAppendChild();
-  } else {
-    this._observer && this._observer.disconnect && this._observer.disconnect();
-  }
+  this._observer && this._observer.disconnect && this._observer.disconnect();
 };
 
 export default Sandbox;
