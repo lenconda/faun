@@ -1,5 +1,5 @@
 <template>
-  <h1>Foo Route in Vue.js App</h1>
+  <h1 class="foo-title">Foo Route in Vue.js App</h1>
 </template>
 
 <script>
@@ -7,3 +7,10 @@
     name: 'Foo',
   }
 </script>
+
+<style scoped>
+.foo-title {
+  font-weight: bolder;
+  color: #666;
+}
+</style>

@@ -12,7 +12,6 @@ app.registerSubApplications({
     ],
     styles: [],
     mountPointID: 'app',
-    useCSSPrefix: false,
   },
   '/react': {
     scripts: [
