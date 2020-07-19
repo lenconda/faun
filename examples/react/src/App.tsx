@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import styles from './App.less';
 import history from './utils/route';
 import { Router, Switch, Route, Link } from 'react-router-dom';
 
 import HomePage from './pages/home';
-import FooPage from './pages/foo';
-import BarPage from './pages/bar';
+
+const FooPage = lazy(() => import('./pages/foo'));
+const BarPage = lazy(() => import('./pages/bar'));
 
 const App: React.FC = () => {
   return (
@@ -19,12 +20,14 @@ const App: React.FC = () => {
       </svg>
       <div>
         <Link to="/react/foo">/foo</Link>&nbsp;&nbsp;
-        <Link to="/react/bar">/foo</Link>
+        <Link to="/react/bar">/bar</Link>
       </div>
       <Switch>
-        <Route path="/" component={HomePage} exact />
-        <Route path="/react/foo" component={FooPage} />
-        <Route path="/react/bar" component={BarPage} />
+        <Suspense fallback={null}>
+          <Route path="/" component={HomePage} exact />
+          <Route path="/react/foo" component={FooPage} />
+          <Route path="/react/bar" component={BarPage} />
+        </Suspense>
       </Switch>
     </Router>
   );

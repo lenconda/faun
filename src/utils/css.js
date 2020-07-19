@@ -63,12 +63,16 @@ export default function(input, prefix) {
   }
 
   parsedStyleRules.stylesheet.rules.forEach(rule => {
+    if (rule.type !== 'rule') {
+      return rule;
+    }
+
     if (rule.parent && keyframeRules.includes(rule.parent.type)) {
       return rule;
     }
 
     rule.selectors = rule.selectors.map(selector => {
-      if (excludeSelector(selector, ['html', 'body'])) {
+      if (excludeSelector(selector, ['html', 'body', '*']) || selector.startsWith(`.${prefix}`)) {
         return selector;
       }
 
