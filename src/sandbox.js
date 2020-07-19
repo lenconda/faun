@@ -41,8 +41,13 @@ function Sandbox(name, usePrefix = true) {
       mutations.forEach(mutation => {
         const currentAddedNodes = mutation.addedNodes;
         currentAddedNodes.forEach(node => {
-          if (node && /^style$|^link$|^script$/.test(node.nodeName.toLowerCase())) {
+          const nodeName = node.nodeName.toLowerCase();
+          if (node && (nodeName === 'style' || nodeName === 'script' || nodeName === 'link')) {
             this.domSnapshot.push(node);
+
+            if (nodeName === 'style' && this.usePrefix) {
+              node.innerHTML = cssPrefix(node.innerHTML, this.prefix);
+            }
           }
         });
       });
