@@ -7,6 +7,10 @@ export default function() {
   const appendChild = Element.prototype.appendChild;
 
   return {
+    /**
+     * callback for new element
+     * @param {Function} callback
+     */
     intercept(callback) {
       Element.prototype.appendChild = function(element) {
         const nodeName = element.nodeName.toLowerCase();
