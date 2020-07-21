@@ -32,7 +32,7 @@ module.exports = [
       banner: generateBanner(),
     },
     plugins: [
-      resolve(),
+      resolve({ browser: true }),
       commonjs(),
       globals(),
       babel(babelOpts),

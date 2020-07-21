@@ -11,7 +11,7 @@ import createElement from './utils/create-element';
 import cssPrefix from './utils/css';
 import random from './utils/random';
 import PolyfilledMutationObserver from 'mutation-observer';
-import appendChildInterceptor from './overwrites/append-child';
+import childNodeOperator from './overwrites/child-operate';
 
 /**
  * sandbox constructor
@@ -37,7 +37,7 @@ function Sandbox(name, usePrefix = true) {
   this.assetURLMapper = url => url;
   this._modifyPropsMap = {};
   this._observer = null;
-  this._appendChildInterceptor = appendChildInterceptor();
+  this._childNodeOperator = childNodeOperator();
 
   if (!this._observer) {
     this._observer = new PolyfilledMutationObserver(mutations => {
@@ -155,7 +155,7 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
  */
 Sandbox.prototype.mount = function() {
   const _this = this;
-  this._appendChildInterceptor.intercept(function(element) {
+  this._childNodeOperator.intercept(function(element) {
     const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
     switch(nodeName) {
     case 'script': {
@@ -212,7 +212,7 @@ Sandbox.prototype.mount = function() {
  * @public
  */
 Sandbox.prototype.unmount = function() {
-  this._appendChildInterceptor.stop();
+  this._childNodeOperator.stop();
   const currentMountPointElement = document.getElementById(this.mountPointID);
   currentMountPointElement && currentMountPointElement.remove();
   this.usePrefix && (this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' '));
