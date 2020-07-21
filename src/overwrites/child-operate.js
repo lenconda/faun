@@ -3,10 +3,19 @@
  * @author lenconda<i@lenconda.top>
  */
 
+/**
+ * get node name
+ * @param {Node} node
+ */
 function getNodeName(node) {
   return node.nodeName && node.nodeName.toLowerCase() || '';
 }
 
+/**
+ * get processed element using processor
+ * @param {Element} element
+ * @param {Function} processor
+ */
 function getResultElement(element, processor) {
   const nodeName = getNodeName(element);
   if (/^script$|^link$/.test(nodeName)) {
@@ -19,6 +28,11 @@ function getResultElement(element, processor) {
   return element;
 }
 
+/**
+ * process a collection of elements or DOMStrings
+ * @param {...Array} collection
+ * @param {Function} processor
+ */
 function mapHTMLCollection(collection, processor) {
   const args = Array.from(collection);
   const results = args.map(arg => {
