@@ -12,6 +12,8 @@ app.registerSubApplications({
     ],
     styles: [],
     mountPointID: 'app',
+    useCSSPrefix: false,
+    assetURLMapper: url => `//localhost:8181${url}`,
   },
   '/react': {
     scripts: [
@@ -22,6 +24,7 @@ app.registerSubApplications({
       '//localhost:8182/static/css/main.css',
     ],
     mountPointID: 'root',
+    assetURLMapper: url => `//localhost:8182${url}`,
   },
 });
 

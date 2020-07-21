@@ -10,6 +10,7 @@ declare interface ISubApplicationConfig {
   styles: Array<string>;
   mountPointID: string;
   useCSSPrefix?: boolean;
+  assetURLMapper?: (url: string) => string;
 }
 
 declare interface IDependenceInfo {

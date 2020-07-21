@@ -11,6 +11,7 @@ import createElement from './utils/create-element';
 import cssPrefix from './utils/css';
 import random from './utils/random';
 import PolyfilledMutationObserver from 'mutation-observer';
+import appendChildInterceptor from './overwrites/append-child';
 
 /**
  * sandbox constructor
@@ -33,16 +34,18 @@ function Sandbox(name, usePrefix = true) {
   this.disableRewriteEventListeners = null;
   this.rootElement = document.getElementsByTagName('html')[0];
   this.usePrefix = usePrefix;
+  this.assetURLMapper = url => url;
   this._modifyPropsMap = {};
   this._observer = null;
+  this._appendChildInterceptor = appendChildInterceptor();
 
   if (!this._observer) {
     this._observer = new PolyfilledMutationObserver(mutations => {
       mutations.forEach(mutation => {
         const currentAddedNodes = mutation.addedNodes;
         currentAddedNodes.forEach(node => {
-          const nodeName = node.nodeName.toLowerCase();
-          if (node && (nodeName === 'style' || nodeName === 'script' || nodeName === 'link')) {
+          const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
+          if (node && /^style$|^script$|^link$/.test(nodeName)) {
             this.domSnapshot.push(node);
 
             if (nodeName === 'style' && this.usePrefix) {
@@ -106,9 +109,13 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
  * @returns {Promise<void>}
  */
 Sandbox.prototype.create = async function(subApplicationConfig) {
-  const { mountPointID } = subApplicationConfig;
+  const { mountPointID, assetURLMapper = null } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
+  }
+
+  if (assetURLMapper && typeof assetURLMapper === 'function') {
+    this.assetURLMapper = assetURLMapper;
   }
 
   this.mountPointID = mountPointID;
@@ -147,6 +154,30 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
  * @public
  */
 Sandbox.prototype.mount = function() {
+  const _this = this;
+  this._appendChildInterceptor.intercept(function(element) {
+    const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
+    switch(nodeName) {
+    case 'script': {
+      const src = element.getAttribute('src');
+      if (src) {
+        element.setAttribute('src', _this.assetURLMapper(src));
+      }
+      break;
+    }
+    case 'link': {
+      const href = element.getAttribute('href');
+      const rel = element.getAttribute('rel');
+      if (href && rel === 'stylesheet') {
+        element.setAttribute('href', _this.assetURLMapper(href));
+      }
+      break;
+    }
+    default:
+      break;
+    }
+    return element;
+  });
   this._observer && this._observer.observe(document.documentElement, {
     attributes: true,
     childList: true,
@@ -181,6 +212,7 @@ Sandbox.prototype.mount = function() {
  * @public
  */
 Sandbox.prototype.unmount = function() {
+  this._appendChildInterceptor.stop();
   const currentMountPointElement = document.getElementById(this.mountPointID);
   currentMountPointElement && currentMountPointElement.remove();
   this.usePrefix && (this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' '));

@@ -28,7 +28,7 @@ module.exports = {
     path: path.resolve(__dirname, '../dist'),
     filename: 'static/js/' + (env.isDev ? '[name].bundle.js' : '[name].[hash].bundle.js'),
     chunkFilename: 'static/js/' + (env.isDev ? '[name].chunk.js' : '[name].[contenthash].chunk.js'),
-    publicPath: '//localhost:8182/',
+    publicPath: '/',
   },
 
   optimization: {
