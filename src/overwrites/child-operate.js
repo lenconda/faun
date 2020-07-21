@@ -84,6 +84,9 @@ export default function() {
 
     stop() {
       Element.prototype.appendChild = appendChild;
+      Element.prototype.insertBefore = insertBefore;
+      Element.prototype.append = append;
+      Element.prototype.prepend = prepend;
     },
   };
 }
