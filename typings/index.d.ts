@@ -5,9 +5,9 @@ export default Faun;
 export {
   ISubApplications,
   IPlugin,
-  IDependenceInfo,
+  IGlobalDependenceInfo,
   ISubApplicationConfig,
 } from './faun';
 export { IEvent } from './event';
 export { IHooks } from './hooks';
-export { ISandbox } from './sandbox';
+export { Sandbox, IChildNodeOperator, ISandboxProps } from './sandbox';

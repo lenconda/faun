@@ -14,73 +14,28 @@ import PolyfilledMutationObserver from 'mutation-observer';
 import childNodeOperator from './overwrites/child-operate';
 
 /**
- * sandbox constructor
- * @class
- * @param {string} name
- * @param {boolean} usePrefix
- * @constructor
- */
-function Sandbox(name, usePrefix = true) {
-  this.domSnapshot = [];
-  this.mountPoint = null;
-  this.mountPointID = '';
-  this.windowSnapshot = {};
-  this.name = name || '';
-  this.prefix = random();
-  this.bundles = [];
-  this.css = [];
-  this.bundleExecutors = [];
-  this.styleElements = [];
-  this.disableRewriteEventListeners = null;
-  this.rootElement = document.getElementsByTagName('html')[0];
-  this.usePrefix = usePrefix;
-  this.assetURLMapper = url => url;
-  this._modifyPropsMap = {};
-  this._observer = null;
-  this._childNodeOperator = childNodeOperator();
-
-  if (!this._observer) {
-    this._observer = new PolyfilledMutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        const currentAddedNodes = mutation.addedNodes;
-        currentAddedNodes.forEach(node => {
-          const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
-          if (node && /^style$|^script$|^link$/.test(nodeName)) {
-            this.domSnapshot.push(node);
-
-            if (nodeName === 'style' && this.usePrefix) {
-              node.innerHTML = cssPrefix(node.innerHTML, this.prefix);
-            }
-          }
-        });
-      });
-    });
-  }
-}
-
-/**
  * restore snapshot to document.head
  * @public
  */
-Sandbox.prototype.restoreDOMSnapshot = function() {
-  this.domSnapshot.forEach(node => node && node.remove());
-  this.styleElements.forEach(element => element && element.remove());
+const restoreDOMSnapshot = function(props) {
+  props.domSnapshot.forEach(node => node && node.remove());
+  props.styleElements.forEach(element => element && element.remove());
 };
 
 /**
  * take window snapshot based on diff
  * @public
  */
-Sandbox.prototype.takeWindowSnapshot = function() {
-  this.windowSnapshot = {};
+const takeWindowSnapshot = function(props) {
+  props.windowSnapshot = {};
 
   traverseProps(window, prop => {
-    this.windowSnapshot[prop] = window[prop];
+    props.windowSnapshot[prop] = window[prop];
   });
 
-  Object.keys(this._modifyPropsMap).forEach(prop => {
+  Object.keys(props.modifiedPropsMap).forEach(prop => {
     if (Object.getOwnPropertyDescriptor(window, prop).writable) {
-      window[prop] = this._modifyPropsMap[prop];
+      window[prop] = props.modifiedPropsMap[prop];
     }
   });
 };
@@ -89,15 +44,16 @@ Sandbox.prototype.takeWindowSnapshot = function() {
  * restore window snapshot to window
  * @public
  */
-Sandbox.prototype.restoreWindowSnapshot = function() {
-  this._modifyPropsMap = {};
+const restoreWindowSnapshot = function(props) {
+  props.modifiedPropsMap = {};
 
   traverseProps(window, prop => {
     if (
-      window[prop] !== this.windowSnapshot[prop]
-      && Object.getOwnPropertyDescriptor(window, prop).writable) {
-      this._modifyPropsMap[prop] = window[prop];
-      window[prop] = this.windowSnapshot[prop];
+      window[prop] !== props.windowSnapshot[prop]
+      && Object.getOwnPropertyDescriptor(window, prop).writable
+    ) {
+      props.modifiedPropsMap[prop] = window[prop];
+      window[prop] = props.windowSnapshot[prop];
     }
   });
 };
@@ -108,10 +64,18 @@ Sandbox.prototype.restoreWindowSnapshot = function() {
  * @param {ISubApplicationConfig} subApplicationConfig
  * @returns {Promise<void>}
  */
-Sandbox.prototype.create = async function(subApplicationConfig) {
-  const { mountPointID, assetURLMapper = null } = subApplicationConfig;
+const create = async function(subApplicationConfig, props) {
+  const {
+    mountPointID,
+    assetURLMapper = null,
+    prefixElementSelector = null,
+  } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
+  }
+
+  if (prefixElementSelector && typeof prefixElementSelector === 'function') {
+    this.prefixElementSelector = prefixElementSelector;
   }
 
   if (assetURLMapper && typeof assetURLMapper === 'function') {
@@ -119,7 +83,7 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
   }
 
   this.mountPointID = mountPointID;
-  this.mountPoint = createElement('div', { id: this.mountPointID });
+  props.mountPointElement = createElement('div', { id: this.mountPointID });
 
   if (subApplicationConfig.scripts && subApplicationConfig.scripts.length) {
     for (const bundleURL of subApplicationConfig.scripts) {
@@ -129,7 +93,7 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
       if (data) {
         // wrap bundle code into a function
         // when mount method called, execute the functions
-        this.bundleExecutors.push(new Function(data));
+        props.bundleExecutors.push(new Function(data));
       }
     }
   }
@@ -140,10 +104,10 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
       // make an ajax to load styles
       const data = await fetch(stylesURL);
       if (data) {
-        const styleData = this.usePrefix ? cssPrefix(data, this.prefix) : data;
+        const styleData = this.useCSSPrefix ? cssPrefix(data, props.prefix) : data;
         const currentStyleElement = createElement('style', { type: 'text/css' });
         currentStyleElement.innerHTML = styleData;
-        this.styleElements.push(currentStyleElement);
+        props.styleElements.push(currentStyleElement);
       }
     }
   }
@@ -153,9 +117,10 @@ Sandbox.prototype.create = async function(subApplicationConfig) {
  * mount the sandbox
  * @public
  */
-Sandbox.prototype.mount = function() {
+const mount = function(props) {
   const _this = this;
-  this._childNodeOperator.intercept(function(element) {
+
+  props.childNodeOperator.intercept(function(element) {
     const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
     switch(nodeName) {
     case 'script': {
@@ -178,29 +143,35 @@ Sandbox.prototype.mount = function() {
     }
     return element;
   });
-  this._observer && this._observer.observe(document.documentElement, {
+
+  props.observer && props.observer.observe(document.documentElement, {
     attributes: true,
     childList: true,
     subtree: true,
   });
 
-  // appendChildManager.overwriteAppendChild(this.domSnapshot);
-  this.usePrefix && (this.rootElement.classList = [...this.rootElement.classList, this.prefix].join(' '));
-  this.disableRewriteEventListeners = overwriteEventListeners();
+  props.disableRewriteEventListeners = overwriteEventListeners();
 
   const checkExistElement = document.getElementById(this.mountPointID);
+
   if (checkExistElement) {
     checkExistElement.remove();
   }
-  document.body.appendChild(Array.prototype.slice.call([this.mountPoint])[0]);
 
-  if (this.styleElements && Array.isArray(this.styleElements)) {
-    this.styleElements.forEach(element => document.head.appendChild(element));
+  document.body.appendChild(Array.prototype.slice.call([props.mountPointElement])[0]);
+
+  const prefixElement = this.prefixElementSelector() || props.defaultPrefixElement;
+  if (prefixElement && prefixElement instanceof Node && this.useCSSPrefix) {
+    prefixElement.classList = [...prefixElement.classList, props.prefix].join(' ');
   }
 
-  !!this.windowSnapshot.length && this.restoreWindowSnapshot();
+  if (props.styleElements && Array.isArray(props.styleElements)) {
+    props.styleElements.forEach(element => document.head.appendChild(element));
+  }
 
-  this.bundleExecutors && this.bundleExecutors.forEach(executor => {
+  !!props.windowSnapshot.length && this.restoreWindowSnapshot();
+
+  props.bundleExecutors && props.bundleExecutors.forEach(executor => {
     if (isFunction(executor)) {
       executor.call();
     }
@@ -211,16 +182,92 @@ Sandbox.prototype.mount = function() {
  * unmount the sandbox
  * @public
  */
-Sandbox.prototype.unmount = function() {
-  this._childNodeOperator.stop();
+const unmount = function(props) {
+  props.childNodeOperator.stop();
   const currentMountPointElement = document.getElementById(this.mountPointID);
   currentMountPointElement && currentMountPointElement.remove();
-  this.usePrefix && (this.rootElement.classList = Array.from(this.rootElement).filter(item => item !== this.prefix).join(' '));
+  const prefixElement = this.prefixElementSelector() || props.defaultPrefixElement;
+  if (prefixElement && prefixElement instanceof Node && this.useCSSPrefix) {
+    prefixElement.classList = Array.from(prefixElement.classList).filter(item => item !== props.prefix).join(' ');
+  }
   this.takeWindowSnapshot();
-  this.disableRewriteEventListeners && this.disableRewriteEventListeners();
+  props.disableRewriteEventListeners && props.disableRewriteEventListeners();
   this.restoreDOMSnapshot();
-  this.domSnapshot.splice(0, this.domSnapshot.length);
-  this._observer && this._observer.disconnect && this._observer.disconnect();
+  props.domSnapshot.splice(0, props.domSnapshot.length);
+  props.observer && props.observer.disconnect && props.observer.disconnect();
 };
+
+/**
+ * sandbox constructor
+ * @class
+ * @param {string} name
+ * @param {boolean} useCSSPrefix
+ * @constructor
+ */
+function Sandbox(name, useCSSPrefix = true) {
+  const props = {
+    domSnapshot: [],
+    mountPointElement: null,
+    windowSnapshot: {},
+    prefix: random(),
+    bundleExecutors: [],
+    styleElements: [],
+    disableRewriteEventListeners: null,
+    modifiedPropsMap: {},
+    observer: null,
+    childNodeOperator: childNodeOperator(),
+    defaultPrefixElement: document.documentElement,
+  };
+
+  this.mountPointID = '';
+  this.name = name || '';
+  this.bundles = [];
+  this.css = [];
+  this.useCSSPrefix = useCSSPrefix;
+  this.assetURLMapper = url => url;
+  this.prefixElementSelector = () => props.defaultPrefixElement;
+
+  if (!props.observer) {
+    props.observer = new PolyfilledMutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        const currentAddedNodes = mutation.addedNodes;
+        currentAddedNodes.forEach(node => {
+          const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
+          if (node && /^style$|^script$|^link$/.test(nodeName)) {
+            props.domSnapshot.push(node);
+
+            if (nodeName === 'style' && this.useCSSPrefix) {
+              node.innerHTML = cssPrefix(node.innerHTML, props.prefix);
+            }
+          }
+        });
+      });
+    });
+  }
+
+  this.restoreDOMSnapshot = function() {
+    restoreDOMSnapshot.call(this, props);
+  };
+
+  this.takeWindowSnapshot = function() {
+    takeWindowSnapshot.call(this, props);
+  };
+
+  this.restoreWindowSnapshot = function() {
+    restoreWindowSnapshot.call(this, props);
+  };
+
+  this.create = async function(subApplicationConfig) {
+    await create.call(this, subApplicationConfig, props);
+  };
+
+  this.mount = function() {
+    mount.call(this, props);
+  };
+
+  this.unmount = function() {
+    unmount.call(this, props);
+  };
+}
 
 export default Sandbox;
