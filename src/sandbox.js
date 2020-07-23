@@ -217,7 +217,7 @@ function Sandbox(name, useCSSPrefix = true) {
     observer: null,
     childNodeOperator: childNodeOperator(),
     defaultPrefixElement: document.getElementsByTagName('html')[0],
-  }
+  };
 
   this.mountPointID = '';
   this.name = name || '';
@@ -257,8 +257,8 @@ function Sandbox(name, useCSSPrefix = true) {
     restoreWindowSnapshot.call(this, props);
   };
 
-  this.create = function(subApplicationConfig) {
-    create.call(this, subApplicationConfig, props);
+  this.create = async function(subApplicationConfig) {
+    await create.call(this, subApplicationConfig, props);
   };
 
   this.mount = function() {
