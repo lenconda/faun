@@ -4,7 +4,7 @@
   "description": "A more simple way to make micro front-end apps",
   "main": "src/index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test jest --coverage",
     "lint": "eslint ./src",
     "clean": "rimraf dist",
     "build": "cross-env NODE_ENV=production npm run clean && rollup -c build/rollup.config.js",
@@ -15,7 +15,7 @@
     "start:framework": "webpack-dev-server --config examples/framework/build/webpack.config.js --mode=development --progress",
     "start:vue": "cd examples/vue && npm start",
     "start:react": "cd examples/react && npm start",
-    "example:start": "npm-run-all --parallel start:*"
+    "start": "npm-run-all --parallel start:*"
   },
   "repository": {
     "type": "git",
