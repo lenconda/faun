@@ -25,6 +25,7 @@ app.registerSubApplications({
     ],
     mountPointID: 'root',
     assetURLMapper: url => `//localhost:8182${url}`,
+    prefixElementSelector: () => document.getElementsByTagName('body')[0],
   },
 });
 
