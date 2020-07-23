@@ -1,34 +1,41 @@
 import { noop } from 'lodash';
 import { ISubApplicationConfig } from './faun';
 
-interface IChildNodeOperator {
+export interface IChildNodeOperator {
   intercept: (callback: (element: Element) => void) => void;
   stop: () => void;
 }
 
-export interface ISandbox {
-  readonly domSnapshot: string;
-  readonly mountPoint: Element;
-  readonly mountPointID: string;
+export abstract class Sandbox {
+  constructor(name: string, useCSSPrefix: boolean);
+
+  mountPointID: string;
+  name: string;
+  bundles: Array<string>;
+  css: Array<string>
+  usePrefix: boolean;
+
+  abstract assetURLMapper(url: string): string;
+  abstract prefixElementSelector(): Node;
+  
+  abstract restoreDOMSnapshot(): void;
+  abstract takeWindowSnapshot(): void;
+  abstract restoreWindowSnapshot(): void;
+  abstract create(subApplicationConfig: ISubApplicationConfig): Promise<void | null>;
+  abstract mount(): void;
+  abstract unmount(): void;
+}
+
+export interface ISandboxProps {
+  readonly domSnapshot: Array<Node>;
+  readonly mountPointElement: Element | null;
   readonly windowSnapshot: Partial<Window>;
-  readonly name: string;
   readonly prefix: string;
-  readonly bundles: Array<string>;
-  readonly css: Array<string>
   readonly bundleExecutors: Array<Function>;
   readonly styleElements: Array<HTMLElement>;
-  readonly disableRewriteEventListeners: () => typeof noop;
-  readonly rootElement: HTMLDocument;
-  readonly usePrefix: boolean;
-  readonly assetURLMapper: (url: string) => string;
-  readonly _modifyPropsMap: Partial<Window>;
-  readonly _observer: MutationObserver;
-  readonly _childNodeOperator: IChildNodeOperator;
-
-  restoreDOMSnapshot: () => void;
-  takeWindowSnapshot: () => void;
-  restoreWindowSnapshot: () => void;
-  create: (module: ISubApplicationConfig) => void | null;
-  mount: () => void;
-  unmount: () => void;
+  readonly disableRewriteEventListeners: () => typeof noop | null;
+  readonly modifiedPropsMap: Partial<Window>;
+  readonly observer: MutationObserver | null;
+  readonly childNodeOperator: IChildNodeOperator;
+  readonly defaultPrefixElement: HTMLHtmlElement;
 }

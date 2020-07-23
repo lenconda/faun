@@ -2,8 +2,7 @@ import { IEvent } from './event';
 import { History, LocationState } from 'history';
 import { IHooks } from './hooks';
 import { IStore } from './store';
-
-declare interface PolyatomicConstructor {}
+import { Sandbox } from './sandbox';
 
 declare interface ISubApplicationConfig {
   scripts: Array<string>;
@@ -11,9 +10,10 @@ declare interface ISubApplicationConfig {
   mountPointID: string;
   useCSSPrefix?: boolean;
   assetURLMapper?: (url: string) => string;
+  prefixElementSelector?: () => Node;
 }
 
-declare interface IDependenceInfo {
+declare interface IGlobalDependenceInfo {
   name: string;
   dep: any;
 }
@@ -27,16 +27,35 @@ declare interface IPlugin {
   [key: string]: any;
 }
 
-export interface Faun {
-  readonly events: IEvent;
-  readonly history: History<LocationState>;
-  readonly hooks: IHooks;
-  readonly store: IStore;
-
-  run: () => void;
-  use: (plugin: IPlugin, options?: Record<string, any>) => void;
-  registerModules: (modules: ISubApplications) => this | void;
-  addGlobalDependence: (name: string, dep: any) => void;
+declare interface IFaunProps {
+  readonly registeredSubApplications: ISubApplications;
+  readonly currentLocation: LocationState;
+  readonly sandboxes: Array<Sandbox>;
+  readonly position: number;
+  readonly direction: 'forward' | 'backward';
 }
 
-export const Faun: PolyatomicConstructor;
+declare abstract class Faun {
+  constructor();
+
+  abstract run(): void;
+  abstract registerSubApplications(config: ISubApplications): void;
+  abstract addGlobalDependence<T extends Record<string, any>>(name: string, dep: T): void;
+
+  public history: History<LocationState>;
+
+  public hooks: IHooks;
+  public store: IStore;
+  public events: IEvent;
+
+  static use<T extends Record<string, any>>(plugin: IPlugin, options: T): void;
+}
+
+export {
+  Faun,
+  IFaunProps,
+  IPlugin,
+  ISubApplicationConfig,
+  ISubApplications,
+  IGlobalDependenceInfo,
+}

@@ -216,7 +216,7 @@ function Sandbox(name, useCSSPrefix = true) {
     modifiedPropsMap: {},
     observer: null,
     childNodeOperator: childNodeOperator(),
-    defaultPrefixElement: document.getElementsByTagName('html')[0],
+    defaultPrefixElement: document.documentElement,
   };
 
   this.mountPointID = '';
