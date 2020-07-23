@@ -1,9 +1,9 @@
-import { ISandbox } from './sandbox';
+import { Sandbox } from './sandbox';
 
 export interface IHooks {
   loading: (pathname: string) => any;
   loaded: (pathname: string) => any;
-  mounted: (pathname: string, sandbox: ISandbox) => any;
+  mounted: (pathname: string, sandbox: Sandbox) => any;
   beforeUnmount: (prev: string, next: string) => any;
-  unmounted: (prev: string, next: string, sandbox: ISandbox) => any;
+  unmounted: (prev: string, next: string, sandbox: Sandbox) => any;
 }

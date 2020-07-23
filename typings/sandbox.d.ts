@@ -1,23 +1,41 @@
 import { noop } from 'lodash';
 import { ISubApplicationConfig } from './faun';
 
-export interface ISandbox {
-  readonly domSnapshot: string;
+export interface IChildNodeOperator {
+  intercept: (callback: (element: Element) => void) => void;
+  stop: () => void;
+}
+
+export abstract class Sandbox {
+  constructor(name: string, useCSSPrefix: boolean);
+
+  mountPointID: string;
+  name: string;
+  bundles: Array<string>;
+  css: Array<string>
+  usePrefix: boolean;
+
+  abstract assetURLMapper(url: string): string;
+  abstract prefixElementSelector(): Node;
+  
+  abstract restoreDOMSnapshot(): void;
+  abstract takeWindowSnapshot(): void;
+  abstract restoreWindowSnapshot(): void;
+  abstract create(subApplicationConfig: ISubApplicationConfig): Promise<void | null>;
+  abstract mount(): void;
+  abstract unmount(): void;
+}
+
+export interface ISandboxProps {
+  readonly domSnapshot: Array<Node>;
+  readonly mountPointElement: Element | null;
   readonly windowSnapshot: Partial<Window>;
-  readonly _modifyPropsMap: Partial<Window>;
-  readonly proxy: Window;
-  readonly name: string;
-  readonly running: boolean;
-  readonly bundles: Array<string>;
-  readonly css: Array<string>
+  readonly prefix: string;
   readonly bundleExecutors: Array<Function>;
   readonly styleElements: Array<HTMLElement>;
-  readonly disableRewriteEventListeners: () => typeof noop;
-
-  restoreDOMSnapshot: () => void;
-  takeWindowSnapshot: () => void;
-  restoreWindowSnapshot: () => void;
-  create: (module: ISubApplicationConfig) => void | null;
-  mount: () => void;
-  unmount: () => void;
+  readonly disableRewriteEventListeners: () => typeof noop | null;
+  readonly modifiedPropsMap: Partial<Window>;
+  readonly observer: MutationObserver | null;
+  readonly childNodeOperator: IChildNodeOperator;
+  readonly defaultPrefixElement: HTMLHtmlElement;
 }
