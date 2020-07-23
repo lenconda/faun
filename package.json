@@ -15,7 +15,8 @@
     "start:framework": "webpack-dev-server --config examples/framework/build/webpack.config.js --mode=development --progress",
     "start:vue": "cd examples/vue && npm start",
     "start:react": "cd examples/react && npm start",
-    "start": "npm-run-all --parallel start:*"
+    "start": "npm-run-all --parallel start:*",
+    "docs": "docsify serve docs"
   },
   "repository": {
     "type": "git",
