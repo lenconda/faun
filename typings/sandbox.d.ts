@@ -17,7 +17,7 @@ export abstract class Sandbox {
 
   abstract assetURLMapper(url: string): string;
   abstract prefixElementSelector(): Node;
-  
+
   abstract restoreDOMSnapshot(): void;
   abstract takeWindowSnapshot(): void;
   abstract restoreWindowSnapshot(): void;

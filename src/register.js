@@ -7,17 +7,20 @@ import { cloneDeep } from './utils/lodash';
 
 /**
  * register sub-applications, context is `props` in constructor
- * @param subApplicationInfo
+ * @param subApplicationConfigMap
  * @returns {"default"}
  */
-export default function(subApplicationInfo) {
+export default function(subApplicationConfigMap) {
   // only accept Object and NOT Array
-  if (typeof subApplicationInfo !== 'object' || Array.isArray(subApplicationInfo)) {
+  if (
+    typeof subApplicationConfigMap !== 'object'
+    || Array.isArray(subApplicationConfigMap)
+  ) {
     return this;
   }
 
   // assign sub-application configs to context
   Object.assign(this.registeredSubApplications, {
-    ...cloneDeep(subApplicationInfo),
+    ...cloneDeep(subApplicationConfigMap),
   });
 }

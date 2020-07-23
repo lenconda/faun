@@ -15,7 +15,7 @@ import childNodeOperator from './overwrites/child-operate';
 
 /**
  * restore snapshot to document.head
- * @public
+ * @param {ISandboxProps} props
  */
 const restoreDOMSnapshot = function(props) {
   props.domSnapshot.forEach(node => node && node.remove());
@@ -24,7 +24,7 @@ const restoreDOMSnapshot = function(props) {
 
 /**
  * take window snapshot based on diff
- * @public
+ * @param {ISandboxProps} props
  */
 const takeWindowSnapshot = function(props) {
   props.windowSnapshot = {};
@@ -42,7 +42,7 @@ const takeWindowSnapshot = function(props) {
 
 /**
  * restore window snapshot to window
- * @public
+ * @param {ISandboxProps} props
  */
 const restoreWindowSnapshot = function(props) {
   props.modifiedPropsMap = {};
@@ -60,8 +60,8 @@ const restoreWindowSnapshot = function(props) {
 
 /**
  * create sandbox when passing a sub-application config
- * @public
  * @param {ISubApplicationConfig} subApplicationConfig
+ * @param {ISandboxProps} props
  * @returns {Promise<void>}
  */
 const create = async function(subApplicationConfig, props) {
@@ -115,7 +115,7 @@ const create = async function(subApplicationConfig, props) {
 
 /**
  * mount the sandbox
- * @public
+ * @param {ISandboxProps} props
  */
 const mount = function(props) {
   const _this = this;
@@ -180,7 +180,7 @@ const mount = function(props) {
 
 /**
  * unmount the sandbox
- * @public
+ * @param {ISandboxProps} props
  */
 const unmount = function(props) {
   props.childNodeOperator.stop();

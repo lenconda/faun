@@ -19,7 +19,8 @@ import './overwrites/direction';
 /**
  * essential method to start the application
  * contains the whole lifecycles, includes initialization
- * @param props
+ * @param {IFaunProps} props
+ * @param {IGlobalDependenceInfo} deps
  */
 export default function(props, deps) {
   const _this = this;

@@ -32,7 +32,7 @@ export const initRoute = function(location, callback) {
 
 /**
  * initialize the global dependencies
- * @param {object[]} deps
+ * @param {IGlobalDependenceInfo[]} deps
  */
 export const initGlobalDependencies = function(deps) {
   if (!Array.isArray) {
