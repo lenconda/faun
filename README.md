@@ -26,7 +26,7 @@ To avoid making the rules for every applications repeatedly, we made a common ru
 
 ## Features
 
-- Light weight: only 47 kB with terser
+- Light weight: only 54 kB with terser
 - COMPLETELY framework-independent
 - Control the sub-applications by sandboxes and snapshots
 - Load sub-applications based on JavaScript entries
@@ -39,9 +39,21 @@ To avoid making the rules for every applications repeatedly, we made a common ru
 
 > The package is now under development mode, if you seriously want to play with it, just read [Getting Started](#getting-started)
 
+Since the package was ready to switch itself as a published NPM package, its name would be `faun` at NPM registry, in the near future, it could be installed by:
+
+```bash
+$ npm install faun
+```
+
+Another way to install it is link the AMD-bundled `faun.min.js` through `script` tag:
+
+```javascript
+<script src="/path/to/faun.min.js"></script>
+```
+
 ## Documentation
 
-Coming soon...
+Seriously coming soon, now part of the documentation is already in `docs` folder.
 
 ## Getting Started
 
@@ -85,7 +97,7 @@ $ npm run start:framework
 Or by executing a simpler command:
 
 ```bash
-$ npm run example:start
+$ npm start
 ```
 
 This command will start framework and sub-applications in parallel.
@@ -96,21 +108,22 @@ After finishing the steps above, and if everything goes well, these examples may
 - Vue App: `http://localhost:8181`
 - React App: `http://localhost:8182`
 
-Make sure `8081` and `8082` are not listening by another process.
+Make sure `8181` and `8182` are not listening by another process.
 
 You just open the browser and visit the framework's address.
 
 ## Todo
 
 - [x] Global key-value storage support
-- [ ] More lifecycle hooks integration
 - [x] Custom plugins support
 - [ ] Global interceptors support
 - [ ] Development kit support
+- [ ] Higher test coverage
+- [ ] API docs
 
 ## FAQ
 
-Coming soon...
+Coming soon, but you can make some questions at [Issues](https://github.com/lenconda/faun/issues) **with `FAQ` tag**, or directly contact me at [i@lenconda.top](mailto:i@lenconda.top) or [prexustech@gmail.com](mailto:prexustech@gmail.com).
 
 ## Community
 
