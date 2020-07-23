@@ -2,14 +2,14 @@
 
 ## Introduction
 
-Faun is an implementation of concepts from [Micro Frontends](https://micro-frontends.org/). It was designed to make it easier to build new micro-frontend applications and at the same time be less intrusive migrating existed project to micro-frontend.
+Faun(IPA: /ˈfɔːn/) is an implementation of concepts from [micro-frontends.org](https://micro-frontends.org/). It was designed to make it easier to build new micro-frontend applications and at the same time be less intrusive migrating existed project to micro-frontend architecture.
 
 ### Concepts and Technical Terms
 
 - Micro Frontend: technology, implemented methods or methodology to build micro-frontend apps
 - Micro Frontend Apps: the projects or applications build with micro-frontend technology
 - Framework: or *framework-application(s)* or *master-application(s)*, the dock to load sub-applications. It also solves the global events and stores global states.
-- Sub-application(s): could be loaded by framework-application, and also be able to work independently as an independent application under certain circumstances (Which is called *Atomicity*).
+- Sub-application(s): could be loaded by framework-application, and also be able to work independently as an independent application under certain circumstances.
 
 ### What is Micro-Frontend
 
