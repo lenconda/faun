@@ -18,7 +18,7 @@ declare interface IGlobalDependenceInfo {
   dep: any;
 }
 
-declare interface ISubApplications {
+declare interface ISubApplicationConfigMap {
   [key: string]: Partial<ISubApplicationConfig>;
 }
 
@@ -28,7 +28,7 @@ declare interface IPlugin {
 }
 
 declare interface IFaunProps {
-  readonly registeredSubApplications: ISubApplications;
+  readonly registeredSubApplications: ISubApplicationConfigMap;
   readonly currentLocation: LocationState;
   readonly sandboxes: Array<Sandbox>;
   readonly position: number;
@@ -39,7 +39,7 @@ declare abstract class Faun {
   constructor();
 
   abstract run(): void;
-  abstract registerSubApplications(config: ISubApplications): void;
+  abstract registerSubApplications(config: ISubApplicationConfigMap): void;
   abstract addGlobalDependence<T extends Record<string, any>>(name: string, dep: T): void;
 
   public history: History<LocationState>;
@@ -56,6 +56,6 @@ export {
   IFaunProps,
   IPlugin,
   ISubApplicationConfig,
-  ISubApplications,
+  ISubApplicationConfigMap,
   IGlobalDependenceInfo,
 }
