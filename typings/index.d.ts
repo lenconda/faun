@@ -3,7 +3,7 @@ import { Faun } from './faun';
 export default Faun;
 
 export {
-  ISubApplications,
+  ISubApplicationConfigMap,
   IPlugin,
   IGlobalDependenceInfo,
   ISubApplicationConfig,

@@ -67,7 +67,7 @@ function Faun() {
 /**
  * use a Faun plugin
  * the plugin should contain an `install` method
- * @param {Object} plugin
+ * @param {IPlugin} plugin
  * @param {Object|null} options
  */
 Faun.use = async function(plugin, options) {

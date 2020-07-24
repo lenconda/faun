@@ -2,14 +2,14 @@
 
 ## Introduction
 
-Faun is an implementation of concepts from [Micro Frontends](https://micro-frontends.org/). It was designed to make it easier to build new micro-frontend applications and at the same time be less intrusive migrating existed project to micro-frontend.
+Faun (IPA: /ˈfɔːn/) is an implementation of concepts from [micro-frontends.org](https://micro-frontends.org/). It was designed to make it easier to build micro-frontend applications and at the same time be less intrusive migrating existed project to micro-frontend architecture.
 
 ### Concepts and Technical Terms
 
 - Micro Frontend: technology, implemented methods or methodology to build micro-frontend apps
 - Micro Frontend Apps: the projects or applications build with micro-frontend technology
 - Framework: or *framework-application(s)* or *master-application(s)*, the dock to load sub-applications. It also solves the global events and stores global states.
-- Sub-application(s): could be loaded by framework-application, and also be able to work independently as an independent application under certain circumstances (Which is called *Atomicity*).
+- Sub-application(s): could be loaded by framework-application, and also be able to work independently as an independent application under certain circumstances.
 
 ### What is Micro-Frontend
 
@@ -48,19 +48,23 @@ The only difference between Faun and principles in [Micro Frontends](https://mic
 
 To get understand of how it works, here we put an image to show the main processes of what will Faun do when starting a micro-frontend-powered application:
 
-![faun](_media/faun.svg)
+![faun](../_media/faun.jpg)
 
-Sandbox is the core of Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the route configuration for this application. Then it would load sandbox with the top-level route path. For example, if a user request a route like `https://foo.com/bar/baz` while base path was set as `http://foo.com/`, if `/bar` hits the route config and there is no sandbox with the same path exist in sandboxes map, Faun will create a new sandbox to load resources, and take snapshots from `window` and `document.head`. If `/bar` matches one of the sandbox in sandboxes map, Faun will use that sandbox and restore the snapshots to `window` and `document.head`.
+Sandbox is the core of Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the sub application configuration map for this application.
 
-It is worth paying attention that Faun will only match the first level of the route: if get a path like `/bar/baz`, it will only take `/bar` to find a matching route config. Downward routes, like `/baz`, would be taken over by sub-applications.
+Then it would load sandbox with the top-level route. For example, if a user request a route like `https://foo.com/bar/baz` while base path was set as `http://foo.com/`, while `/bar` hits the route config, Faun will create a new sandbox to load resources, and take snapshots from `window`.
+
+Meantime, sandbox will overwrite DOM operations on `Element.prototype` (such as `appendChild`, `insertBefore`) and `window.addEventListener` in order to catch snapshot and make some mutations.
+
+A polyfilled `MutationObserver` would be settled in order to catch the DOM changes, push them in an array. When unloading sandbox, the elements in this array would be removed.
+
+> It is worth paying attention that Faun will only match the first level of the route: if get a path like `/bar/baz`, it will only take `/bar` to find a matching route config. Downward routes, like `/baz`, would be taken over by sub-applications.
 
 After finishing loading resources, sandbox will execute the bundle by `new Function()`, and the other resources by appending child nodes into targeted parent nodes.
 
 Faun uses `history` to manage the top level routes, especially listen route changes. All the route and sandbox changes would be managed by `history` listener.
 
 When the top level route changing, the former sandbox will unmount, then mount next sandbox with the new path. The `loading`, `loaded`, `mounted`, `beforeUnmount` and `umounted` lifecycle hooks will be triggered when changing route.
-
-Faun overwrites `Element.prototype.appendChild` to prevent appending duplicated element to document, and overwrites `Window.prototype.addEventListener` to record the listeners that are created by sandboxes, for cleaning the listeners when umounting current sandbox.
 
 ### Features
 
@@ -99,10 +103,19 @@ In HTML/Vue template/JSX:
 <a href="/foo"></a>
 ```
 
+Install Faun:
+
+```bash
+$ npm install faun
+```
+
 Import Faun in your framework:
 
 ```javascript
-import Faun from '/path/to/faun';
+// Node.js CommonJS
+const Faun = require('faun');
+// ES 6 Module
+import Faun from 'faun';
 // or by UMD
 <script src="/path/to/faun.min.js"></script>
 ```
@@ -110,15 +123,13 @@ import Faun from '/path/to/faun';
 Initialize the framework application with:
 
 ```javascript
-const app = new Faun('root');
+const app = new Faun();
 ```
 
-`root` is the mount point ID which sub-applications will mount onto.
-
-Register modules (sub-applications route configuration), for example:
+Register sub applications map, for example:
 
 ```javascript
-app.registerModules({
+app.registerSubApplications({
   '/vue': {
     scripts: [
       '//localhost:8181/app.js',
@@ -136,6 +147,7 @@ app.registerModules({
       '//localhost:8182/static/css/main.css',
     ],
     mountPointID: 'root',
+    prefixElementSelector: () => document.body,
   },
 });
 ```
@@ -143,7 +155,10 @@ app.registerModules({
 it is also easy to load route configuration from a remote server:
 
 ```javascript
-fetch('https://foo.com/api/routes').then(routes => app.registerModules(routes.json()));
+fetch('https://foo.com/api/routes')
+  .then(routes =>
+    app.registerModules(routes.json()
+  ));
 ```
 
 Create a listener for hooks:
@@ -163,19 +178,30 @@ Finally, run the framework:
 app.run();
 ```
 
-
-
 ### Sub Application
 
-Since Faun is low invasive, we can just make a few modifications on sub-applications. The simplest change to make sub-applications work is changing bundle prefix. For example, if using Webpack as bundler, just:
+Since Faun is low invasive, we can just make a few modifications on sub-applications. The ONLY thing that you might have to pay attention to is that make sure all of the CSS and JavaScript resource URLs are right when sending to framework application.
+
+It is usually seen that many Webpack applications has assets' `output.publicPath` like `/`. Since the application's URL is not the same as framework's, it could cause `404` errors when loading chunked assets.
+
+To avoid this, we recommend to modify `output.publicPath` with absolute hostname. For example, an application is deployed at `example.com`, the `output.publicPath` could be `//example.com`.
+
+Faun's sandbox also provide a more perfect method: `assetURLMapper` to modify URLs, just add it in your sub application config map:
 
 ```javascript
-module.exports = {
+app.registerSubApplications({
   // ...
-  output: {
+  '/react': {
+    scripts: [
+      // ...
+    ],
+    styles: [
+      // ...
+    ],
     // ...
-    // When in production mode, use an absolute prefix
-    publicPath: process.NODE_ENV === 'production' ? '//example.com' : '/',
+    assetURLMapper: url => mapURL(url),
   },
-}
+});
 ```
+
+the `assetURLMapper` method should return a new URL which is the right one to load resources.
