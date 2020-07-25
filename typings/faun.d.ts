@@ -5,8 +5,8 @@ import { IStore } from './store';
 import { Sandbox } from './sandbox';
 
 declare interface ISubApplicationConfig {
-  scripts: Array<string>;
-  styles: Array<string>;
+  scripts?: Array<string>;
+  styles?: Array<string>;
   mountPointID: string;
   useCSSPrefix?: boolean;
   assetURLMapper?: (url: string) => string;
