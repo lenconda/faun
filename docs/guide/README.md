@@ -50,7 +50,7 @@ To get understand of how it works, here we put an image to show the main process
 
 ![faun](../_media/faun.jpg)
 
-Sandbox is the core of Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the sub application configuration map for this application.
+Sandbox is the core of Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the sub-application configuration map for this application.
 
 Then it would load sandbox with the top-level route. For example, if a user request a route like `https://foo.com/bar/baz` while base path was set as `http://foo.com/`, while `/bar` hits the route config, Faun will create a new sandbox to load resources, and take snapshots from `window`.
 
@@ -126,7 +126,7 @@ Initialize the framework application with:
 const app = new Faun();
 ```
 
-Register sub applications map, for example:
+Register sub-applications map, for example:
 
 ```javascript
 app.registerSubApplications({
@@ -157,8 +157,8 @@ it is also easy to load route configuration from a remote server:
 ```javascript
 fetch('https://foo.com/api/routes')
   .then(routes =>
-    app.registerModules(routes.json()
-  ));
+    app.registerModules(routes.json())
+  );
 ```
 
 Create a listener for hooks:
@@ -186,7 +186,7 @@ It is usually seen that many Webpack applications has assets' `output.publicPath
 
 To avoid this, we recommend to modify `output.publicPath` with absolute hostname. For example, an application is deployed at `example.com`, the `output.publicPath` could be `//example.com`.
 
-Faun's sandbox also provide a more perfect method: `assetURLMapper` to modify URLs, just add it in your sub application config map:
+Faun's sandbox also provide a more perfect method: `assetURLMapper` to modify URLs, just add it in your sub-application config map:
 
 ```javascript
 app.registerSubApplications({
