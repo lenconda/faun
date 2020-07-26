@@ -23,7 +23,7 @@ declare interface ISubApplicationConfigMap {
 }
 
 declare interface IPlugin {
-  install: Function;
+  install: (Faun: Faun) => any;
   [key: string]: any;
 }
 
