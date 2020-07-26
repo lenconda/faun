@@ -14,12 +14,52 @@ import PolyfilledMutationObserver from 'mutation-observer';
 import childNodeOperator from './overwrites/child-operate';
 
 /**
- * restore snapshot to document.head
+ * take DOM snapshot
+ * @param {ISandboxProps} props
+ */
+const takeDOMSnapshot = function(props) {
+  const _this = this;
+
+  props.childNodeOperator.intercept(function(element) {
+    const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
+    switch(nodeName) {
+    case 'script': {
+      const src = element.getAttribute('src');
+      if (src) {
+        element.setAttribute('src', _this.assetURLMapper(src));
+      }
+      break;
+    }
+    case 'link': {
+      const href = element.getAttribute('href');
+      const rel = element.getAttribute('rel');
+      if (href && rel === 'stylesheet') {
+        element.setAttribute('href', _this.assetURLMapper(href));
+      }
+      break;
+    }
+    default:
+      break;
+    }
+    return element;
+  });
+
+  props.observer && props.observer.observe(document.documentElement, {
+    attributes: true,
+    childList: true,
+    subtree: true,
+  });
+}
+
+/**
+ * restore snapshot from domSnapshot and styleElements
  * @param {ISandboxProps} props
  */
 const restoreDOMSnapshot = function(props) {
   props.domSnapshot.forEach(node => node && node.remove());
   props.styleElements.forEach(element => element && element.remove());
+  props.observer && props.observer.disconnect && props.observer.disconnect();
+  props.childNodeOperator.stop();
 };
 
 /**
@@ -118,38 +158,7 @@ const create = async function(subApplicationConfig, props) {
  * @param {ISandboxProps} props
  */
 const mount = function(props) {
-  const _this = this;
-
-  props.childNodeOperator.intercept(function(element) {
-    const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
-    switch(nodeName) {
-    case 'script': {
-      const src = element.getAttribute('src');
-      if (src) {
-        element.setAttribute('src', _this.assetURLMapper(src));
-      }
-      break;
-    }
-    case 'link': {
-      const href = element.getAttribute('href');
-      const rel = element.getAttribute('rel');
-      if (href && rel === 'stylesheet') {
-        element.setAttribute('href', _this.assetURLMapper(href));
-      }
-      break;
-    }
-    default:
-      break;
-    }
-    return element;
-  });
-
-  props.observer && props.observer.observe(document.documentElement, {
-    attributes: true,
-    childList: true,
-    subtree: true,
-  });
-
+  this.takeDOMSnapshot();
   props.disableRewriteEventListeners = overwriteEventListeners();
 
   const checkExistElement = document.getElementById(this.mountPointID);
@@ -183,7 +192,6 @@ const mount = function(props) {
  * @param {ISandboxProps} props
  */
 const unmount = function(props) {
-  props.childNodeOperator.stop();
   const currentMountPointElement = document.getElementById(this.mountPointID);
   currentMountPointElement && currentMountPointElement.remove();
   const prefixElement = this.prefixElementSelector() || props.defaultPrefixElement;
@@ -194,7 +202,6 @@ const unmount = function(props) {
   props.disableRewriteEventListeners && props.disableRewriteEventListeners();
   this.restoreDOMSnapshot();
   props.domSnapshot.splice(0, props.domSnapshot.length);
-  props.observer && props.observer.disconnect && props.observer.disconnect();
 };
 
 /**
@@ -243,6 +250,10 @@ function Sandbox(name, useCSSPrefix = true) {
         });
       });
     });
+  }
+
+  this.takeDOMSnapshot = function() {
+    takeDOMSnapshot.call(this, props);
   }
 
   this.restoreDOMSnapshot = function() {
