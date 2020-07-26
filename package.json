@@ -18,6 +18,7 @@
     "start": "npm-run-all --parallel start:*",
     "docs": "docsify serve docs"
   },
+  "types": "./typings/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lenconda/faun.git"
