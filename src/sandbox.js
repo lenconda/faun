@@ -49,7 +49,7 @@ const takeDOMSnapshot = function(props) {
     childList: true,
     subtree: true,
   });
-}
+};
 
 /**
  * restore snapshot from domSnapshot and styleElements
@@ -254,7 +254,7 @@ function Sandbox(name, useCSSPrefix = true) {
 
   this.takeDOMSnapshot = function() {
     takeDOMSnapshot.call(this, props);
-  }
+  };
 
   this.restoreDOMSnapshot = function() {
     restoreDOMSnapshot.call(this, props);
