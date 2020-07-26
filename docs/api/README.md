@@ -285,11 +285,40 @@ export abstract class Sandbox {
   abstract assetURLMapper(url: string): string;
   abstract prefixElementSelector(): Node;
 
+  abstract takeDOMSnapshot(): void;
   abstract restoreDOMSnapshot(): void;
   abstract takeWindowSnapshot(): void;
   abstract restoreWindowSnapshot(): void;
   abstract create(subApplicationConfig: ISubApplicationConfig): Promise<void | null>;
   abstract mount(): void;
   abstract unmount(): void;
+}
+```
+
+## `Faun` :id=doc-faun
+
+- Entry
+
+```javascript
+import { Faun } from 'faun';
+```
+
+- Typing
+
+```javascript
+declare abstract class Faun {
+  constructor();
+
+  abstract run(): void;
+  abstract registerSubApplications(config: ISubApplicationConfigMap): void;
+  abstract addGlobalDependence<T extends Record<string, any>>(name: string, dep: T): void;
+
+  public history: History<LocationState>;
+
+  public hooks: IHooks;
+  public store: IStore;
+  public events: IEvent;
+
+  static use<T extends Record<string, any>>(plugin: IPlugin, options: T): void;
 }
 ```
