@@ -117,7 +117,7 @@ const Faun = require('faun');
 // ES 6 Module
 import Faun from 'faun';
 // or by UMD
-<script src="/path/to/faun.min.js"></script>
+<script src="https://unpkg.com/faun@latest/dist/faun.min.js"></script>
 ```
 
 Initialize the framework application with:
