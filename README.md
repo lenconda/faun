@@ -123,11 +123,13 @@ You just open the browser and visit the framework's address.
 
 ## FAQ
 
-Coming soon, but you can make some questions at [Issues](https://github.com/lenconda/faun/issues) **with `FAQ` tag**, or directly contact me at [i@lenconda.top](mailto:i@lenconda.top) or [prexustech@gmail.com](mailto:prexustech@gmail.com).
+Checkout FAQ at [here](https://faun.lenconda.top/#/faq/).
+
+> You can make some questions at [issues](https://github.com/lenconda/faun/issues) **with `FAQ` tag**, or directly contact me at [i@lenconda.top](mailto:i@lenconda.top) or [prexustech@gmail.com](mailto:prexustech@gmail.com).
 
 ## Community
 
-Coming soon...
+[lenconda/faun/issues](https://github.com/lenconda/faun/issues)
 
 ## Contributing
 
