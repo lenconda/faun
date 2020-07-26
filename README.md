@@ -48,7 +48,7 @@ $ npm install faun
 Another way to install it is link the AMD-bundled `faun.min.js` through `script` tag:
 
 ```javascript
-<script src="/path/to/faun.min.js"></script>
+<script src="https://unpkg.com/faun@latest/dist/faun.min.js"></script>
 ```
 
 ## Documentation

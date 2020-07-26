@@ -11,6 +11,8 @@ notifications:
 node_js:
   - 10
   - 12
+before_deploy:
+  - npm run build
 deploy:
   provider: npm
   email: 'i@lenconda.top'
@@ -18,5 +20,6 @@ deploy:
   on:
     branch: master
     tags: true
+  kip_cleanup: true
 script:
   - npm test
