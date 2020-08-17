@@ -16,6 +16,7 @@ declare interface ISubApplicationConfig {
   useCSSPrefix?: boolean;
   assetURLMapper?: (url: string) => string;
   prefixElementSelector?: () => Node;
+  preserveChunks?: boolean;
 }
 
 declare interface IGlobalDependenceInfo {
