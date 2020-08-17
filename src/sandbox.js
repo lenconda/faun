@@ -126,14 +126,30 @@ const create = async function(subApplicationConfig, props) {
   props.mountPointElement = createElement('div', { id: this.mountPointID });
 
   if (subApplicationConfig.scripts && subApplicationConfig.scripts.length) {
-    for (const bundleURL of subApplicationConfig.scripts) {
-      this.bundles.push(bundleURL);
+    for (const bundle of subApplicationConfig.scripts) {
+      let bundleURL;
+      let executor;
+      if (typeof bundle === 'string') {
+        bundleURL = bundle;
+      } else if (bundle.url && bundle.executorGenerator) {
+        bundleURL = bundle.url;
+      }
+
+      this.bundles.push(bundle);
       // make an ajax to load the sub-application bundles
       const data = await fetch(bundleURL);
+      const defaultExecutor = new Function(data);
+
+      if (bundle.executorGenerator) {
+        executor = bundle.executorGenerator(data, defaultExecutor);
+      } else {
+        executor = defaultExecutor;
+      }
+
       if (data) {
         // wrap bundle code into a function
         // when mount method called, execute the functions
-        props.bundleExecutors.push(new Function(data));
+        props.bundleExecutors.push(executor);
       }
     }
   }
