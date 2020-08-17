@@ -56,8 +56,17 @@ const takeDOMSnapshot = function(props) {
  * @param {ISandboxProps} props
  */
 const restoreDOMSnapshot = function(props) {
-  props.domSnapshot.forEach(node => node && node.remove());
-  props.styleElements.forEach(element => element && element.remove());
+  console.log('=====================================THIS FUCK', this, props);
+  const _this = this;
+
+  function remove(node) {
+    if (node.remove && _this.preserveChunks !== true) {
+      node && node.remove();
+    }
+  }
+
+  props.domSnapshot.forEach(remove);
+  props.styleElements.forEach(remove);
   props.observer && props.observer.disconnect && props.observer.disconnect();
   props.childNodeOperator.stop();
 };
@@ -109,9 +118,14 @@ const create = async function(subApplicationConfig, props) {
     mountPointID,
     assetURLMapper = null,
     prefixElementSelector = null,
+    preserveChunks,
   } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
+  }
+
+  if (preserveChunks === true) {
+    this.preserveChunks = true;
   }
 
   if (prefixElementSelector && typeof prefixElementSelector === 'function') {
@@ -126,14 +140,30 @@ const create = async function(subApplicationConfig, props) {
   props.mountPointElement = createElement('div', { id: this.mountPointID });
 
   if (subApplicationConfig.scripts && subApplicationConfig.scripts.length) {
-    for (const bundleURL of subApplicationConfig.scripts) {
-      this.bundles.push(bundleURL);
+    for (const bundle of subApplicationConfig.scripts) {
+      let bundleURL;
+      let executor;
+      if (typeof bundle === 'string') {
+        bundleURL = bundle;
+      } else if (bundle.url && bundle.executorGenerator) {
+        bundleURL = bundle.url;
+      }
+
+      this.bundles.push(bundle);
       // make an ajax to load the sub-application bundles
       const data = await fetch(bundleURL);
+      const defaultExecutor = new Function(data);
+
+      if (bundle.executorGenerator) {
+        executor = bundle.executorGenerator(data, defaultExecutor);
+      } else {
+        executor = defaultExecutor;
+      }
+
       if (data) {
         // wrap bundle code into a function
         // when mount method called, execute the functions
-        props.bundleExecutors.push(new Function(data));
+        props.bundleExecutors.push(executor);
       }
     }
   }
@@ -233,6 +263,7 @@ function Sandbox(name, useCSSPrefix = true) {
   this.useCSSPrefix = useCSSPrefix;
   this.assetURLMapper = url => url;
   this.prefixElementSelector = () => props.defaultPrefixElement;
+  this.preserveChunks = false;
 
   if (!props.observer) {
     props.observer = new PolyfilledMutationObserver(mutations => {

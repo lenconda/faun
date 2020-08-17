@@ -4,13 +4,19 @@ import { IHooks } from './hooks';
 import { IStore } from './store';
 import { Sandbox } from './sandbox';
 
+declare interface IBundleConfig {
+  url: string;
+  executorGenerator: (data: string, defaultExecutor: Function) => Function;
+}
+
 declare interface ISubApplicationConfig {
-  scripts?: Array<string>;
+  scripts?: Array<string|IBundleConfig>;
   styles?: Array<string>;
   mountPointID: string;
   useCSSPrefix?: boolean;
   assetURLMapper?: (url: string) => string;
   prefixElementSelector?: () => Node;
+  preserveChunks?: boolean;
 }
 
 declare interface IGlobalDependenceInfo {
