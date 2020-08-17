@@ -14,6 +14,7 @@ app.registerSubApplications({
     mountPointID: 'app',
     useCSSPrefix: false,
     assetURLMapper: url => `//localhost:8181${url}`,
+    preserveChunks: true,
   },
   '/react': {
     scripts: [

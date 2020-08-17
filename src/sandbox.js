@@ -56,8 +56,17 @@ const takeDOMSnapshot = function(props) {
  * @param {ISandboxProps} props
  */
 const restoreDOMSnapshot = function(props) {
-  props.domSnapshot.forEach(node => node && node.remove());
-  props.styleElements.forEach(element => element && element.remove());
+  console.log('=====================================THIS FUCK', this, props);
+  const _this = this;
+
+  function remove(node) {
+    if (node.remove && _this.preserveChunks !== true) {
+      node && node.remove();
+    }
+  }
+
+  props.domSnapshot.forEach(remove);
+  props.styleElements.forEach(remove);
   props.observer && props.observer.disconnect && props.observer.disconnect();
   props.childNodeOperator.stop();
 };
@@ -109,9 +118,14 @@ const create = async function(subApplicationConfig, props) {
     mountPointID,
     assetURLMapper = null,
     prefixElementSelector = null,
+    preserveChunks,
   } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
+  }
+
+  if (preserveChunks === true) {
+    this.preserveChunks = true;
   }
 
   if (prefixElementSelector && typeof prefixElementSelector === 'function') {
@@ -249,6 +263,7 @@ function Sandbox(name, useCSSPrefix = true) {
   this.useCSSPrefix = useCSSPrefix;
   this.assetURLMapper = url => url;
   this.prefixElementSelector = () => props.defaultPrefixElement;
+  this.preserveChunks = false;
 
   if (!props.observer) {
     props.observer = new PolyfilledMutationObserver(mutations => {
