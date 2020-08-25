@@ -56,7 +56,6 @@ const takeDOMSnapshot = function(props) {
  * @param {ISandboxProps} props
  */
 const restoreDOMSnapshot = function(props) {
-  console.log('=====================================THIS FUCK', this, props);
   const _this = this;
 
   function remove(node) {

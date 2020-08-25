@@ -14,6 +14,7 @@ export abstract class Sandbox {
   bundles: Array<string>;
   css: Array<string>
   usePrefix: boolean;
+  preserveChunks: boolean;
 
   abstract assetURLMapper(url: string): string;
   abstract prefixElementSelector(): Node;
