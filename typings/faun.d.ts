@@ -4,13 +4,15 @@ import { IHooks } from './hooks';
 import { IStore } from './store';
 import { Sandbox } from './sandbox';
 
+declare type Extra = Record<string, any>;
+
 declare interface IBundleConfig {
   url: string;
-  executorGenerator: (data: string, defaultExecutor: Function) => Function;
+  executorGenerator: (data: string, defaultExecutor: Function, extra: Extra) => Function;
 }
 
 declare interface ISubApplicationConfig {
-  scripts?: Array<string|IBundleConfig>;
+  scripts?: Array<string | IBundleConfig>;
   styles?: Array<string>;
   mountPointID: string;
   useCSSPrefix?: boolean;
