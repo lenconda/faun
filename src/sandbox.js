@@ -118,6 +118,7 @@ const create = async function(subApplicationConfig, props) {
     assetURLMapper = null,
     prefixElementSelector = null,
     preserveChunks,
+    extra = {},
   } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
@@ -154,7 +155,7 @@ const create = async function(subApplicationConfig, props) {
       const defaultExecutor = new Function(data);
 
       if (bundle.executorGenerator) {
-        executor = bundle.executorGenerator(data, defaultExecutor);
+        executor = bundle.executorGenerator(data, defaultExecutor, extra);
       } else {
         executor = defaultExecutor;
       }
