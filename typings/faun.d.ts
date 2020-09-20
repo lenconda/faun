@@ -19,6 +19,7 @@ declare interface ISubApplicationConfig {
   assetURLMapper?: (url: string) => string;
   prefixElementSelector?: () => Node;
   preserveChunks?: boolean;
+  extra?: Extra;
 }
 
 declare interface IGlobalDependenceInfo {
@@ -26,9 +27,7 @@ declare interface IGlobalDependenceInfo {
   dep: any;
 }
 
-declare interface ISubApplicationConfigMap {
-  [key: string]: Partial<ISubApplicationConfig>;
-}
+declare type ISubApplicationConfigMap = Array<Partial<ISubApplicationConfig>>;
 
 declare interface IPlugin {
   install: (Faun: Faun) => any;
