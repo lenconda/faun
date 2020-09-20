@@ -12,12 +12,12 @@ declare interface IBundleConfig {
 }
 
 declare interface ISubApplicationConfig {
+  name?: string;
   scripts?: Array<string | IBundleConfig>;
   styles?: Array<string>;
   mountPointID: string;
   useCSSPrefix?: boolean;
   assetURLMapper?: (url: string) => string;
-  prefixElementSelector?: () => Node;
   preserveChunks?: boolean;
   extra?: Extra;
 }
@@ -42,11 +42,15 @@ declare interface IFaunProps {
   readonly direction: 'forward' | 'backward';
 }
 
+declare type FaunConfig = {
+  singular?: boolean;
+};
+
 declare abstract class Faun {
-  constructor();
+  constructor(appConfig: FaunConfig);
 
   abstract run(): void;
-  abstract registerSubApplications(config: ISubApplicationConfigMap): void;
+  abstract registerSubApplications(config: ISubApplicationConfigMap, hooks: IHooks): void;
   abstract addGlobalDependence<T extends Record<string, any>>(name: string, dep: T): void;
 
   public history: History<LocationState>;
