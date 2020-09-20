@@ -8,16 +8,18 @@ app.addGlobalDependence('axios', axios);
 app.registerSubApplications(
   [
     {
+      name: 'demo_vue_app',
       activeWhen: '/vue',
       scripts: [
         '//localhost:8181/app.js',
       ],
       styles: [],
       mountPointID: 'app',
-      useCSSPrefix: true,
+      useCSSPrefix: false,
       assetURLMapper: url => `//localhost:8181${url}`,
     },
     {
+      // name: 'demo_react_app',
       activeWhen: '/react',
       scripts: [
         '//localhost:8182/static/js/main.bundle.js',
@@ -27,7 +29,7 @@ app.registerSubApplications(
         '//localhost:8182/static/css/main.css',
       ],
       mountPointID: 'root',
-      useCSSPrefix: true,
+      useCSSPrefix: false,
       assetURLMapper: url => `//localhost:8182${url}`,
     },
   ],

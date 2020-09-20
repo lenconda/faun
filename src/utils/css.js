@@ -72,11 +72,15 @@ export default function(input, prefix, excludes = []) {
     }
 
     rule.selectors = rule.selectors.map(selector => {
-      if (excludeSelector(selector, ['html', 'body', '*', ...excludes]) || selector.startsWith(`.${prefix}`)) {
+      if (
+        excludeSelector(selector, ['html', 'body', '*', ...excludes])
+        || selector.startsWith(`#${prefix}`)
+        || selector.indexOf(`#${prefix}`) !== -1
+      ) {
         return selector;
       }
 
-      return '.' + prefixWithSpace + selector;
+      return '#' + prefixWithSpace + selector;
     });
   });
 
