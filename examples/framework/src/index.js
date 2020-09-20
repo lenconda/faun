@@ -5,30 +5,34 @@ const app = new Faun();
 
 app.addGlobalDependence('axios', axios);
 
-app.registerSubApplications({
-  '/vue': {
-    scripts: [
-      '//localhost:8181/app.js',
-    ],
-    styles: [],
-    mountPointID: 'app',
-    useCSSPrefix: false,
-    assetURLMapper: url => `//localhost:8181${url}`,
-    preserveChunks: true,
-  },
-  '/react': {
-    scripts: [
-      '//localhost:8182/static/js/main.bundle.js',
-      '//localhost:8182/static/js/vendors.chunk.js',
-    ],
-    styles: [
-      '//localhost:8182/static/css/main.css',
-    ],
-    mountPointID: 'root',
-    assetURLMapper: url => `//localhost:8182${url}`,
-    prefixElementSelector: () => document.body,
-  },
-});
+app.registerSubApplications(
+  [
+    {
+      activeWhen: '/vue',
+      scripts: [
+        '//localhost:8181/app.js',
+      ],
+      styles: [],
+      mountPointID: 'app',
+      useCSSPrefix: false,
+      assetURLMapper: url => `//localhost:8181${url}`,
+      preserveChunks: true,
+    },
+    {
+      activeWhen: '/react',
+      scripts: [
+        '//localhost:8182/static/js/main.bundle.js',
+        '//localhost:8182/static/js/vendors.chunk.js',
+      ],
+      styles: [
+        '//localhost:8182/static/css/main.css',
+      ],
+      mountPointID: 'root',
+      assetURLMapper: url => `//localhost:8182${url}`,
+      prefixElementSelector: () => document.body,
+    },
+  ],
+);
 
 app.hooks.loading = function(pathname) {
   console.log('loading', this);
