@@ -18,14 +18,7 @@ export const handleClick = function(event, props, history) {
     const { pathname, search } = event.target;
     const currentRoutePathname = pathname || '';
     const currentRouteSearch = search || '';
-    const currentRouteResources = props.registeredSubApplications[currentRoutePathname];
-
-    if (currentRouteResources) {
-      history.push(`${currentRoutePathname}${currentRouteSearch}`, generateRandomString());
-    } else {
-      throw new ReferenceError(`[Faun] Cannot find current route resources: ${currentRoutePathname}`);
-    }
-
+    history.push(`${currentRoutePathname}${currentRouteSearch}`, generateRandomString());
     event.preventDefault();
     return false;
   }

@@ -15,7 +15,6 @@ import { findLastIndex } from './utils/lodash';
  * @returns {Promise<void>}
  */
 export const loadSubApplication = async function(props, pathname, context, action) {
-  console.log(props.registeredSubApplications);
   const currentRouteResources = props.registeredSubApplications.find(config => {
     const activeWhen = config.activeWhen;
     if (!activeWhen) {
@@ -36,7 +35,7 @@ export const loadSubApplication = async function(props, pathname, context, actio
       return false;
     }
   });
-  const hooks = context && context.hooks || null;
+  const hooks = props && props.hooks || null;
 
   // only if the sub-application resources are found in context
   // the loadSubApplication method will work

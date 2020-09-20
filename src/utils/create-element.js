@@ -5,7 +5,7 @@
  * @returns {HTMLElement|null}
  */
 
-export default function(tagName, attributes) {
+export default function(tagName, attributes, children = []) {
   if (typeof tagName !== 'string' || typeof attributes !== 'object') {
     return null;
   }
@@ -14,6 +14,10 @@ export default function(tagName, attributes) {
   Object.keys(attributes).forEach(key => {
     element[key] = attributes[key];
   });
+
+  if (children.length > 0) {
+    children.forEach(child => element.appendChild(child));
+  }
 
   return element;
 }

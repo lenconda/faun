@@ -32,6 +32,8 @@ function Faun() {
     position: 0,
     // stack cursor direction
     direction: 'forward',
+    // lifecycle hooks
+    hooks: createHooks(),
   };
 
   // global dependencies
@@ -46,10 +48,11 @@ function Faun() {
 
   /**
    * get remote sub-applications resources and call this method
-   * @param config
+   * @param {ISubApplicationConfigMap} subApplicationConfigMap
+   * @param {IHooks} hooks
    * @returns {function}
    */
-  this.registerSubApplications = config => registerSubApplications.call(props, config);
+  this.registerSubApplications = (config, hooks) => registerSubApplications.call(props, config, hooks);
 
   /**
    * set global deps to window
@@ -88,15 +91,6 @@ Faun.use = async function(plugin, options) {
  * @type {History<LocationState>}
  */
 Faun.prototype.history = Faun.history = createBrowserHistory();
-
-/**
- * create the lifecycle hooks of the application
- * only hooks that in _HOOKS array would be added, or it will throw a ReferenceError
- * returns a Proxy-based object, check if the hook name is legal
- * @public
- * @type {Proxy}
- */
-Faun.prototype.hooks = createHooks();
 
 // install plugin `Events`
 Faun.use(Events);
