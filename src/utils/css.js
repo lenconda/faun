@@ -34,7 +34,7 @@ function stringify(node, options = {}) {
  * @param {string} input
  * @param {string} prefix
  */
-export default function(input, prefix) {
+export default function(input, prefix, excludes = []) {
   if (!input) {
     return '';
   }
@@ -72,7 +72,7 @@ export default function(input, prefix) {
     }
 
     rule.selectors = rule.selectors.map(selector => {
-      if (excludeSelector(selector, ['html', 'body', '*']) || selector.startsWith(`.${prefix}`)) {
+      if (excludeSelector(selector, ['html', 'body', '*', ...excludes]) || selector.startsWith(`.${prefix}`)) {
         return selector;
       }
 

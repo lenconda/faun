@@ -116,28 +116,26 @@ const create = async function(subApplicationConfig, props) {
   const {
     mountPointID,
     assetURLMapper = null,
-    prefixElementSelector = null,
     preserveChunks,
     extra = {},
+    useCSSPrefix,
   } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
   }
 
+  this.mountPointID = mountPointID;
+  props.mountPointElement = createElement('div', { classList: useCSSPrefix ? props.prefix : '' }, [
+    createElement('div', { id: mountPointID }),
+  ]);
+
   if (preserveChunks === true) {
     this.preserveChunks = true;
-  }
-
-  if (prefixElementSelector && typeof prefixElementSelector === 'function') {
-    this.prefixElementSelector = prefixElementSelector;
   }
 
   if (assetURLMapper && typeof assetURLMapper === 'function') {
     this.assetURLMapper = assetURLMapper;
   }
-
-  this.mountPointID = mountPointID;
-  props.mountPointElement = createElement('div', { id: this.mountPointID });
 
   if (subApplicationConfig.scripts && subApplicationConfig.scripts.length) {
     for (const bundle of subApplicationConfig.scripts) {
@@ -199,11 +197,6 @@ const mount = function(props) {
 
   document.body.appendChild(Array.prototype.slice.call([props.mountPointElement])[0]);
 
-  const prefixElement = this.prefixElementSelector() || props.defaultPrefixElement;
-  if (prefixElement && prefixElement instanceof Node && this.useCSSPrefix) {
-    prefixElement.classList = [...prefixElement.classList, props.prefix].join(' ');
-  }
-
   if (props.styleElements && Array.isArray(props.styleElements)) {
     props.styleElements.forEach(element => document.head.appendChild(element));
   }
@@ -222,12 +215,7 @@ const mount = function(props) {
  * @param {ISandboxProps} props
  */
 const unmount = function(props) {
-  const currentMountPointElement = document.getElementById(this.mountPointID);
-  currentMountPointElement && currentMountPointElement.remove();
-  const prefixElement = this.prefixElementSelector() || props.defaultPrefixElement;
-  if (prefixElement && prefixElement instanceof Node && this.useCSSPrefix) {
-    prefixElement.classList = Array.from(prefixElement.classList).filter(item => item !== props.prefix).join(' ');
-  }
+  props.mountPointElement.remove();
   this.takeWindowSnapshot();
   props.disableRewriteEventListeners && props.disableRewriteEventListeners();
   this.restoreDOMSnapshot();
@@ -253,7 +241,6 @@ function Sandbox(name, useCSSPrefix = true) {
     modifiedPropsMap: {},
     observer: null,
     childNodeOperator: childNodeOperator(),
-    defaultPrefixElement: document.documentElement,
   };
 
   this.mountPointID = '';
@@ -262,7 +249,6 @@ function Sandbox(name, useCSSPrefix = true) {
   this.css = [];
   this.useCSSPrefix = useCSSPrefix;
   this.assetURLMapper = url => url;
-  this.prefixElementSelector = () => props.defaultPrefixElement;
   this.preserveChunks = false;
 
   if (!props.observer) {
