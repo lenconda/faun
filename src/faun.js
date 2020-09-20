@@ -18,7 +18,7 @@ import Store from './plugins/store';
  * @constructor
  * Constructor of Faun
  */
-function Faun() {
+function Faun(appConfig = {}) {
   // defines the application properties
   // which will be passed when `run` and `registerSubApplications` is called
   const props = {
@@ -34,6 +34,8 @@ function Faun() {
     direction: 'forward',
     // lifecycle hooks
     hooks: createHooks(),
+    // app config
+    appConfig,
   };
 
   // global dependencies

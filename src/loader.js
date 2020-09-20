@@ -46,7 +46,7 @@ export const loadSubApplication = async function(props, pathname, context, actio
       const sandbox = new Sandbox(pathname, currentRouteResources.useCSSPrefix);
       // call loading hook
       hooks && hooks.loading && hooks.loading.call(context, pathname);
-      await sandbox.create(currentRouteResources);
+      await sandbox.create(currentRouteResources, props.appConfig);
       props.sandboxes.splice(props.position + 1, props.sandboxes.length - props.position - 1);
       props.sandboxes.push(sandbox);
       props.position = props.sandboxes.length - 1;

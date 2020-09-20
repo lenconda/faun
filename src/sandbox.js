@@ -112,20 +112,23 @@ const restoreWindowSnapshot = function(props) {
  * @param {ISandboxProps} props
  * @returns {Promise<void>}
  */
-const create = async function(subApplicationConfig, props) {
+const create = async function(subApplicationConfig, props, appConfig) {
   const {
     mountPointID,
     assetURLMapper = null,
     preserveChunks,
     extra = {},
     useCSSPrefix,
+    name = random(),
   } = subApplicationConfig;
   if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
     return;
   }
 
+  props.name = name;
+  props.singular = appConfig.singular || true;
   this.mountPointID = mountPointID;
-  props.mountPointElement = createElement('div', { classList: useCSSPrefix ? props.prefix : '' }, [
+  props.mountPointElement = createElement('div', { id: (useCSSPrefix || !props.singular) ? props.name : '' }, [
     createElement('div', { id: mountPointID }),
   ]);
 
@@ -172,7 +175,7 @@ const create = async function(subApplicationConfig, props) {
       // make an ajax to load styles
       const data = await fetch(stylesURL);
       if (data) {
-        const styleData = this.useCSSPrefix ? cssPrefix(data, props.prefix) : data;
+        const styleData = (this.useCSSPrefix || !props.singular) ? cssPrefix(data, props.name) : data;
         const currentStyleElement = createElement('style', { type: 'text/css' });
         currentStyleElement.innerHTML = styleData;
         props.styleElements.push(currentStyleElement);
@@ -231,11 +234,12 @@ const unmount = function(props) {
  */
 function Sandbox(name, useCSSPrefix = true) {
   const props = {
+    name: '',
     domSnapshot: [],
     mountPointElement: null,
     windowSnapshot: {},
-    prefix: random(),
     bundleExecutors: [],
+    singular: true,
     styleElements: [],
     disableRewriteEventListeners: null,
     modifiedPropsMap: {},
@@ -260,8 +264,8 @@ function Sandbox(name, useCSSPrefix = true) {
           if (node && /^style$|^script$|^link$/.test(nodeName)) {
             props.domSnapshot.push(node);
 
-            if (nodeName === 'style' && this.useCSSPrefix) {
-              node.innerHTML = cssPrefix(node.innerHTML, props.prefix);
+            if (nodeName === 'style' && (this.useCSSPrefix || !props.singular)) {
+              node.innerHTML = cssPrefix(node.innerHTML, props.name);
             }
           }
         });
@@ -285,8 +289,8 @@ function Sandbox(name, useCSSPrefix = true) {
     restoreWindowSnapshot.call(this, props);
   };
 
-  this.create = async function(subApplicationConfig) {
-    await create.call(this, subApplicationConfig, props);
+  this.create = async function(subApplicationConfig, appConfig) {
+    await create.call(this, subApplicationConfig, props, appConfig);
   };
 
   this.mount = function() {
