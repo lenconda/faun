@@ -310,7 +310,6 @@ function Sandbox(name, useCSSPrefix = true) {
   };
 
   this.create = async function(subApplicationConfig, appConfig) {
-    console.log('FUCK');
     await create.call(this, subApplicationConfig, props, appConfig);
   };
 
