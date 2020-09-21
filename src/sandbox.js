@@ -129,9 +129,11 @@ const create = async function(subApplicationConfig, props, appConfig) {
   props.name = name;
   props.singular = appConfig.singular || true;
   this.mountPointID = mountPointID;
-  props.mountPointElement = createElement('div', { id: (useCSSPrefix || !props.singular) ? props.name : '' }, [
-    createElement('div', { id: mountPointID }),
-  ]);
+  if ((useCSSPrefix || !props.singular) && document.getElementById(props.name)) {
+    props.mountPointElement = createElement('div', {
+      id: (useCSSPrefix || !props.singular) ? props.name : '',
+    }, document.getElementById(mountPointID) ? [] : [createElement('div', { id: mountPointID })]);
+  }
 
   if (preserveChunks === true) {
     this.preserveChunks = true;
