@@ -15,7 +15,7 @@ import { findLastIndex } from './utils/lodash';
  * @returns {Promise<void>}
  */
 export const loadSubApplication = async function(props, pathname, context, action) {
-  const currentRouteResources = props.registeredSubApplications.find(config => {
+  const currentRouteResources = props.registeredSubApplications.filter(config => {
     const activeWhen = config.activeWhen;
     if (!activeWhen) {
       return false;
@@ -35,6 +35,7 @@ export const loadSubApplication = async function(props, pathname, context, actio
       return false;
     }
   });
+
   const hooks = props && props.hooks || null;
 
   // only if the sub-application resources are found in context
@@ -43,46 +44,59 @@ export const loadSubApplication = async function(props, pathname, context, actio
     const actionLowerCase = action && action.toLowerCase() || '';
 
     if (actionLowerCase === 'push') {
-      const sandbox = new Sandbox(pathname, currentRouteResources.useCSSPrefix);
+      const sandboxesList = currentRouteResources.map(resource => ({
+        sandbox: new Sandbox(pathname, resource.useCSSPrefix),
+        resource,
+      }));
+
       // call loading hook
       hooks && hooks.loading && hooks.loading.call(context, pathname);
-      await sandbox.create(currentRouteResources, props.appConfig);
-      props.sandboxes.splice(props.position + 1, props.sandboxes.length - props.position - 1);
-      props.sandboxes.push(sandbox);
-      props.position = props.sandboxes.length - 1;
+      await Promise.all(sandboxesList.map(item => (async () => {
+        await item.sandbox.create(item.resource, props.appConfig);
+      })()));
+      props.routes.splice(props.position + 1, props.routes.length - props.position - 1);
+      const routeInfo = {
+        pathname,
+        sandboxes: sandboxesList.map(item => item.sandbox),
+      };
+      if (routeInfo.sandboxes.length > 0 && props.appConfig.singular === true) {
+        routeInfo.sandboxes = [routeInfo.sandboxes[0]];
+      }
+      props.routes.push(routeInfo);
+      props.position = props.routes.length - 1;
     }
 
     if (actionLowerCase === 'pop') {
-      let sandboxIndex;
+      let routeIndex;
       if (props.direction === 'forward') {
-        sandboxIndex = props.sandboxes.findIndex((item, index) => {
-          return item.name === pathname && index >= props.position;
+        routeIndex = props.routes.findIndex((item, index) => {
+          return item.pathname === pathname && index >= props.position;
         });
       }
       if (props.direction === 'backward') {
-        sandboxIndex = findLastIndex(props.sandboxes.slice(0, props.position), (item, index) => {
-          return item.name === pathname && index <= props.position;
+        routeIndex = findLastIndex(props.routes.slice(0, props.position), (item, index) => {
+          return item.pathname === pathname && index <= props.position;
         });
       }
 
-      if (sandboxIndex && sandboxIndex !== -1) {
-        const currentSandbox = props.sandboxes[sandboxIndex];
+      if (routeIndex && routeIndex !== -1) {
+        const currentSandboxes = props.routes[routeIndex].sandboxes;
 
-        if (!currentSandbox) {
+        if (!currentSandboxes || currentSandboxes.length === 0) {
           return;
         }
 
-        props.position = sandboxIndex;
+        props.position = routeIndex;
       }
     }
 
-    const currentSandbox = props.sandboxes[props.position];
+    const currentSandboxes = props.routes[props.position].sandboxes;
 
     // call loaded hook
-    hooks && hooks.loaded && hooks.loaded.call(context, pathname, currentSandbox);
-    currentSandbox.mount();
+    hooks && hooks.loaded && hooks.loaded.call(context, pathname, currentSandboxes);
+    await Promise.all(currentSandboxes.map(sandbox => sandbox.mount()));
     // call mounted hook
-    hooks && hooks.mounted && hooks.mounted.call(context, pathname, currentSandbox);
+    hooks && hooks.mounted && hooks.mounted.call(context, pathname, currentSandboxes);
   }
 };
 
@@ -96,10 +110,10 @@ export const loadSubApplication = async function(props, pathname, context, actio
  */
 // eslint-disable-next-line max-params
 export const unloadSubApplication = function(props, prev, next, context) {
-  const currentSandbox = props.sandboxes[props.position];
+  const currentSandboxes = props.routes[props.position].sandboxes;
   const hooks = context.hooks || null;
 
-  if (!currentSandbox) {
+  if (!currentSandboxes || currentSandboxes.length === 0) {
     return true;
   }
 
@@ -110,12 +124,14 @@ export const unloadSubApplication = function(props, prev, next, context) {
     }
   }
 
-  currentSandbox.unmount();
+  currentSandboxes.forEach(sandbox => sandbox.unmount());
+  // await PromisecurrentSandbox.unmount();
   // call unmounted hook
-  hooks && hooks.unmounted && hooks.unmounted.call(context, prev, next, currentSandbox);
+  hooks && hooks.unmounted && hooks.unmounted.call(context, prev, next, currentSandboxes);
 
-  props.sandboxes[0].restoreDOMSnapshot();
-  props.sandboxes[0].restoreWindowSnapshot();
+  const [defaultSandbox] = props.routes[0].sandboxes;
+  defaultSandbox.restoreDOMSnapshot();
+  defaultSandbox.restoreWindowSnapshot();
 
   return true;
 };

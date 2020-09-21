@@ -1,7 +1,7 @@
 import Faun from '../../../src';
 import axios from 'axios';
 
-const app = new Faun();
+const app = new Faun({ singular: false });
 
 app.addGlobalDependence('axios', axios);
 
@@ -16,21 +16,20 @@ app.registerSubApplications(
       styles: [],
       mountPointID: 'app',
       useCSSPrefix: false,
-      assetURLMapper: url => `//localhost:8181${url}`,
+      assetPublicPath: '//localhost:8181',
     },
     {
-      // name: 'demo_react_app',
+      name: 'demo_react_app',
       activeWhen: '/react',
       scripts: [
         '//localhost:8182/static/js/main.bundle.js',
-        '//localhost:8182/static/js/vendors.chunk.js',
       ],
       styles: [
         '//localhost:8182/static/css/main.css',
       ],
       mountPointID: 'root',
       useCSSPrefix: false,
-      assetURLMapper: url => `//localhost:8182${url}`,
+      assetPublicPath: '//localhost:8182',
     },
   ],
   {

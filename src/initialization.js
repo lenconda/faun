@@ -10,10 +10,12 @@ import { isFunction } from './utils/lodash';
  * initialize the default sandbox on context
  */
 export const initSandbox = function() {
-  if (!this.sandboxes[0]) {
-    this.sandboxes.push(new Sandbox('@@default'));
+  if (!this.routes[0]) {
+    this.routes.push({
+      sandboxes: [new Sandbox('@@default')],
+    });
   }
-  const defaultSandbox = this.sandboxes[0];
+  const [defaultSandbox] = this.routes[0].sandboxes;
   defaultSandbox.takeWindowSnapshot();
 };
 

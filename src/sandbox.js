@@ -23,11 +23,12 @@ const takeDOMSnapshot = function(props) {
   props.childNodeOperator.intercept(function(element) {
     const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
     const { assetPublicPath } = _this;
+    const getAssetsPrefix = src => (isFunction(assetPublicPath) ? `${assetPublicPath(src)}${src}` : `${assetPublicPath}${src}`);
     switch(nodeName) {
     case 'script': {
       const src = element.getAttribute('src');
       if (src) {
-        element.setAttribute('src', (typeof assetPublicPath === 'function' ? `${assetPublicPath(src)}${src}` : `${assetPublicPath}${src}`));
+        element.setAttribute('src', getAssetsPrefix(src));
       }
       break;
     }
@@ -35,7 +36,7 @@ const takeDOMSnapshot = function(props) {
       const href = element.getAttribute('href');
       const rel = element.getAttribute('rel');
       if (href && rel === 'stylesheet') {
-        element.setAttribute('href', _this.assetPublicPath(href));
+        element.setAttribute('href', getAssetsPrefix(href));
       }
       break;
     }
@@ -129,7 +130,7 @@ const create = async function(subApplicationConfig, props, appConfig) {
   props.name = name;
   props.singular = appConfig.singular || true;
   this.mountPointID = mountPointID;
-  if ((useCSSPrefix || !props.singular) && document.getElementById(props.name)) {
+  if (!document.getElementById(props.name)) {
     props.mountPointElement = createElement('div', {
       id: (useCSSPrefix || !props.singular) ? props.name : '',
     }, document.getElementById(mountPointID) ? [] : [createElement('div', { id: mountPointID })]);
@@ -210,7 +211,7 @@ const mount = function(props) {
   !!props.windowSnapshot.length && this.restoreWindowSnapshot();
 
   props.bundleExecutors && props.bundleExecutors.forEach(executor => {
-    if (isFunction(executor)) {
+    if (executor && isFunction(executor)) {
       (function(window) {
         executor.call();
       })(new Proxy(props.sandboxWindow, {
@@ -309,6 +310,7 @@ function Sandbox(name, useCSSPrefix = true) {
   };
 
   this.create = async function(subApplicationConfig, appConfig) {
+    console.log('FUCK');
     await create.call(this, subApplicationConfig, props, appConfig);
   };
 
