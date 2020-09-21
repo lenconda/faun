@@ -218,7 +218,7 @@ const mount = function(props) {
  * @param {ISandboxProps} props
  */
 const unmount = function(props) {
-  props.mountPointElement.remove();
+  props.mountPointElement && props.mountPointElement.remove();
   this.takeWindowSnapshot();
   props.disableRewriteEventListeners && props.disableRewriteEventListeners();
   this.restoreDOMSnapshot();
