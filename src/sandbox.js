@@ -22,8 +22,10 @@ const takeDOMSnapshot = function(props) {
 
   props.childNodeOperator.intercept(function(element) {
     const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
-    const { assetPublicPath } = _this;
-    const getAssetsPrefix = src => (isFunction(assetPublicPath) ? `${assetPublicPath(src)}${src}` : `${assetPublicPath}${src}`);
+    const getAssetsPrefix = src => {
+      const { assetPublicPath } = _this;
+      return (isFunction(assetPublicPath) ? `${assetPublicPath(src)}${src}` : `${assetPublicPath}${src}`);
+    };
     switch(nodeName) {
     case 'script': {
       const src = element.getAttribute('src');
