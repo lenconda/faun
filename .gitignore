@@ -20,3 +20,5 @@ dist
 
 report
 coverage
+
+index.dev.js
