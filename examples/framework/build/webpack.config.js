@@ -4,8 +4,18 @@ const webpack = require('webpack');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const getEntryPath = () => {
+  const devEntryPath = path.resolve(__dirname, '../src/index.dev.js');
+
+  if (!devEntryPath) {
+    return path.resolve(__dirname, '../src/index.js');
+  }
+
+  return devEntryPath;
+}
+
 module.exports = {
-  entry: path.resolve(__dirname, '../src/index.js'),
+  entry: getEntryPath(),
 
   output: {
     path: path.resolve(__dirname, '../dist'),

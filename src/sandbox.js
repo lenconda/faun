@@ -22,11 +22,15 @@ const takeDOMSnapshot = function(props) {
 
   props.childNodeOperator.intercept(function(element) {
     const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
+    const getAssetsPrefix = src => {
+      const { assetPublicPath } = _this;
+      return (isFunction(assetPublicPath) ? `${assetPublicPath(src)}${src}` : `${assetPublicPath}${src}`);
+    };
     switch(nodeName) {
     case 'script': {
       const src = element.getAttribute('src');
       if (src) {
-        element.setAttribute('src', _this.assetURLMapper(src));
+        element.setAttribute('src', getAssetsPrefix(src));
       }
       break;
     }
@@ -34,7 +38,7 @@ const takeDOMSnapshot = function(props) {
       const href = element.getAttribute('href');
       const rel = element.getAttribute('rel');
       if (href && rel === 'stylesheet') {
-        element.setAttribute('href', _this.assetURLMapper(href));
+        element.setAttribute('href', getAssetsPrefix(href));
       }
       break;
     }
@@ -115,7 +119,7 @@ const restoreWindowSnapshot = function(props) {
 const create = async function(subApplicationConfig, props, appConfig) {
   const {
     mountPointID,
-    assetURLMapper = null,
+    assetPublicPath = '',
     preserveChunks,
     extra = {},
     useCSSPrefix,
@@ -128,16 +132,18 @@ const create = async function(subApplicationConfig, props, appConfig) {
   props.name = name;
   props.singular = appConfig.singular || true;
   this.mountPointID = mountPointID;
-  props.mountPointElement = createElement('div', { id: (useCSSPrefix || !props.singular) ? props.name : '' }, [
-    createElement('div', { id: mountPointID }),
-  ]);
+  if (!document.getElementById(props.name)) {
+    props.mountPointElement = createElement('div', {
+      id: (useCSSPrefix || !props.singular) ? props.name : '',
+    }, document.getElementById(mountPointID) ? [] : [createElement('div', { id: mountPointID })]);
+  }
 
   if (preserveChunks === true) {
     this.preserveChunks = true;
   }
 
-  if (assetURLMapper && typeof assetURLMapper === 'function') {
-    this.assetURLMapper = assetURLMapper;
+  if (assetPublicPath) {
+    this.assetPublicPath = assetPublicPath;
   }
 
   if (subApplicationConfig.scripts && subApplicationConfig.scripts.length) {
@@ -207,8 +213,23 @@ const mount = function(props) {
   !!props.windowSnapshot.length && this.restoreWindowSnapshot();
 
   props.bundleExecutors && props.bundleExecutors.forEach(executor => {
-    if (isFunction(executor)) {
-      executor.call();
+    if (executor && isFunction(executor)) {
+      (function(window) {
+        executor.call();
+      })(new Proxy(props.sandboxWindow, {
+        get(obj, prop) {
+          if (obj[prop]) {
+            return Reflect.get(obj, prop);
+          }
+          if (window[prop]) {
+            return Reflect.get(window, prop);
+          }
+          return null;
+        },
+        set(obj, prop, value) {
+          Reflect.set(obj, prop, value);
+        },
+      }));
     }
   });
 };
@@ -218,7 +239,7 @@ const mount = function(props) {
  * @param {ISandboxProps} props
  */
 const unmount = function(props) {
-  props.mountPointElement.remove();
+  props.mountPointElement && props.mountPointElement.remove();
   this.takeWindowSnapshot();
   props.disableRewriteEventListeners && props.disableRewriteEventListeners();
   this.restoreDOMSnapshot();
@@ -245,6 +266,7 @@ function Sandbox(name, useCSSPrefix = true) {
     modifiedPropsMap: {},
     observer: null,
     childNodeOperator: childNodeOperator(),
+    sandboxWindow: {},
   };
 
   this.mountPointID = '';
@@ -252,7 +274,7 @@ function Sandbox(name, useCSSPrefix = true) {
   this.bundles = [];
   this.css = [];
   this.useCSSPrefix = useCSSPrefix;
-  this.assetURLMapper = url => url;
+  this.assetPublicPath = '';
   this.preserveChunks = false;
 
   if (!props.observer) {

@@ -27,7 +27,7 @@ function Faun(appConfig = {}) {
     // current location object
     currentLocation: {},
     // sandboxes stack
-    sandboxes: [new Sandbox('@@default')],
+    routes: [{ sandboxes: [new Sandbox('@@default')] }],
     // stack top position
     position: 0,
     // stack cursor direction
@@ -35,7 +35,11 @@ function Faun(appConfig = {}) {
     // lifecycle hooks
     hooks: createHooks(),
     // app config
-    appConfig,
+    appConfig: {
+      ...appConfig,
+      // TODO: tmp set singular to true
+      singular: true,
+    },
   };
 
   // global dependencies

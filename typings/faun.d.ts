@@ -17,7 +17,7 @@ declare interface ISubApplicationConfig {
   styles?: Array<string>;
   mountPointID: string;
   useCSSPrefix?: boolean;
-  assetURLMapper?: (url: string) => string;
+  assetPublicPath?: (url: string) => string | string;
   preserveChunks?: boolean;
   extra?: Extra;
 }
