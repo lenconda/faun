@@ -146,23 +146,24 @@ const create = async function(subApplicationConfig, props, appConfig) {
     this.assetPublicPath = assetPublicPath;
   }
 
-  if (subApplicationConfig.scripts && subApplicationConfig.scripts.length) {
-    for (const bundle of subApplicationConfig.scripts) {
+  const { entry = {} } = subApplicationConfig;
+  if (entry.scripts && entry.scripts.length) {
+    for (const bundle of entry.scripts) {
       let bundleURL;
       let executor;
       if (typeof bundle === 'string') {
         bundleURL = bundle;
-      } else if (bundle.url && bundle.executorGenerator) {
+      } else if (bundle.url && bundle.scriptExecutor) {
         bundleURL = bundle.url;
       }
 
-      this.bundles.push(bundle);
+      this.scripts.push(bundle);
       // make an ajax to load the sub-application bundles
       const data = await fetch(bundleURL);
       const defaultExecutor = new Function(data);
 
-      if (bundle.executorGenerator) {
-        executor = bundle.executorGenerator(data, defaultExecutor, extra);
+      if (bundle.scriptExecutor) {
+        executor = bundle.scriptExecutor(data, defaultExecutor, extra);
       } else {
         executor = defaultExecutor;
       }
@@ -170,14 +171,14 @@ const create = async function(subApplicationConfig, props, appConfig) {
       if (data) {
         // wrap bundle code into a function
         // when mount method called, execute the functions
-        props.bundleExecutors.push(executor);
+        props.scriptExecutors.push(executor);
       }
     }
   }
 
-  if (subApplicationConfig.styles && subApplicationConfig.styles.length) {
-    for (const stylesURL of subApplicationConfig.styles) {
-      this.css.push(stylesURL);
+  if (entry.styles && entry.styles.length) {
+    for (const stylesURL of entry.styles) {
+      this.styles.push(stylesURL);
       // make an ajax to load styles
       const data = await fetch(stylesURL);
       if (data) {
@@ -212,7 +213,7 @@ const mount = function(props) {
 
   !!props.windowSnapshot.length && this.restoreWindowSnapshot();
 
-  props.bundleExecutors && props.bundleExecutors.forEach(executor => {
+  props.scriptExecutors && props.scriptExecutors.forEach(executor => {
     if (executor && isFunction(executor)) {
       (function(window) {
         executor.call();
@@ -259,7 +260,7 @@ function Sandbox(name, useCSSPrefix = true) {
     domSnapshot: [],
     mountPointElement: null,
     windowSnapshot: {},
-    bundleExecutors: [],
+    scriptExecutors: [],
     singular: true,
     styleElements: [],
     disableRewriteEventListeners: null,
@@ -271,8 +272,8 @@ function Sandbox(name, useCSSPrefix = true) {
 
   this.mountPointID = '';
   this.name = name || '';
-  this.bundles = [];
-  this.css = [];
+  this.scripts = [];
+  this.styles = [];
   this.useCSSPrefix = useCSSPrefix;
   this.assetPublicPath = '';
   this.preserveChunks = false;

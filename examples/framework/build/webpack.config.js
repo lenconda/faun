@@ -1,5 +1,6 @@
 const env = require('../../../build/utils/env');
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -7,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const getEntryPath = () => {
   const devEntryPath = path.resolve(__dirname, '../src/index.dev.js');
 
-  if (!devEntryPath) {
+  if (!fs.existsSync(devEntryPath)) {
     return path.resolve(__dirname, '../src/index.js');
   }
 

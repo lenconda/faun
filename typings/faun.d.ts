@@ -6,15 +6,20 @@ import { Sandbox } from './sandbox';
 
 declare type Extra = Record<string, any>;
 
-declare interface IBundleConfig {
+declare interface IEntryCustomScriptConfig {
   url: string;
-  executorGenerator: (data: string, defaultExecutor: Function, extra: Extra) => Function;
+  scriptExecutor: (data: string, defaultExecutor: Function, extra: Extra) => Function;
 }
+
+declare type ScriptConfig = Array<string | IEntryCustomScriptConfig>;
+declare type StyleConfig = Array<string>;
 
 declare interface ISubApplicationConfig {
   name?: string;
-  scripts?: Array<string | IBundleConfig>;
-  styles?: Array<string>;
+  entry?: {
+    scripts?: ScriptConfig,
+    styles?: StyleConfig,
+  };
   mountPointID: string;
   useCSSPrefix?: boolean;
   assetPublicPath?: (url: string) => string | string;
