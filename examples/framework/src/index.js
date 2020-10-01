@@ -10,10 +10,12 @@ app.registerSubApplications(
     {
       name: 'demo_vue_app',
       activeWhen: '/vue',
-      scripts: [
-        '//localhost:8181/app.js',
-      ],
-      styles: [],
+      entry: {
+        scripts: [
+          '//localhost:8181/app.js',
+        ],
+        styles: [],
+      },
       mountPointID: 'app',
       useCSSPrefix: false,
       assetPublicPath: '//localhost:8181',
@@ -21,12 +23,14 @@ app.registerSubApplications(
     {
       name: 'demo_react_app',
       activeWhen: '/react',
-      scripts: [
-        '//localhost:8182/static/js/main.bundle.js',
-      ],
-      styles: [
-        '//localhost:8182/static/css/main.css',
-      ],
+      entry: {
+        scripts: [
+          '//localhost:8182/static/js/main.bundle.js',
+        ],
+        styles: [
+          '//localhost:8182/static/css/main.css',
+        ],
+      },
       mountPointID: 'root',
       useCSSPrefix: false,
       assetPublicPath: '//localhost:8182',
