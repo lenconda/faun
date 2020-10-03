@@ -33,7 +33,7 @@ export default function(props, deps) {
 
   initRoute(this.history.location, function(location, pathname) {
     refreshLocation.call(props, location);
-    loadSubApplication(props, pathname, _this, 'PUSH', _this.history.location);
+    loadSubApplication(props, pathname, _this, 'PUSH');
   });
 
   // listen history change to load and unload sandboxes
@@ -43,7 +43,7 @@ export default function(props, deps) {
       if (!unloadSubApplication(props, prev, next, _this)) {
         return;
       }
-      loadSubApplication(props, next, _this, action, _this.history.location);
+      loadSubApplication(props, next, _this, action);
     });
   });
 
