@@ -9,7 +9,7 @@ export interface IChildNodeOperator {
 export abstract class Sandbox {
   constructor(name: string, useCSSPrefix: boolean);
 
-  mountPointID: string;
+  container: string;
   name: string;
   bundles: Array<string>;
   css: Array<string>

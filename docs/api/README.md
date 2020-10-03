@@ -15,7 +15,7 @@ Register sub-applications configuration.
     - `ISubApplicationConfig`. Required, the configuration for current sub-application
   - `ISubApplicationConfig`
     - [Type definition](#doc-isubapplicationconfig)
-    - `mountPointID`: `string`. Required, the mount point ID for current sub-application. e.g. if pass `app` to `mountPointID`, Faun will create a `HTMLDivElement` element with ID of `app`
+    - `container`: `string`. Required, the mount point ID for current sub-application. e.g. if pass `app` to `container`, Faun will create a `HTMLDivElement` element with ID of `app`
     - `scripts`: `Array<string>`. Optional, default `null`. JavaScript resource URLs for current sub-application
     - `styles`: `Array<string>`. Optional, default `null`. CSS resource URLS for current sub-application
     - `useCSSPrefix`: `boolean`. Optional, default `true`. By default, Faun will add a random string to `document.documentElement.classList`, such as `<html class="qz7Ux3v0">...</html>`
@@ -181,7 +181,7 @@ import { ISubApplicationConfig } from 'faun';
 declare interface ISubApplicationConfig {
   scripts?: Array<string>;
   styles?: Array<string>;
-  mountPointID: string;
+  container: string;
   useCSSPrefix?: boolean;
   assetURLMapper?: (url: string) => string;
   prefixElementSelector?: () => Node;
@@ -276,7 +276,7 @@ import { Sandbox } from 'faun';
 export abstract class Sandbox {
   constructor(name: string, useCSSPrefix: boolean);
 
-  mountPointID: string;
+  container: string;
   name: string;
   bundles: Array<string>;
   css: Array<string>

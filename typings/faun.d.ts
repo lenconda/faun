@@ -20,7 +20,7 @@ declare interface ISubApplicationConfig {
     scripts?: ScriptConfig,
     styles?: StyleConfig,
   };
-  mountPointID: string;
+  container: HTMLElement | string;
   useCSSPrefix?: boolean;
   assetPublicPath?: (url: string) => string | string;
   preserveChunks?: boolean;
