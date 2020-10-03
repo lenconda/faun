@@ -118,24 +118,29 @@ const restoreWindowSnapshot = function(props) {
  */
 const create = async function(subApplicationConfig, props, appConfig) {
   const {
-    mountPointID,
+    container,
     assetPublicPath = '',
     preserveChunks,
     extra = {},
     useCSSPrefix,
     name = random(),
   } = subApplicationConfig;
-  if (!subApplicationConfig || !mountPointID || typeof mountPointID !== 'string') {
+  if (!subApplicationConfig || !container || typeof container !== 'string') {
     return;
   }
 
   props.name = name;
   props.singular = appConfig.singular || true;
-  this.mountPointID = mountPointID;
+  if (container instanceof HTMLElement) {
+    this.container = container;
+  } else if (typeof container === 'string') {
+    this.container = createElement('div', { id: container });
+  }
+  this.container.remove();
   if (!document.getElementById(props.name)) {
     props.mountPointElement = createElement('div', {
       id: (useCSSPrefix || !props.singular) ? props.name : '',
-    }, document.getElementById(mountPointID) ? [] : [createElement('div', { id: mountPointID })]);
+    }, [this.container]);
   }
 
   if (preserveChunks === true) {
@@ -199,7 +204,7 @@ const mount = function(props) {
   this.takeDOMSnapshot();
   props.disableRewriteEventListeners = overwriteEventListeners();
 
-  const checkExistElement = document.getElementById(this.mountPointID);
+  const checkExistElement = document.getElementById(this.container);
 
   if (checkExistElement) {
     checkExistElement.remove();
@@ -270,7 +275,7 @@ function Sandbox(name, useCSSPrefix = true) {
     sandboxWindow: {},
   };
 
-  this.mountPointID = '';
+  // this.container = '';
   this.name = name || '';
   this.scripts = [];
   this.styles = [];
