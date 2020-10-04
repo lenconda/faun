@@ -26,5 +26,9 @@ export const handleRouteChange = function(props, location, callback) {
   const nextPathname = `/${nextPathArray[0]}`;
   const previousPathname = `/${previousPathArray[0]}`;
 
-  callback && isFunction(callback) && callback(previousPathname, nextPathname);
+  try {
+    callback && isFunction(callback) && callback(previousPathname, nextPathname);
+  } catch(e) {
+    console.error(e);
+  }
 };

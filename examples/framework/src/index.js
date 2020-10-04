@@ -31,13 +31,25 @@ app.registerSubApplications(
           '//localhost:8182/static/css/main.css',
         ],
       },
-      container: (() => {
-        const element = document.createElement('div');
-        element.setAttribute('id', 'root');
-        return element;
-      })(),
+      container: 'root',
       useCSSPrefix: false,
       assetPublicPath: '//localhost:8182',
+    },
+    {
+      name: 'demo_ng_app',
+      activeWhen: '/angular',
+      entry: {
+        scripts: [
+          '//localhost:8183/polyfills.js',
+          '//localhost:8183/runtime.js',
+          '//localhost:8183/main.js',
+          '//localhost:8183/vendor.js',
+          '//localhost:8183/styles.js',
+        ],
+      },
+      container: (() => document.createElement('app-root'))(),
+      useCSSPrefix: false,
+      // assetPublicPath: '//localhost:8183',
     },
   ],
   {
