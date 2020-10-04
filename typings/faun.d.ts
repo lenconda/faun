@@ -5,12 +5,10 @@ import { IStore } from './store';
 import { Sandbox } from './sandbox';
 
 declare type Extra = Record<string, any>;
-
 declare interface IEntryCustomScriptConfig {
   url: string;
   scriptExecutor: (data: string, defaultExecutor: Function, extra: Extra) => Function;
 }
-
 declare type ScriptConfig = Array<string | IEntryCustomScriptConfig>;
 declare type StyleConfig = Array<string>;
 
@@ -20,7 +18,7 @@ declare interface ISubApplicationConfig {
     scripts?: ScriptConfig,
     styles?: StyleConfig,
   };
-  container: HTMLElement | string;
+  container: (extra: Extra) => HTMLElement | HTMLElement | string;
   useCSSPrefix?: boolean;
   assetPublicPath?: (url: string) => string | string;
   preserveChunks?: boolean;

@@ -125,7 +125,7 @@ const create = async function(subApplicationConfig, props, appConfig) {
     useCSSPrefix,
     name = random(),
   } = subApplicationConfig;
-  if (!subApplicationConfig || !container || typeof container !== 'string') {
+  if (!subApplicationConfig || !container) {
     return;
   }
 
@@ -133,10 +133,19 @@ const create = async function(subApplicationConfig, props, appConfig) {
   props.singular = appConfig.singular || true;
   if (container instanceof HTMLElement) {
     this.container = container;
-  } else if (typeof container === 'string') {
-    this.container = createElement('div', { id: container });
+  } else {
+    switch (typeof container) {
+    case 'string':
+      this.container = createElement('div', { id: container });
+      break;
+    case 'function':
+      this.container = container(extra);
+      break;
+    default:
+      break;
+    }
   }
-  this.container.remove();
+
   if (!document.getElementById(props.name)) {
     props.mountPointElement = createElement('div', {
       id: (useCSSPrefix || !props.singular) ? props.name : '',
@@ -201,22 +210,19 @@ const create = async function(subApplicationConfig, props, appConfig) {
  * @param {ISandboxProps} props
  */
 const mount = function(props) {
-  this.takeDOMSnapshot();
+  const _this = this;
+
+  _this.takeDOMSnapshot();
   props.disableRewriteEventListeners = overwriteEventListeners();
 
-  const checkExistElement = document.getElementById(this.container);
-
-  if (checkExistElement) {
-    checkExistElement.remove();
-  }
-
-  document.body.appendChild(Array.prototype.slice.call([props.mountPointElement])[0]);
+  const mountPointElement = Array.prototype.slice.call([props.mountPointElement])[0];
+  document.body.appendChild(mountPointElement);
 
   if (props.styleElements && Array.isArray(props.styleElements)) {
     props.styleElements.forEach(element => document.head.appendChild(element));
   }
 
-  !!props.windowSnapshot.length && this.restoreWindowSnapshot();
+  !!props.windowSnapshot.length && _this.restoreWindowSnapshot();
 
   props.scriptExecutors && props.scriptExecutors.forEach(executor => {
     if (executor && isFunction(executor)) {
@@ -245,10 +251,12 @@ const mount = function(props) {
  * @param {ISandboxProps} props
  */
 const unmount = function(props) {
+  const _this = this;
+
   props.mountPointElement && props.mountPointElement.remove();
-  this.takeWindowSnapshot();
+  _this.takeWindowSnapshot();
   props.disableRewriteEventListeners && props.disableRewriteEventListeners();
-  this.restoreDOMSnapshot();
+  _this.restoreDOMSnapshot();
   props.domSnapshot.splice(0, props.domSnapshot.length);
 };
 
@@ -275,7 +283,6 @@ function Sandbox(name, useCSSPrefix = true) {
     sandboxWindow: {},
   };
 
-  // this.container = '';
   this.name = name || '';
   this.scripts = [];
   this.styles = [];
@@ -301,33 +308,15 @@ function Sandbox(name, useCSSPrefix = true) {
     });
   }
 
-  this.takeDOMSnapshot = function() {
-    takeDOMSnapshot.call(this, props);
-  };
-
-  this.restoreDOMSnapshot = function() {
-    restoreDOMSnapshot.call(this, props);
-  };
-
-  this.takeWindowSnapshot = function() {
-    takeWindowSnapshot.call(this, props);
-  };
-
-  this.restoreWindowSnapshot = function() {
-    restoreWindowSnapshot.call(this, props);
-  };
-
+  this.takeDOMSnapshot = takeDOMSnapshot.bind(this, props);
+  this.restoreDOMSnapshot = restoreDOMSnapshot.bind(this, props);
+  this.takeWindowSnapshot = takeWindowSnapshot.bind(this, props);
+  this.restoreWindowSnapshot = restoreWindowSnapshot.bind(this, props);
   this.create = async function(subApplicationConfig, appConfig) {
     await create.call(this, subApplicationConfig, props, appConfig);
   };
-
-  this.mount = function() {
-    mount.call(this, props);
-  };
-
-  this.unmount = function() {
-    unmount.call(this, props);
-  };
+  this.mount =  mount.bind(this, props);
+  this.unmount = unmount.bind(this, props);
 }
 
 export default Sandbox;

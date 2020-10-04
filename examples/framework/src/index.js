@@ -31,7 +31,11 @@ app.registerSubApplications(
           '//localhost:8182/static/css/main.css',
         ],
       },
-      container: 'root',
+      container: (() => {
+        const element = document.createElement('div');
+        element.setAttribute('id', 'root');
+        return element;
+      })(),
       useCSSPrefix: false,
       assetPublicPath: '//localhost:8182',
     },
