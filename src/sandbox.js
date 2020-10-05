@@ -124,6 +124,7 @@ const create = async function(subApplicationConfig, props, appConfig) {
     extra = {},
     useCSSPrefix,
     name = random(),
+    contentBaseURLReplaceRules = [],
   } = subApplicationConfig;
   if (!subApplicationConfig || !container) {
     return;
@@ -131,6 +132,7 @@ const create = async function(subApplicationConfig, props, appConfig) {
 
   props.name = name;
   props.singular = appConfig.singular || true;
+  props.contentBaseURLReplaceRules = contentBaseURLReplaceRules;
   if (container instanceof HTMLElement) {
     this.container = container;
   } else {
@@ -295,6 +297,7 @@ function Sandbox(name, useCSSPrefix = true) {
       mutations.forEach(mutation => {
         const currentAddedNodes = mutation.addedNodes;
         currentAddedNodes.forEach(node => {
+          // if (props)
           const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
           if (node && /^style$|^script$|^link$/.test(nodeName)) {
             props.domSnapshot.push(node);

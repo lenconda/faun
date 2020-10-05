@@ -4,25 +4,31 @@ import { IHooks } from './hooks';
 import { IStore } from './store';
 import { Sandbox } from './sandbox';
 
-declare type Extra = Record<string, any>;
+declare type ExtraType = Record<string, any>;
 declare interface IEntryCustomScriptConfig {
   url: string;
-  scriptExecutor: (data: string, defaultExecutor: Function, extra: Extra) => Function;
+  scriptExecutor: (data: string, defaultExecutor: Function, extra: ExtraType) => Function;
 }
-declare type ScriptConfig = Array<string | IEntryCustomScriptConfig>;
-declare type StyleConfig = Array<string>;
+declare type ScriptConfigType = Array<string | IEntryCustomScriptConfig>;
+declare type StyleConfigType = Array<string>;
+declare type ContentBaseURLReplaceRuleType = {
+  tagName: string;
+  attributes: Array<string>;
+  matcher: (url: string) => string;
+};
 
 declare interface ISubApplicationConfig {
   name?: string;
   entry?: {
-    scripts?: ScriptConfig,
-    styles?: StyleConfig,
+    scripts?: ScriptConfigType,
+    styles?: StyleConfigType,
   };
-  container: (extra: Extra) => HTMLElement | HTMLElement | string;
+  container: (extra: ExtraType) => HTMLElement | HTMLElement | string;
   useCSSPrefix?: boolean;
   assetPublicPath?: (url: string) => string | string;
   preserveChunks?: boolean;
-  extra?: Extra;
+  extra?: ExtraType;
+  contentBaseURLReplaceRules?: Array<ContentBaseURLReplaceRuleType>;
 }
 
 declare interface IGlobalDependenceInfo {
