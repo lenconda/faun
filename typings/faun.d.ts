@@ -11,10 +11,10 @@ declare interface IEntryCustomScriptConfig {
 }
 declare type ScriptConfigType = Array<string | IEntryCustomScriptConfig>;
 declare type StyleConfigType = Array<string>;
-declare type ContentBaseURLReplaceRuleType = {
-  tagName: string;
+declare type StaticResourcesReplaceRuleType = {
+  tagNames: Array<string>;
   attributes: Array<string>;
-  matcher: (url: string) => string;
+  replacer: (element: HTMLElement) => void;
 };
 
 declare interface ISubApplicationConfig {
@@ -28,7 +28,7 @@ declare interface ISubApplicationConfig {
   assetPublicPath?: (url: string) => string | string;
   preserveChunks?: boolean;
   extra?: ExtraType;
-  contentBaseURLReplaceRules?: Array<ContentBaseURLReplaceRuleType>;
+  staticResourcesReplaceRule?: StaticResourcesReplaceRuleType;
 }
 
 declare interface IGlobalDependenceInfo {
