@@ -12,7 +12,7 @@ declare interface IEntryCustomScriptConfig {
 declare type ScriptConfigType = Array<string | IEntryCustomScriptConfig>;
 declare type StyleConfigType = Array<string>;
 declare type StaticResourcesReplaceRuleType = {
-  tagNames: Array<string>;
+  nodeNames: Array<string>;
   attributes: Array<string>;
   replacer: (element: HTMLElement) => void;
 };
