@@ -308,10 +308,11 @@ function Sandbox(name, useCSSPrefix = true) {
             attributes = [],
             matcher = null,
           } = props.staticResourcesReplaceRule;
+          const lowerCasedNodeNames = nodeNames.map(name => name.toLowerCase());
           const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
           const nodeAttributes = node.attributes && Array.from(node.attributes).map(attribute => attribute.name) || [];
           if (
-            nodeNames.indexOf(nodeName) !== -1
+            lowerCasedNodeNames.indexOf(nodeName) !== -1
             && nodeAttributes.filter(attribute => attributes.indexOf(attribute) !== -1).length !== 0
             && matcher
           ) {
@@ -319,7 +320,6 @@ function Sandbox(name, useCSSPrefix = true) {
           }
           if (node && /^style$|^script$|^link$/.test(nodeName)) {
             props.domSnapshot.push(node);
-
             if (nodeName === 'style' && (this.useCSSPrefix || !props.singular)) {
               node.innerHTML = cssPrefix(node.innerHTML, props.name);
             }
