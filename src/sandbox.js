@@ -125,6 +125,7 @@ const create = async function(subApplicationConfig, props, appConfig) {
     useCSSPrefix,
     name = random(),
     staticResourcesReplaceRule = {},
+    cleanDOMWhenUnmounting = false,
   } = subApplicationConfig;
   if (!subApplicationConfig || !container) {
     return;
@@ -133,6 +134,7 @@ const create = async function(subApplicationConfig, props, appConfig) {
   props.name = name;
   props.singular = appConfig.singular || true;
   props.staticResourcesReplaceRule = staticResourcesReplaceRule;
+  props.cleanDOMWhenUnmounting = cleanDOMWhenUnmounting;
   if (container instanceof HTMLElement) {
     this.container = container;
   } else {
@@ -255,6 +257,9 @@ const mount = function(props) {
 const unmount = function(props) {
   const _this = this;
 
+  if (_this.container && props.cleanDOMWhenUnmounting) {
+    _this.container.innerHTML = '';
+  }
   props.mountPointElement && props.mountPointElement.remove();
   _this.takeWindowSnapshot();
   props.disableRewriteEventListeners && props.disableRewriteEventListeners();

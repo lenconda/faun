@@ -63,6 +63,7 @@ app.registerSubApplications(
       },
       container: 'root',
       useCSSPrefix: false,
+      cleanDOMWhenUnmounting: true,
     },
   ],
   {

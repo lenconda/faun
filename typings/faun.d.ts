@@ -29,6 +29,7 @@ declare interface ISubApplicationConfig {
   preserveChunks?: boolean;
   extra?: ExtraType;
   staticResourcesReplaceRule?: StaticResourcesReplaceRuleType;
+  cleanDOMWhenUnmounting?: boolean;
 }
 
 declare interface IGlobalDependenceInfo {
