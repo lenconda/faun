@@ -32,29 +32,6 @@ module.exports = {
   },
 
   optimization: {
-    // splitChunks: {
-    //   cacheGroups: {
-    //     vendors: {
-    //       name: 'vendors',
-    //       test: /[\\/]node_modules[\\/]/,
-    //       priority: -10,
-    //       chunks: 'initial'
-    //     },
-    //     common: {
-    //       name: 'common',
-    //       chunks: 'all',
-    //       minSize: 20,
-    //       minChunks: 2
-    //     },
-    //     '@ant-design': {
-    //       name: 'ant-design',
-    //       test: /[\\/]@ant-design[\\/]/,
-    //       priority: 30,
-    //       chunks: 'initial',
-    //     },
-    //   }
-    // },
-
     minimizer: [
       new TerserWebpackPlugin({
         cache: true,
@@ -83,16 +60,6 @@ module.exports = {
       'Access-Control-Allow-Methods': '*',
     },
     inline: true,
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://101.132.184.52:6217',
-    //     secure: true,
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       '^/api': '/api'
-    //     }
-    //   }
-    // },
     contentBase: path.resolve(__dirname, '../public')
   },
 
