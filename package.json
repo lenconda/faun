@@ -12,11 +12,13 @@
     "examples:install:vue": "cd examples/vue && npm i",
     "examples:install:react": "cd examples/react && npm i",
     "examples:install:angular": "cd examples/angular && npm i",
+    "examples:install:svelte": "cd examples/svelte && npm i",
     "examples:install": "npm-run-all --serial examples:install:*",
     "examples:start:framework": "webpack-dev-server --config examples/framework/build/webpack.config.js --mode=development --progress",
     "examples:start:vue": "cd examples/vue && npm start",
     "examples:start:react": "cd examples/react && npm start",
     "examples:start:angular": "cd examples/angular && npm start",
+    "examples:start:svelte": "cd examples/svelte && npm run dev",
     "examples:start": "npm-run-all --parallel examples:start:*",
     "docs": "docsify serve docs"
   },

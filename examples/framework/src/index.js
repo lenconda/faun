@@ -49,7 +49,20 @@ app.registerSubApplications(
       },
       container: (() => document.createElement('app-root'))(),
       useCSSPrefix: false,
-      // assetPublicPath: '//localhost:8183',
+    },
+    {
+      name: 'demo_svelte_app',
+      activeWhen: '/svelte',
+      entry: {
+        scripts: [
+          '//localhost:8184/bundle.js',
+        ],
+        styles: [
+          '//localhost:8184/global.css',
+        ],
+      },
+      container: 'root',
+      useCSSPrefix: false,
     },
   ],
   {
