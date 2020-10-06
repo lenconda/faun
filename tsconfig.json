@@ -1,4 +1,25 @@
 {
   "name": "faun",
-  "main": "typings/index.js"
+  "compilerOptions": {
+    "target": "es5",
+    "jsx": "react",
+    "module": "esnext",
+    "lib": ["es2018", "dom"],
+    "declaration": true,
+    "outDir": "./esm",
+    "rootDir": "./src",
+    "importHelpers": true,
+    "typeRoots": ["typings", "node_modules/@types"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+  },
+  "exclude": ["node_modules", "examples"]
 }
