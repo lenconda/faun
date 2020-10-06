@@ -39,7 +39,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.ts', '.tsx', '.jsx'],
   },
 
   devtool: 'eval',
@@ -55,7 +55,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js?$/,
+        test: /\.(ts|js|tsx|jsx)?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
