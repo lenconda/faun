@@ -6,7 +6,7 @@
     "module": "esnext",
     "lib": ["es2018", "dom"],
     "declaration": true,
-    "outDir": "./esm",
+    "outDir": "./dist/es",
     "rootDir": "./src",
     "importHelpers": true,
     "typeRoots": ["typings", "node_modules/@types"],
@@ -20,6 +20,18 @@
     "noFallthroughCasesInSwitch": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
   },
-  "exclude": ["node_modules", "examples"]
+  "include": ["src/*"],
+  "exclude": [
+    "node_modules",
+    "examples",
+    "build",
+    "coverage",
+    "dist",
+    "docs"
+  ]
 }

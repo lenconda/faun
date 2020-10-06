@@ -1,4 +1,4 @@
-import Faun from '../../../src';
+import Faun from '../../../src/index.ts';
 import axios from 'axios';
 
 const app = new Faun({ singular: false });

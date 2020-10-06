@@ -6,9 +6,10 @@ module.exports = {
         exclude: ['transform-regenerator']
       },
       '@babel/preset-flow'
-    ]
+    ],
+    ['@babel/typescript'],
   ],
   plugins: [
     ['@babel/transform-runtime']
   ],
-}
+};

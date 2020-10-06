@@ -24,13 +24,15 @@ Object.assign(babelOpts, originalBabelConfig);
 
 module.exports = [
   {
-    input: resolveFile('src/index.js'),
-    output: {
-      file: resolveFile('dist/faun.min.js'),
-      format: 'umd',
-      name: 'Faun',
-      banner: generateBanner(),
-    },
+    input: resolveFile('src/index.ts'),
+    output: [
+      {
+        file: resolveFile('dist/umd/faun.min.js'),
+        format: 'umd',
+        name: 'Faun',
+        banner: generateBanner(),
+      },
+    ],
     plugins: [
       resolve({ browser: true }),
       commonjs(),
