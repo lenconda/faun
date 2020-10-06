@@ -2,7 +2,8 @@
   "name": "faun",
   "version": "0.1.6",
   "description": "A more simple way to make micro front-end apps",
-  "main": "src/index.ts",
+  "main": "dist/es/index.js",
+  "module": "dist/es/index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --coverage",
     "lint": "eslint ./src",
@@ -22,7 +23,7 @@
     "examples:start": "npm-run-all --parallel examples:start:*",
     "docs": "docsify serve docs"
   },
-  "types": "./typings/index.d.ts",
+  "types": "dist/es/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lenconda/faun.git"
