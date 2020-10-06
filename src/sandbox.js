@@ -3,7 +3,7 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import traverseProps from '../src/utils/traverse-props';
+import traverseProps from './utils/traverse-props';
 import fetch from './fetch';
 import { isFunction } from './utils/lodash';
 import overwriteEventListeners from './overwrites/window-listeners';

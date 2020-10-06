@@ -21,6 +21,7 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "noEmit": false,
+    "outDir": "./dist",
     "lib": [
       "es5",
       "dom",
@@ -34,10 +35,5 @@
   "include": [
     "src",
     "./typings/"
-  ],
-  "exclude": [
-    "./node_modules/**/*",
-    "dist/**/*",
-    "**/*.js",
   ]
 }

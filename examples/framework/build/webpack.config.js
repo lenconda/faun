@@ -9,7 +9,7 @@ const getEntryPath = () => {
   const devEntryPath = path.resolve(__dirname, '../src/index.dev.js');
 
   if (!fs.existsSync(devEntryPath)) {
-    return path.resolve(__dirname, '../src/index.js');
+    return path.resolve(__dirname, '../src/index.ts');
   }
 
   return devEntryPath;
