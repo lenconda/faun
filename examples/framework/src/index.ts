@@ -71,10 +71,9 @@ app.registerSubApplications(
       console.log('loading', this);
       console.log('pathname: ', pathname);
     },
-    loaded: function(pathname, sandbox) {
+    loaded: function(pathname) {
       console.log('loaded', this);
       console.log('pathname: ', pathname);
-      console.log('sandbox: ', sandbox);
     },
     mounted: function(pathname, sandbox) {
       console.log('mounted', this);

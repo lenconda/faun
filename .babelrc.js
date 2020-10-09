@@ -10,6 +10,7 @@ module.exports = {
     ['@babel/typescript'],
   ],
   plugins: [
-    ['@babel/transform-runtime']
+    ['@babel/transform-runtime'],
+    ['transform-class-properties'],
   ],
 };
