@@ -1,5 +1,5 @@
 /**
- * @file interfaces.ts
+ * @file /src/interfaces.ts
  * @author lenconda<i@lenconda.top>
  */
 import { History, Location } from 'history';
@@ -74,3 +74,6 @@ export interface IFaunLifecycleHooks {
   beforeUnmount?: (prev: string, next: string) => boolean;
   unmounted?: (prev: string, next: string, sandbox?: Sandbox) => any;
 }
+
+export type EventSubscriberCallbackType = (data: any) => any;
+export type EventSubscribersType = Record<string, Array<EventSubscriberCallbackType>>;

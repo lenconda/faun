@@ -1,5 +1,5 @@
 /**
- * @file faun.js
+ * @file /src/faun.ts
  * @author lenconda<i@lenconda.top>
  */
 
