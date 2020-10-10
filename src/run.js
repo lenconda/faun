@@ -22,7 +22,7 @@ import './overwrites/direction';
  * @param {IFaunProps} props
  * @param {IGlobalDependenceInfo} deps
  */
-export default function(props, deps) {
+export default function(props, deps, history) {
   const _this = this;
 
   if (Array.isArray(deps) && deps.length) {
@@ -31,15 +31,15 @@ export default function(props, deps) {
 
   initSandbox.call(props);
 
-  initRoute(this.history.location, function(location, pathname) {
+  initRoute(history.location, function(location, pathname) {
     refreshLocation.call(props, location);
     loadSubApplication(props, pathname, _this, 'PUSH');
   });
 
   // listen history change to load and unload sandboxes
-  this.history.listen(function(location, action) {
+  history.listen(function(location, action) {
     handleRouteChange(props, location, function(prev, next) {
-      refreshLocation.call(props, _this.history.location);
+      refreshLocation.call(props, history.location);
       if (!unloadSubApplication(props, prev, next, _this)) {
         return;
       }
@@ -49,7 +49,7 @@ export default function(props, deps) {
 
   // intercept all click events
   window.addEventListener('click', function(event) {
-    handleClick(event, props, _this.history);
+    handleClick(event, props, history);
   });
 
   window.addEventListener('forward', event => {
