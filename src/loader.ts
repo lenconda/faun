@@ -5,33 +5,40 @@
 
 import Sandbox from './sandbox';
 import { findLastIndex } from './utils/lodash';
+import {
+  IFaunInstanceProps,
+  FaunType,
+} from './interfaces';
 
 /**
  * load sub-application from context
- * @param {Object} props
- * @param {string} pathname
- * @param {Object} context
- * @param {string} action
+ * @param props
+ * @param pathname
+ * @param context
+ * @param action
  * @returns {Promise<void>}
  */
-export const loadSubApplication = async function(props, pathname, context, action) {
+export const loadSubApplication = async (
+  props: IFaunInstanceProps,
+  pathname: string,
+  context: FaunType,
+  action: 'PUSH' | 'POP' | 'REPLACE',
+) => {
   const currentRouteResources = props.registeredSubApplications.filter(config => {
     const activeWhen = config.activeWhen;
     if (!activeWhen) {
       return false;
     }
-    const activeWhenType = Object.prototype.toString.call(activeWhen);
-    switch (activeWhenType) {
-    case '[object Array]': {
+    // const activeWhenType = Object.prototype.toString.call(activeWhen);
+    if (Array.isArray(activeWhen)) {
       return activeWhen.indexOf(pathname) !== -1;
-    }
-    case '[object Function]': {
+    } else if (typeof activeWhen === 'function') {
       return activeWhen(props.currentLocation);
-    }
-    case '[object String]': {
+    } else if (typeof activeWhen === 'string') {
       return pathname === activeWhen;
-    }
-    default:
+    } else if (activeWhen instanceof RegExp) {
+      return activeWhen.test(pathname);
+    } else {
       return false;
     }
   });
@@ -102,16 +109,21 @@ export const loadSubApplication = async function(props, pathname, context, actio
 
 /**
  * unload sub-application
- * @param {Object} props
- * @param {string} prev
- * @param {string} next
- * @param {Object} context
+ * @param props
+ * @param prev
+ * @param next
+ * @param context
  * @returns {boolean}
  */
 // eslint-disable-next-line max-params
-export const unloadSubApplication = function(props, prev, next, context) {
+export const unloadSubApplication = (
+  props: IFaunInstanceProps,
+  prev: string,
+  next: string,
+  context: FaunType,
+) => {
   const currentSandboxes = props.routes[props.position].sandboxes;
-  const hooks = context.hooks || null;
+  const hooks = props.hooks || null;
 
   if (!currentSandboxes || currentSandboxes.length === 0) {
     return true;

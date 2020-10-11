@@ -1,5 +1,5 @@
 /**
- * @file run.js
+ * @file /src/run.ts
  * @author lenconda<i@lenconda.top>
  */
 
@@ -15,35 +15,45 @@ import {
 } from './loader';
 import { handleRouteChange, handleClick } from './handlers';
 import './overwrites/direction';
+import {
+  IFaunInstanceProps,
+  IFaunDependency,
+  FaunType,
+  FaunHistoryType,
+  FaunLocationType,
+} from './interfaces';
 
 /**
  * essential method to start the application
  * contains the whole lifecycles, includes initialization
- * @param {IFaunProps} props
- * @param {IGlobalDependenceInfo} deps
+ * @param props
+ * @param deps
  */
-export default function(props, deps, history) {
-  const _this = this;
-
+export default (
+  props: IFaunInstanceProps,
+  deps: Array<IFaunDependency>,
+  history: FaunHistoryType,
+  context: FaunType,
+) => {
   if (Array.isArray(deps) && deps.length) {
     initGlobalDependencies(deps);
   }
 
-  initSandbox.call(props);
+  initSandbox(props);
 
-  initRoute(history.location, function(location, pathname) {
+  initRoute(history.location, function(location: FaunLocationType, pathname: string) {
     refreshLocation.call(props, location);
-    loadSubApplication(props, pathname, _this, 'PUSH');
+    loadSubApplication(props, pathname, context, 'PUSH');
   });
 
   // listen history change to load and unload sandboxes
-  history.listen(function(location, action) {
-    handleRouteChange(props, location, function(prev, next) {
+  history.listen((location, action) => {
+    handleRouteChange(props, location, function(prev: string, next: string) {
       refreshLocation.call(props, history.location);
-      if (!unloadSubApplication(props, prev, next, _this)) {
+      if (!unloadSubApplication(props, prev, next, context)) {
         return;
       }
-      loadSubApplication(props, next, _this, action);
+      loadSubApplication(props, next, context, action);
     });
   });
 
@@ -51,11 +61,10 @@ export default function(props, deps, history) {
   window.addEventListener('click', function(event) {
     handleClick(event, props, history);
   });
-
-  window.addEventListener('forward', event => {
+  window.addEventListener('forward', () => {
     props.direction = 'forward';
   });
-  window.addEventListener('back', event => {
+  window.addEventListener('back', () => {
     props.direction = 'backward';
   });
-}
+};
