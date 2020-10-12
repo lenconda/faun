@@ -39,7 +39,7 @@ module.exports = {
       'error',
       {
         'skipBlankLines': true,
-      }
+      },
     ],
   },
 };
