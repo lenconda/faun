@@ -35,5 +35,11 @@ module.exports = {
     '@typescript-eslint/no-require-imports': 'off',
     '@typescript-eslint/prefer-optional-chain': 'off',
     'max-params': 'off',
+    'no-trailing-spaces': [
+      'error',
+      {
+        'skipBlankLines': true,
+      }
+    ],
   },
 };
