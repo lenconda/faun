@@ -1,15 +1,26 @@
 /**
- * @file interfaces.ts
+ * @file /src/interfaces.ts
  * @author lenconda<i@lenconda.top>
  */
 import { History, Location } from 'history';
 import Faun from './faun';
 import { Sandbox } from '../typings/sandbox';
 
-type FaunType = typeof Faun;
+export type FaunType = typeof Faun;
 type SubApplicationExtraType = Record<string, any>;
 type SubApplicationScriptConfigType = Array<string | IEntryCustomScriptConfig>;
 type SubApplicationStyleConfigType = Array<string>;
+
+type SubApplicationActiveRuleFunctionType = (location: Location<History.PoorMansUnknown> | {}) => boolean;
+type SubApplicationActiveRuleRegExpType = RegExp;
+type SubApplicationActiveRuleArrayType = Array<string>;
+type SubApplicationActiveRuleStringType = string;
+
+export type SubApplicationActiveRuleType =
+  SubApplicationActiveRuleFunctionType
+  | SubApplicationActiveRuleRegExpType
+  | SubApplicationActiveRuleArrayType
+  | SubApplicationActiveRuleStringType;
 
 export interface IStaticResourcesReplaceRule {
   nodeNames: Array<string>;
@@ -26,15 +37,30 @@ export interface IEntryCustomScriptConfig {
   scriptExecutor: (data: string, defaultExecutor: Function, extra: SubApplicationExtraType) => Function;
 }
 
+export type SubApplicationContainerFunctionType = (extra: SubApplicationExtraType) => HTMLElement;
+export type SubApplicationContainerHTMLElementType = HTMLElement;
+export type SubApplicationContainerStringType = string;
+export type SubApplicationContainerType =
+  SubApplicationContainerFunctionType
+  | SubApplicationContainerHTMLElementType
+  | SubApplicationContainerStringType;
+
+export type SubApplicationAssetPublicPathFunctionType = (url: string) => string;
+export type SubApplicationAssetPublicPathStringType = string;
+export type SubApplicationAssetPublicPathType =
+  SubApplicationAssetPublicPathFunctionType
+  | SubApplicationAssetPublicPathStringType;
+
 export interface ISubApplicationConfig {
   name?: string;
   entry?: {
     scripts?: SubApplicationScriptConfigType,
     styles?: SubApplicationStyleConfigType,
   };
-  container: (extra: SubApplicationExtraType) => HTMLElement | HTMLElement | string;
+  activeWhen: SubApplicationActiveRuleType;
+  container: SubApplicationContainerType;
   useCSSPrefix?: boolean;
-  assetPublicPath?: (url: string) => string | string;
+  assetPublicPath?: SubApplicationAssetPublicPathType;
   preserveChunks?: boolean;
   extra?: SubApplicationExtraType;
   staticResourcesReplaceRule?: IStaticResourcesReplaceRule;
@@ -46,6 +72,8 @@ export interface IFaunRouteItem {
   // TODO:
   sandboxes: Array<any>;
 }
+
+export type SubApplicationsType = Array<ISubApplicationConfig>;
 
 export interface IFaunInstanceProps {
   registeredSubApplications: Array<ISubApplicationConfig>;
@@ -74,3 +102,8 @@ export interface IFaunLifecycleHooks {
   beforeUnmount?: (prev: string, next: string) => boolean;
   unmounted?: (prev: string, next: string, sandbox?: Sandbox) => any;
 }
+
+export type EventSubscriberCallbackType = (data: any) => any;
+export type EventSubscribersType = Record<string, Array<EventSubscriberCallbackType>>;
+export type FaunHistoryType = History;
+export type FaunLocationType = Location;

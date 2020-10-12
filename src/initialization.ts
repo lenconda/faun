@@ -5,26 +5,35 @@
 
 import Sandbox from './sandbox';
 import { isFunction } from './utils/lodash';
+import {
+  IFaunInstanceProps,
+  FaunLocationType,
+  IFaunDependency,
+} from './interfaces';
 
 /**
  * initialize the default sandbox on context
+ * @param props
  */
-export const initSandbox = function() {
-  if (!this.routes[0]) {
-    this.routes.push({
+export const initSandbox = (props: IFaunInstanceProps) => {
+  if (!props.routes[0]) {
+    props.routes.push({
       sandboxes: [new Sandbox('@@default')],
     });
   }
-  const [defaultSandbox] = this.routes[0].sandboxes;
+  const [defaultSandbox] = props.routes[0].sandboxes;
   defaultSandbox.takeWindowSnapshot();
 };
 
 /**
  * initialize the route
- * @param {History<LocationState>} location
+ * @param location
  * @param callback
  */
-export const initRoute = function(location, callback) {
+export const initRoute = (
+  location: FaunLocationType,
+  callback: (location: FaunLocationType, pathname: string) => void,
+) => {
   const currentPathnameArray = location.pathname.split('/');
   currentPathnameArray.shift();
   const pathname = `/${currentPathnameArray[0]}`;
@@ -34,9 +43,9 @@ export const initRoute = function(location, callback) {
 
 /**
  * initialize the global dependencies
- * @param {IGlobalDependenceInfo[]} deps
+ * @param deps
  */
-export const initGlobalDependencies = function(deps) {
+export const initGlobalDependencies = (deps: Array<IFaunDependency>) => {
   if (!Array.isArray) {
     throw new TypeError('[Faun] Param `deps` should be an array');
   }

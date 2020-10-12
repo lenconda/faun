@@ -1,9 +1,9 @@
 /**
- * @file faun.js
+ * @file /src/faun.ts
  * @author lenconda<i@lenconda.top>
  */
 
-import { createBrowserHistory, History } from 'history';
+import { createBrowserHistory } from 'history';
 import registerSubApplications from './register';
 import run from './run';
 import Sandbox from './sandbox';
@@ -14,6 +14,8 @@ import {
   IFaunDependency,
   IFaunPlugin,
   IFaunLifecycleHooks,
+  FaunHistoryType,
+  SubApplicationsType,
 } from './interfaces';
 
 // internal plugins
@@ -23,7 +25,7 @@ import Store from './plugins/store';
 const history = createBrowserHistory();
 
 class Faun {
-  static history: History = history;
+  static history: FaunHistoryType = history;
   static async use(plugin: IFaunPlugin, options: Record<string, any> = {}) {
     if (!plugin) {
       return;
@@ -37,7 +39,7 @@ class Faun {
   private props: IFaunInstanceProps;
   // global dependencies
   private deps: Array<IFaunDependency> = [];
-  private history: History = history;
+  private history: FaunHistoryType = history;
 
   constructor(appConfig: IFaunSubApplicationConfig = {}) {
     this.props = {
@@ -52,7 +54,7 @@ class Faun {
       // stack cursor direction
       direction: 'forward',
       // lifecycle hooks
-      hooks: createHooks() as any,
+      hooks: createHooks(),
       // app config
       appConfig: {
         ...appConfig,
@@ -63,11 +65,14 @@ class Faun {
   }
 
   public run() {
-    run.call(this, this.props, this.deps, this.history);
+    run.call(this, this.props, this.deps, this.history, this);
   }
 
-  public registerSubApplications(config: any, hooks: IFaunLifecycleHooks) {
-    registerSubApplications.call(this.props, config, hooks);
+  public registerSubApplications(
+    config: SubApplicationsType,
+    hooks: IFaunLifecycleHooks,
+  ) {
+    registerSubApplications.call(this, this.props, this, config, hooks);
   }
 
   public addGlobalDependence(name: string, dep: any) {
@@ -82,4 +87,8 @@ Faun.use(Events);
 // install plugin `Store`
 Faun.use(Store);
 
+export const use = Faun.use;
+export {
+  history,
+};
 export default Faun;

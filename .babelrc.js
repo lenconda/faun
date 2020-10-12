@@ -12,5 +12,6 @@ module.exports = {
   plugins: [
     ['@babel/transform-runtime'],
     ['transform-class-properties'],
+    ['@babel/transform-typescript'],
   ],
 };

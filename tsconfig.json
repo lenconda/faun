@@ -23,7 +23,7 @@
     "allowJs": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/*"],
   "exclude": [

@@ -6,21 +6,23 @@ const terser = require('rollup-plugin-terser');
 const commonjs = require('@rollup/plugin-commonjs');
 const packageJson = require('../package.json');
 const globals = require('rollup-plugin-node-globals');
+const { merge } = require('lodash');
+const typescript = require('@rollup/plugin-typescript');
 
 function resolveFile(filePath) {
   return path.join(__dirname, '../', filePath);
 };
 
-const babelOpts = {
-  exclude: 'node_modules/**',
-  babelHelpers: 'runtime',
-};
+const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
 function generateBanner() {
   return `/* faun@${packageJson.version} */`;
 }
 
-Object.assign(babelOpts, originalBabelConfig);
+const babelBuildOptions = merge({
+  exclude: 'node_modules/**',
+  babelHelpers: 'runtime',
+}, originalBabelConfig);
 
 module.exports = [
   {
@@ -34,11 +36,13 @@ module.exports = [
       },
     ],
     plugins: [
-      resolve({ browser: true }),
+      resolve({ browser: true, extensions }),
       commonjs(),
       globals(),
-      babel(babelOpts),
+      babel(babelBuildOptions),
       terser.terser(),
+      typescript(),
     ],
+    include: ['*.ts+(|x)', '**/*.ts+(|x)', '*.js'],
   },
 ];

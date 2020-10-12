@@ -1,24 +1,25 @@
 /**
- * @file hooks.js
+ * @file /src/hooks.ts
  * @author lenconda<i@lenconda.top>
  */
 
 import { isFunction } from './utils/lodash';
+import {
+  IFaunLifecycleHooks,
+} from './interfaces';
 
 /**
  * a Proxy-based hooks creator
- * @returns {Proxy}
  */
-export default function() {
-  const _HOOKS = ['loading', 'loaded', 'mounted', 'beforeUnmount', 'unmounted'];
-
+export default (): IFaunLifecycleHooks => {
+  const _HOOK_NAMES = ['loading', 'loaded', 'mounted', 'beforeUnmount', 'unmounted'];
   const hooks = {};
 
   return new Proxy(hooks, {
     // eslint-disable-next-line max-params
-    set: function(target, property, value, receiver) {
+    set: function(target: Object, property: string, value: Function) {
       // check if the hook name is in _HOOKS
-      if (_HOOKS.indexOf(property) === -1) {
+      if (_HOOK_NAMES.indexOf(property) === -1) {
         throw new ReferenceError(`[Faun] Hook with name \`${property}\` is not allowed`);
       }
 

@@ -6,7 +6,7 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const getEntryPath = () => {
-  const devEntryPath = path.resolve(__dirname, '../src/index.dev.js');
+  const devEntryPath = path.resolve(__dirname, '../src/index.dev.ts');
 
   if (!fs.existsSync(devEntryPath)) {
     return path.resolve(__dirname, '../src/index.ts');
