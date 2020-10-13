@@ -75,7 +75,7 @@ class Faun {
     registerSubApplications.call(this, this.props, this, config, hooks);
   }
 
-  public addGlobalDependence(name: string, dep: any) {
+  public addGlobalDependence<T>(name: string, dep: T) {
     if (name && dep) {
       this.deps.push({ name, dep });
     }

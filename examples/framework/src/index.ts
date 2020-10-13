@@ -1,9 +1,9 @@
 import Faun from '../../../src';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 const app = new Faun({ singular: false });
 
-app.addGlobalDependence('axios', axios);
+app.addGlobalDependence<AxiosInstance>('axios', axios);
 
 app.registerSubApplications(
   [
