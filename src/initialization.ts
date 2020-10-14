@@ -1,5 +1,5 @@
 /**
- * @file initialization.js
+ * @file /src/initialization.ts
  * @author lenconda<i@lenconda.top>
  */
 

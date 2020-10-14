@@ -1,5 +1,5 @@
 /**
- * @file store.js
+ * @file /src/store.ts
  * @author lenconda<i@lenconda.top>
  */
 

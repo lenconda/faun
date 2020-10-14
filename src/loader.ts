@@ -1,5 +1,5 @@
 /**
- * @file loader.js
+ * @file /src/loader.ts
  * @author lenconda<i@lenconda.top>
  */
 
