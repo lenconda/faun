@@ -4,7 +4,7 @@
  */
 import { History, Location } from 'history';
 import Faun from './faun';
-import { Sandbox } from '../typings/sandbox';
+import Sandbox from './sandbox';
 
 export type FaunType = typeof Faun;
 type SubApplicationExtraType = Record<string, any>;
@@ -69,8 +69,7 @@ export interface ISubApplicationConfig {
 
 export interface IFaunRouteItem {
   pathname?: string;
-  // TODO:
-  sandboxes: Array<any>;
+  sandboxes: Array<Sandbox>;
 }
 
 export type SubApplicationsType = Array<ISubApplicationConfig>;
@@ -125,3 +124,5 @@ export interface ChildNodeOperatorType {
   intercept: (callback: ChildNodeOperatorProcessorType) => void;
   stop: () => void;
 }
+
+export type EventListenerType = typeof window.addEventListener;

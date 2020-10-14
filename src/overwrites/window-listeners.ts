@@ -13,7 +13,7 @@ const originalRemoveEventListener = window.removeEventListener;
  * rewrite event listener functions on window
  * @returns {function(): (...args: any[]) => void}
  */
-export default function rewriteEventListener() {
+export default function rewriteEventListener(): Function {
   const listenerMap = new Map();
 
   window.addEventListener = (type, listener, options) => {

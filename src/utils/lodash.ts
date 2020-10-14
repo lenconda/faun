@@ -3,10 +3,9 @@
  * @author lenconda<i@lenconda.top>
  */
 
-import noop from 'lodash/noop';
 import findLastIndex from 'lodash/findLastIndex';
 
-export { noop, findLastIndex };
+export { findLastIndex };
 
 /**
  * check if param is a function
@@ -45,3 +44,5 @@ export const cloneDeep = (target, hash = new WeakMap()) => {
 
   return cloneObj;
 };
+
+export const noop: (...args: any[]) => void = () => {};
