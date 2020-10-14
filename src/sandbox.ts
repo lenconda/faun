@@ -302,6 +302,7 @@ class Sandbox {
 
     this.scriptExecutors && this.scriptExecutors.forEach(executor => {
       if (executor && isFunction(executor)) {
+        // @ts-ignore
         (function(window) {
           executor.call(this);
         })(new Proxy(this.sandboxWindow, {

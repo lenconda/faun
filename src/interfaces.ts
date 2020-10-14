@@ -116,3 +116,7 @@ export type IChildOperate = {
 export type SandboxScriptsType = SubApplicationScriptConfigType;
 export type SandboxStylesType = Array<string>;
 export type SandboxAssetPublicPathType = SubApplicationAssetPublicPathType;
+
+export type StoreStateType = {
+  [key: string]: any;
+};
