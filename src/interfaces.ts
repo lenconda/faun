@@ -108,20 +108,20 @@ export type EventSubscribersType = Record<string, Array<EventSubscriberCallbackT
 export type FaunHistoryType = History;
 export type FaunLocationType = Location;
 
-export type IChildOperate = {
-  intercept(callback: Function): void;
-  stop(): void;
-};
+export interface IChildOperate {
+  intercept: (callback: Function) => void;
+  stop: () => void;
+}
 
 export type SandboxScriptsType = SubApplicationScriptConfigType;
 export type SandboxStylesType = Array<string>;
 export type SandboxAssetPublicPathType = SubApplicationAssetPublicPathType;
 
-export type StoreStateType = {
+export interface StoreStateType {
   [key: string]: any;
-};
+}
 export type ChildNodeOperatorProcessorType = (element: Node) => Node;
-export type ChildNodeOperatorType = {
-  intercept(callback: ChildNodeOperatorProcessorType): void;
-  stop(): void;
-};
+export interface ChildNodeOperatorType {
+  intercept: (callback: ChildNodeOperatorProcessorType) => void;
+  stop: () => void;
+}

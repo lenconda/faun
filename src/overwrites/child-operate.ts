@@ -14,7 +14,7 @@ import {
  */
 const getNodeName = (node: Node): string => {
   return node.nodeName && node.nodeName.toLowerCase() || '';
-}
+};
 
 /**
  * get processed element using processor
@@ -34,7 +34,7 @@ const getResultElement = (
     return element;
   }
   return element;
-}
+};
 
 /**
  * process a collection of elements or DOM Strings
@@ -53,7 +53,7 @@ const mapHTMLCollection = (
     return arg;
   });
   return results;
-}
+};
 
 export default function() {
   const appendChild = Element.prototype.appendChild;
@@ -65,13 +65,13 @@ export default function() {
     Element.prototype.appendChild = function(element) {
       return appendChild.call(this, getResultElement(element, callback));
     };
-  }
+  };
 
   const overwriteInsertBefore = (callback: ChildNodeOperatorProcessorType) => {
     Element.prototype.insertBefore = function(newChild, refChild) {
       return insertBefore.call(this, getResultElement(newChild, callback), refChild);
     };
-  }
+  };
 
   const overwriteAppend = (callback: ChildNodeOperatorProcessorType) => {
     if (!append) {
@@ -82,7 +82,7 @@ export default function() {
       const results = mapHTMLCollection(arguments, callback);
       return append.call(this, ...results);
     };
-  }
+  };
 
   const overwritePrepend = (callback: ChildNodeOperatorProcessorType) => {
     if (!prepend) {
@@ -93,7 +93,7 @@ export default function() {
       const results = mapHTMLCollection(arguments, callback);
       return prepend.call(this, ...results);
     };
-  }
+  };
 
   return {
     /**

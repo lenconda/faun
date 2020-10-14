@@ -30,7 +30,29 @@ import {
  * @constructor
  */
 class Sandbox {
-  constructor(name: string, useCSSPrefix: boolean = true) {
+  public name = '';
+  public scripts: SandboxScriptsType = [];
+  public styles: SandboxStylesType = [];
+  public useCSSPrefix = false;
+  public preserveChunks = false;
+  public assetPublicPath?: SandboxAssetPublicPathType;
+
+  private domSnapshot: Array<HTMLElement> = [];
+  private windowSnapshot: Partial<Window> = {};
+  private scriptExecutors: Array<Function> = [];
+  private styleElements: Array<HTMLStyleElement> = [];
+  private singular = true;
+  private modifiedPropsMap: Record<string, any> = {};
+  private observer?: PolyfilledMutationObserver;
+  private childNodeOperator: IChildOperate = childNodeOperator();
+  private sandboxWindow: Partial<Window> = {};
+  private cleanDOMWhenUnmounting = false;
+  private container: HTMLElement;
+  private mountPointElement?: HTMLElement;
+  private staticResourcesReplaceRule?: IStaticResourcesReplaceRule;
+  private disableRewriteEventListeners?: Function;
+
+  constructor(name: string, useCSSPrefix = true) {
     this.name = name;
     this.useCSSPrefix = useCSSPrefix;
     if (!this.observer) {
@@ -63,28 +85,6 @@ class Sandbox {
       });
     }
   }
-
-  public name: string = '';
-  public scripts: SandboxScriptsType = [];
-  public styles: SandboxStylesType = [];
-  public useCSSPrefix: boolean = false;
-  public preserveChunks: boolean = false;
-  public assetPublicPath?: SandboxAssetPublicPathType;
-
-  private domSnapshot: Array<HTMLElement> = [];
-  private windowSnapshot: Partial<Window> = {};
-  private scriptExecutors: Array<Function> = [];
-  private styleElements: Array<HTMLStyleElement> = [];
-  private singular: boolean = true;
-  private modifiedPropsMap: Record<string, any> = {};
-  private observer?: PolyfilledMutationObserver;
-  private childNodeOperator: IChildOperate = childNodeOperator();
-  private sandboxWindow: Partial<Window> = {};
-  private cleanDOMWhenUnmounting: boolean = false;
-  private container: HTMLElement;
-  private mountPointElement?: HTMLElement;
-  private staticResourcesReplaceRule?: IStaticResourcesReplaceRule;
-  private disableRewriteEventListeners?: Function;
 
   public takeDOMSnapshot() {
     const _this = this;
@@ -145,6 +145,7 @@ class Sandbox {
 
     this.domSnapshot.forEach(remove);
     this.styleElements.forEach(remove);
+    // eslint-disable-next-line no-unused-expressions
     this?.observer?.disconnect();
     this.childNodeOperator.stop();
   }
@@ -205,12 +206,13 @@ class Sandbox {
       this.container = container;
     } else {
       switch (typeof container) {
-      case 'string':
+      case 'string': {
         const currentContainer = createElement('div', { id: container });
         if (currentContainer) {
           this.container = currentContainer;
         }
         break;
+      }
       case 'function':
         this.container = container(extra);
         break;

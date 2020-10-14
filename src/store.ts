@@ -14,8 +14,21 @@ import {
  * @constructor
  */
 class Store {
-  private store: StoreStateType = {};
-  private storeEvent: Event = new Event();
+  /**
+   * register a store event handler
+   * @param {string} key
+   * @param {function} callback
+   * @returns {*}
+   */
+  public on: Function;
+  private store: StoreStateType;
+  private storeEvent: Event;
+
+  constructor() {
+    this.store = {};
+    this.storeEvent = new Event();
+    this.on = this.storeEvent.on;
+  }
 
   /**
    * assign a new store
@@ -54,14 +67,6 @@ class Store {
   public get(key: string) {
     return this.store[key] || undefined;
   }
-
-  /**
-   * register a store event handler
-   * @param {string} key
-   * @param {function} callback
-   * @returns {*}
-   */
-  public on = this.storeEvent.on;
 }
 
 export default Store;
