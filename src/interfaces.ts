@@ -107,3 +107,12 @@ export type EventSubscriberCallbackType = (data: any) => any;
 export type EventSubscribersType = Record<string, Array<EventSubscriberCallbackType>>;
 export type FaunHistoryType = History;
 export type FaunLocationType = Location;
+
+export type IChildOperate = {
+  intercept(callback: Function): void;
+  stop(): void;
+};
+
+export type SandboxScriptsType = SubApplicationScriptConfigType;
+export type SandboxStylesType = Array<string>;
+export type SandboxAssetPublicPathType = SubApplicationAssetPublicPathType;
