@@ -1,5 +1,5 @@
 /**
- * @file window-listener.js
+ * @file /src/overwrites/window-listener.ts
  * @author lenconda<i@lenconda.top>
  * @author Kuitos
  */

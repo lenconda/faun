@@ -120,3 +120,8 @@ export type SandboxAssetPublicPathType = SubApplicationAssetPublicPathType;
 export type StoreStateType = {
   [key: string]: any;
 };
+export type ChildNodeOperatorProcessorType = (element: Node) => Node;
+export type ChildNodeOperatorType = {
+  intercept(callback: ChildNodeOperatorProcessorType): void;
+  stop(): void;
+};

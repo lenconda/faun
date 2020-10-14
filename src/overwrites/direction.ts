@@ -1,3 +1,8 @@
+/**
+ * @file /src/overwrites/direction.ts
+ * @author lenconda<i@lenconda.top>
+ */
+
 // Keep track of current position
 let currentIndex = (history.state && history.state.index) || 0;
 
@@ -10,11 +15,15 @@ if (!history.state || !('index' in history.state)) {
 }
 
 // Native functions
-const getState = Object.getOwnPropertyDescriptor(History.prototype, 'state').get;
+const getState = Object.getOwnPropertyDescriptor(History.prototype, 'state')?.get;
 const { pushState, replaceState } = history;
 
 // Detect forward and back changes
 function onPopstate() {
+  if (!getState) {
+    return;
+  }
+
   const state = getState.call(history);
 
   // State is unset when `location.hash` is set. Update with incremented index
@@ -30,8 +39,8 @@ function onPopstate() {
 }
 
 // Create functions which modify index
-function modifyStateFunction(func, n) {
-  return (state, ...args) => {
+function modifyStateFunction(func: Function, n: number) {
+  return (state: any, ...args: Array<any>) => {
     func.call(history, { index: currentIndex + n, state }, ...args);
     // Only update currentIndex if call succeeded
     currentIndex += n;
@@ -39,8 +48,11 @@ function modifyStateFunction(func, n) {
 }
 
 // Override getter to only return the real state
-function modifyStateGetter(cls) {
-  const { get } = Object.getOwnPropertyDescriptor(cls.prototype, 'state');
+function modifyStateGetter(cls: any) {
+  const get = Object.getOwnPropertyDescriptor(cls.prototype, 'state')?.get;
+  if (!get) {
+    return;
+  }
 
   Object.defineProperty(cls.prototype, 'state', {
     configurable: true,

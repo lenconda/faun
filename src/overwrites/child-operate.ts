@@ -1,13 +1,18 @@
 /**
- * @file child-operate.js
+ * @file /src/overwrites/child-operate.ts
  * @author lenconda<i@lenconda.top>
  */
+
+import {
+  ChildNodeOperatorProcessorType,
+  ChildNodeOperatorType,
+} from '../interfaces';
 
 /**
  * get node name
  * @param {Node} node
  */
-function getNodeName(node) {
+const getNodeName = (node: Node): string => {
   return node.nodeName && node.nodeName.toLowerCase() || '';
 }
 
@@ -16,7 +21,10 @@ function getNodeName(node) {
  * @param {Element} element
  * @param {Function} processor
  */
-function getResultElement(element, processor) {
+const getResultElement = (
+  element: Node,
+  processor: ChildNodeOperatorProcessorType,
+): Node => {
   const nodeName = getNodeName(element);
   if (/^script$|^link$/.test(nodeName)) {
     const result = processor && typeof processor === 'function' && processor(element);
@@ -29,14 +37,17 @@ function getResultElement(element, processor) {
 }
 
 /**
- * process a collection of elements or DOMStrings
+ * process a collection of elements or DOM Strings
  * @param {...Array} collection
  * @param {Function} processor
  */
-function mapHTMLCollection(collection, processor) {
+const mapHTMLCollection = (
+  collection: IArguments,
+  processor: ChildNodeOperatorProcessorType,
+) => {
   const args = Array.from(collection);
   const results = args.map(arg => {
-    if (arg instanceof Element) {
+    if (arg instanceof Node) {
       return getResultElement(arg, processor);
     }
     return arg;
@@ -50,19 +61,19 @@ export default function() {
   const append = Element.prototype.append;
   const prepend = Element.prototype.prepend;
 
-  function overwriteAppendChild(callback) {
+  const overwriteAppendChild = (callback: ChildNodeOperatorProcessorType) => {
     Element.prototype.appendChild = function(element) {
       return appendChild.call(this, getResultElement(element, callback));
     };
   }
 
-  function overwriteInsertBefore(callback) {
+  const overwriteInsertBefore = (callback: ChildNodeOperatorProcessorType) => {
     Element.prototype.insertBefore = function(newChild, refChild) {
       return insertBefore.call(this, getResultElement(newChild, callback), refChild);
     };
   }
 
-  function overwriteAppend(callback) {
+  const overwriteAppend = (callback: ChildNodeOperatorProcessorType) => {
     if (!append) {
       return;
     }
@@ -73,7 +84,7 @@ export default function() {
     };
   }
 
-  function overwritePrepend(callback) {
+  const overwritePrepend = (callback: ChildNodeOperatorProcessorType) => {
     if (!prepend) {
       return;
     }
@@ -89,7 +100,7 @@ export default function() {
      * callback for new element
      * @param {Function} callback
      */
-    intercept(callback) {
+    intercept(callback: ChildNodeOperatorProcessorType) {
       overwriteAppendChild(callback);
       overwriteInsertBefore(callback);
       overwriteAppend(callback);
@@ -102,5 +113,5 @@ export default function() {
       Element.prototype.append = append;
       Element.prototype.prepend = prepend;
     },
-  };
+  } as ChildNodeOperatorType;
 }
