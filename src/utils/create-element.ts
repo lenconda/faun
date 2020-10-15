@@ -5,7 +5,10 @@
  * @returns {HTMLElement|null}
  */
 
-export default function(tagName, attributes, children = []) {
+const createElement = <T extends HTMLElement>(
+  tagName: string,
+  attributes: Array<string>, children: Array<Node> = []
+): T | null => {
   if (typeof tagName !== 'string' || typeof attributes !== 'object') {
     return null;
   }
@@ -19,5 +22,7 @@ export default function(tagName, attributes, children = []) {
     children.forEach(child => element.appendChild(child));
   }
 
-  return element;
+  return element as T;
 }
+
+export default createElement;

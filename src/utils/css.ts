@@ -3,9 +3,12 @@
  */
 
 import parse from 'css/lib/parse';
-
 import Compressed from 'css/lib/stringify/compress';
 import Identity from 'css/lib/stringify/identity';
+import {
+  StringifyOptions,
+  Rule,
+} from 'css';
 
 /**
  * Stringfy the given AST `node`.
@@ -20,7 +23,10 @@ import Identity from 'css/lib/stringify/identity';
  * @return {String}
  * @api public
  */
-function stringify(node, options = {}) {
+const stringify = (
+  node: Node,
+  options: StringifyOptions = {},
+): string => {
   const compiler = options.compress
     ? new Compressed(options)
     : new Identity(options);
@@ -34,7 +40,11 @@ function stringify(node, options = {}) {
  * @param {string} input
  * @param {string} prefix
  */
-export default function(input, prefix, excludes = []) {
+const css = (
+  input: string,
+  prefix: string,
+  excludes: Array<string> = [],
+) => {
   if (!input) {
     return '';
   }
@@ -52,7 +62,7 @@ export default function(input, prefix, excludes = []) {
     '-o-keyframes',
   ];
 
-  function excludeSelector(selector, excludeArr) {
+  const excludeSelector = (selector: string, excludeArr: Array<string | RegExp>) => {
     return excludeArr.some(excludeRule => {
       if (excludeRule instanceof RegExp) {
         return excludeRule.test(selector);
@@ -62,16 +72,16 @@ export default function(input, prefix, excludes = []) {
     });
   }
 
-  parsedStyleRules.stylesheet.rules.forEach(rule => {
+  parsedStyleRules.stylesheet.rules.forEach((rule: Rule) => {
     if (rule.type !== 'rule') {
       return rule;
     }
 
-    if (rule.parent && keyframeRules.includes(rule.parent.type)) {
+    if (rule.parent && keyframeRules.includes(rule.parent.type || '')) {
       return rule;
     }
 
-    rule.selectors = rule.selectors.map(selector => {
+    rule.selectors = rule?.selectors?.map((selector: string) => {
       if (
         excludeSelector(selector, ['html', 'body', '*', ...excludes])
         || selector.startsWith(`#${prefix}`)
@@ -82,9 +92,12 @@ export default function(input, prefix, excludes = []) {
 
       return '#' + prefixWithSpace + selector;
     });
+    return rule;
   });
 
   const result = stringify(parsedStyleRules);
 
   return result;
 };
+
+export default css;

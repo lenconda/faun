@@ -32,7 +32,7 @@ app.registerSubApplications(
         ],
       },
       container: 'root',
-      useCSSPrefix: false,
+      useCSSPrefix: true,
       assetPublicPath: '//localhost:8182',
     },
     {

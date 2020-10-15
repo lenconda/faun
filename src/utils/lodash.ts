@@ -12,7 +12,7 @@ export { findLastIndex };
  * @param {*} functionToCheck
  * @returns {boolean}
  */
-export const isFunction = functionToCheck => {
+export const isFunction = (functionToCheck: any) => {
   return Object.prototype.toString.call(functionToCheck) === '[object Function]';
 };
 
