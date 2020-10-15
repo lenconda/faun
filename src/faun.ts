@@ -21,6 +21,8 @@ import {
 // internal plugins
 import Events from './plugins/events';
 import Store from './plugins/store';
+import StoreType from './store';
+import EventType from './event';
 
 const history = createBrowserHistory();
 
@@ -35,6 +37,9 @@ class Faun {
     }
     await plugin.install(Faun, options);
   }
+
+  public store: StoreType;
+  public events: EventType;
 
   private props: IFaunInstanceProps;
   // global dependencies

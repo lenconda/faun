@@ -4,7 +4,13 @@
  */
 
 import Event from '../../event';
-import { setGlobalObject, getGlobalObject } from '../../utils/global-namespace';
+import {
+  setGlobalObject,
+  getGlobalObject,
+} from '../../utils/global-namespace';
+import {
+  FaunType,
+} from '../../interfaces';
 
 const eventsNamespace = '__FAUN_EVENTS__';
 
@@ -15,7 +21,7 @@ if (!events) {
   setGlobalObject(eventsNamespace, events);
 }
 
-export const install = async function(Faun) {
+export const install = async (Faun: FaunType) => {
   Faun.prototype.events = events;
 };
 

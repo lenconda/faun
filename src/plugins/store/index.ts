@@ -4,7 +4,13 @@
  */
 
 import Store from '../../store';
-import { setGlobalObject, getGlobalObject } from '../../utils/global-namespace';
+import {
+  setGlobalObject,
+  getGlobalObject,
+} from '../../utils/global-namespace';
+import {
+  FaunType,
+} from '../../interfaces';
 
 const storeNamespace = '__FAUN_STORE__';
 
@@ -15,7 +21,7 @@ if (!store) {
   setGlobalObject(storeNamespace, store);
 }
 
-export const install = async function(Faun) {
+export const install = async (Faun: FaunType) => {
   Faun.prototype.store = store;
 };
 
