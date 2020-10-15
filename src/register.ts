@@ -15,7 +15,7 @@ import {
  * @param hooks
  * @returns any
  */
-export default (
+const register = (
   props: IFaunInstanceProps,
   context: FaunType,
   subApplicationConfigMap: SubApplicationsType,
@@ -36,3 +36,5 @@ export default (
   props.registeredSubApplications = Array.from(subApplicationConfigMap || []);
   return;
 };
+
+export default register;

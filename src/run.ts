@@ -29,7 +29,7 @@ import {
  * @param props
  * @param deps
  */
-export default (
+const run = (
   props: IFaunInstanceProps,
   deps: Array<IFaunDependency>,
   history: FaunHistoryType,
@@ -68,3 +68,5 @@ export default (
     props.direction = 'backward';
   });
 };
+
+export default run;
