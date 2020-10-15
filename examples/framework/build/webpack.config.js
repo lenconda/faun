@@ -1,4 +1,3 @@
-const env = require('../../../build/utils/env');
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
