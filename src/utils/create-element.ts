@@ -7,7 +7,7 @@
 
 const createElement = <T extends HTMLElement>(
   tagName: string,
-  attributes: Array<string>, children: Array<Node> = []
+  attributes: { [key: string]: any }, children: Array<Node> = [],
 ): T | null => {
   if (typeof tagName !== 'string' || typeof attributes !== 'object') {
     return null;
@@ -23,6 +23,6 @@ const createElement = <T extends HTMLElement>(
   }
 
   return element as T;
-}
+};
 
 export default createElement;

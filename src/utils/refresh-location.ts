@@ -4,12 +4,15 @@
  */
 
 import { cloneDeep } from './lodash';
+import {
+  FaunLocationType,
+} from '../interfaces';
 
 /**
  * refresh location on context when the route changes
  * @param {History<LocationState>>} location
  */
-export default function(location) {
+export default function(location: FaunLocationType) {
   if (!location || !(typeof location === 'object')) {
     return;
   }

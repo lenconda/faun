@@ -70,7 +70,7 @@ const css = (
 
       return selector === excludeRule;
     });
-  }
+  };
 
   parsedStyleRules.stylesheet.rules.forEach((rule: Rule) => {
     if (rule.type !== 'rule') {

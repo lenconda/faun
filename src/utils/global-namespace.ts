@@ -10,7 +10,7 @@ const NAMESPACE = '__FAUN__';
  * @param {string} key
  * @param {*} value
  */
-export const setGlobalObject = (key, value) => {
+export const setGlobalObject = <T>(key: string, value: T) => {
   if (!window[NAMESPACE]) {
     window[NAMESPACE] = {};
   }
@@ -23,7 +23,7 @@ export const setGlobalObject = (key, value) => {
  * @param key
  * @returns {*}
  */
-export const getGlobalObject = key => {
+export const getGlobalObject = (key: string) => {
   const faun = window[NAMESPACE];
   return faun && faun[key] ? faun[key] : null;
 };
