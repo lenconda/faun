@@ -207,7 +207,7 @@ class Sandbox {
     } else {
       switch (typeof container) {
       case 'string': {
-        const currentContainer = createElement('div', { id: container });
+        const currentContainer = createElement<HTMLDivElement>('div', { id: container });
         if (currentContainer) {
           this.container = currentContainer;
         }
@@ -222,7 +222,7 @@ class Sandbox {
     }
 
     if (!document.getElementById(this.name)) {
-      const mountPointElement = createElement('div', {
+      const mountPointElement = createElement<HTMLDivElement>('div', {
         id: (useCSSPrefix || !this.singular) ? this.name : '',
       }, [this.container]);
       if (mountPointElement) {
