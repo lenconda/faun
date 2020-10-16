@@ -1,5 +1,5 @@
 /**
- * @file global-namespace.js
+ * @file /src/utils/global-namespace.ts
  * @author lenconda<i@lenconda.top>
  */
 

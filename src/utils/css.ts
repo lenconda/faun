@@ -1,5 +1,5 @@
 /**
- * @file css.js
+ * @file /src/utils/css.ts
  */
 
 import parse from 'css/lib/parse';

@@ -1,5 +1,5 @@
 /**
- * @file random.js
+ * @file /src/utils/random.ts
  */
 
 /**

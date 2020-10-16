@@ -1,4 +1,9 @@
 /**
+ * @file /src/utils/create-element.ts
+ * @author lenconda<i@lenconda.top>
+ */
+
+/**
  * create an HTML element
  * @param {string} tagName
  * @param {Object} attributes

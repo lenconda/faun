@@ -1,5 +1,5 @@
 /**
- * @file lodash.js
+ * @file /src/utils/lodash.ts
  * @author lenconda<i@lenconda.top>
  */
 

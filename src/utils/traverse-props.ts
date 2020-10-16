@@ -1,5 +1,5 @@
 /**
- * @file traverse-props.js
+ * @file /src/utils/traverse-props.ts
  * @author lenconda<i@lenconda.top>
  */
 
