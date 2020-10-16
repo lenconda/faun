@@ -1,10 +1,11 @@
 /**
- * @file refresh-location.js
+ * @file /src/utils/refresh-location.ts
  * @author lenconda<i@lenconda.top>
  */
 
 import { cloneDeep } from './lodash';
 import {
+  IFaunInstanceProps,
   FaunLocationType,
 } from '../interfaces';
 
@@ -12,10 +13,17 @@ import {
  * refresh location on context when the route changes
  * @param {History<LocationState>>} location
  */
-export default function(location: FaunLocationType) {
+const refreshLocation = (
+  props: IFaunInstanceProps,
+  location: FaunLocationType,
+) => {
   if (!location || !(typeof location === 'object')) {
     return;
   }
 
-  Object.assign(this.currentLocation, cloneDeep(location));
+  if (props.currentLocation) {
+    Object.assign(props.currentLocation, cloneDeep(location));
+  }
 };
+
+export default refreshLocation;
