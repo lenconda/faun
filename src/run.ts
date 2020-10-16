@@ -59,7 +59,7 @@ const run = (
 
   // intercept all click events
   window.addEventListener('click', function(event) {
-    handleClick(event, props, history);
+    handleClick(event, history);
   });
   window.addEventListener('forward', () => {
     props.direction = 'forward';
