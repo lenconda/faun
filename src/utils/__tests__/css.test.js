@@ -10,7 +10,7 @@ test('`css` should be a function', async () => {
 });
 
 test('`css` should add a prefix to css rules', async () => {
-  expect(/^\.prefix/.test(css('.test { text-align: center; }', 'prefix')))
+  expect(/^\#prefix/.test(css('.test { text-align: center; }', 'prefix')))
     .toBe(true);
 });
 

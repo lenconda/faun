@@ -1,11 +1,21 @@
-const env = require('../../../build/utils/env');
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const getEntryPath = () => {
+  const devEntryPath = path.resolve(__dirname, '../src/index.dev.ts');
+
+  if (!fs.existsSync(devEntryPath)) {
+    return path.resolve(__dirname, '../src/index.ts');
+  }
+
+  return devEntryPath;
+}
+
 module.exports = {
-  entry: path.resolve(__dirname, '../src/index.js'),
+  entry: getEntryPath(),
 
   output: {
     path: path.resolve(__dirname, '../dist'),
@@ -28,7 +38,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.ts', '.tsx', '.jsx'],
   },
 
   devtool: 'eval',
@@ -44,7 +54,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js?$/,
+        test: /\.(ts|js|tsx|jsx)?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',

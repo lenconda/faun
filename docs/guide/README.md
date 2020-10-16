@@ -135,7 +135,7 @@ app.registerSubApplications({
       '//localhost:8181/app.js',
     ],
     styles: [],
-    mountPointID: 'app',
+    container: 'app',
     useCSSPrefix: false,
   },
   '/react': {
@@ -146,7 +146,7 @@ app.registerSubApplications({
     styles: [
       '//localhost:8182/static/css/main.css',
     ],
-    mountPointID: 'root',
+    container: 'root',
     prefixElementSelector: () => document.body,
   },
 });

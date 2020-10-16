@@ -7,7 +7,10 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    window.a = 'test';
+  },
 }
 </script>
 

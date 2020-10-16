@@ -7,9 +7,38 @@
   <link rel="prefetch stylesheet"  href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/source-code-pro@2.30.2/source-code-pro.css" />
   <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.min.css" rel="stylesheet" />
+  <style>
+    .nav-wrapper {
+      box-sizing: border-box;
+      padding: 0;
+      padding: 15px 30px;
+      list-style-type: none;
+      background-color: rgba(0, 0, 0, .8);
+      position: fixed;
+      top: 100px;
+      left: 20px;
+    }
+
+    .nav-wrapper > li {
+      padding: 5px 0;
+    }
+
+    .nav-wrapper > li > a {
+      color: rgba(255, 255, 255, .6);
+      text-decoration: none;
+    }
+
+    .nav-wrapper > li > a:hover {
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
-  <a href="/vue" data-faun-link>/vue</a>
-  <a href="/react" data-faun-link>/react</a>
+  <ul class="nav-wrapper">
+    <li><a href="/vue" data-faun-link>/vue</a></li>
+    <li><a href="/react" data-faun-link>/react</a></li>
+    <li><a href="/angular" data-faun-link>/angular</a></li>
+    <li><a href="/svelte" data-faun-link>/svelte</a></li>
+  </ul>
 </body>
 </html>

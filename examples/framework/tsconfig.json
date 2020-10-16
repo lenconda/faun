@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "strict": true,
+    "jsx": "react",
+    "typeRoots": [
+      "typings/index.d.ts",
+      "./node_modules/@types/"
+    ],
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "strictNullChecks": false,
+    "allowJs": true,
+    "pretty": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "noEmit": false,
+    "outDir": "./dist",
+    "lib": [
+      "es5",
+      "dom",
+      "esnext",
+      "es2017",
+      "es2015",
+      "es2016"
+    ]
+  },
+  "compileOnSave": false,
+  "include": [
+    "src",
+    "./typings/"
+  ]
+}
