@@ -51,7 +51,7 @@ class Faun {
       // registered sub-applications information
       registeredSubApplications: [],
       // current location object
-      currentLocation: {},
+      // currentLocation,
       // sandboxes stack
       routes: [{ sandboxes: [new Sandbox('@@default')] }],
       // stack top position

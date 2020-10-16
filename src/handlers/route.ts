@@ -1,9 +1,13 @@
 /**
- * @file route.js
+ * @file /src/handlers/route.ts
  * @author lenconda<i@lenconda.top>
  */
 
-import { isFunction } from '../utils/lodash';
+import {
+  IFaunInstanceProps,
+  FaunLocationType,
+  FaunRouteHandlerCallback,
+} from '../interfaces';
 
 /**
  * handle history change
@@ -11,9 +15,13 @@ import { isFunction } from '../utils/lodash';
  * @param {History<LocationState>} location
  * @param {function} callback
  */
-export const handleRouteChange = function(props, location, callback) {
+export const handleRouteChange = (
+  props: IFaunInstanceProps,
+  location: FaunLocationType,
+  callback: FaunRouteHandlerCallback,
+) => {
   const nextPathArray = location.pathname.split('/');
-  const previousPath = props.currentLocation.pathname || '';
+  const previousPath = props?.currentLocation?.pathname || '';
   const previousPathArray = previousPath.split('/');
 
   previousPathArray.shift();
@@ -27,7 +35,7 @@ export const handleRouteChange = function(props, location, callback) {
   const previousPathname = `/${previousPathArray[0]}`;
 
   try {
-    callback && isFunction(callback) && callback(previousPathname, nextPathname);
+    callback && typeof callback === 'function' && callback(previousPathname, nextPathname);
   } catch(e) {
     console.error(e);
   }

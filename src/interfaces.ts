@@ -76,7 +76,7 @@ export type SubApplicationsType = Array<ISubApplicationConfig>;
 
 export interface IFaunInstanceProps {
   registeredSubApplications: Array<ISubApplicationConfig>;
-  currentLocation: Location<History.PoorMansUnknown> | {};
+  currentLocation?: Location<History.PoorMansUnknown>;
   routes: Array<IFaunRouteItem>;
   position: number;
   direction: 'forward' | 'backward';
@@ -124,5 +124,5 @@ export interface ChildNodeOperatorType {
   intercept: (callback: ChildNodeOperatorProcessorType) => void;
   stop: () => void;
 }
-
 export type EventListenerType = typeof window.addEventListener;
+export type FaunRouteHandlerCallback = (previousPathname: string, nextPathname: string) => void;

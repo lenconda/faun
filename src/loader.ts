@@ -29,11 +29,10 @@ export const loadSubApplication = async (
     if (!activeWhen) {
       return false;
     }
-    // const activeWhenType = Object.prototype.toString.call(activeWhen);
     if (Array.isArray(activeWhen)) {
       return activeWhen.indexOf(pathname) !== -1;
     } else if (typeof activeWhen === 'function') {
-      return activeWhen(props.currentLocation);
+      return activeWhen(props.currentLocation || {});
     } else if (typeof activeWhen === 'string') {
       return pathname === activeWhen;
     } else if (activeWhen instanceof RegExp) {
