@@ -1,24 +1,24 @@
 ---
 hero:
   title: faun
-  desc: 📦 Fast, general and light-weight library for building micro-frontend apps.
+  desc: 📦 快速、通用、轻量级的微前端解决方案。
   actions:
-    - text: Getting Started
+    - text: 快速上手
       link: /guide
 footer: Open-source MIT Licensed | Copyright © 2020<br />Powered by [dumi](https://d.umijs.org)
 ---
 
-## Installation
+## 安装
 
 ```bash
 $ npm install faun -S
 
-# or
+# 或
 
 $ yarn add faun
 ```
 
-## Getting Started
+## 快速上手
 
 ```js
 import Faun from 'faun';

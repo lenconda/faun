@@ -1,3 +1,12 @@
+---
+order: 0
+toc: 'menu'
+title: 'Guide'
+nav:
+  title: 'Guide'
+  order: 0
+---
+
 # Guide
 
 ## Introduction
