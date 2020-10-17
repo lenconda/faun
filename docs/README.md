@@ -11,7 +11,7 @@ footer: Open-source MIT Licensed | Copyright © 2020<br />Powered by [dumi](http
 ## Installation
 
 ```bash
-$ npm install faun -S
+$ npm i faun -S
 
 # or
 
