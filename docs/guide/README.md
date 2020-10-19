@@ -57,7 +57,7 @@ The only difference between Faun and principles in [Micro Frontends](https://mic
 
 To get understand of how it works, here we put an image to show the main processes of what will Faun do when starting a micro-frontend-powered application:
 
-![faun](../_media/faun.jpg)
+<img src="../_media/faun.png" width="40%" />
 
 Sandbox is the core of Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the sub-application configuration map for this application.
 
