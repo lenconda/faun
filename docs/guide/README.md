@@ -1,3 +1,12 @@
+---
+order: 0
+toc: 'menu'
+title: 'Guide'
+nav:
+  title: 'Guide'
+  order: 0
+---
+
 # Guide
 
 ## Introduction
@@ -8,8 +17,8 @@ Faun (IPA: /ˈfɔːn/) is an implementation of concepts from [micro-frontends.or
 
 - Micro Frontend: technology, implemented methods or methodology to build micro-frontend apps
 - Micro Frontend Apps: the projects or applications build with micro-frontend technology
-- Framework: or *framework-application(s)* or *master-application(s)*, the dock to load sub-applications. It also solves the global events and stores global states.
-- Sub-application(s): could be loaded by framework-application, and also be able to work independently as an independent application under certain circumstances.
+- Framework(or *framework-application(s), master-application(s)*), the container to load sub-applications. It also keeps and handles the global events and stores global states.
+- Sub-application(s): could be loaded by framework-application, but also be able to work independently as an independent application under certain circumstances.
 
 ### What is Micro-Frontend
 
@@ -48,7 +57,7 @@ The only difference between Faun and principles in [Micro Frontends](https://mic
 
 To get understand of how it works, here we put an image to show the main processes of what will Faun do when starting a micro-frontend-powered application:
 
-![faun](../_media/faun.jpg)
+<img src="../_media/faun.png" width="40%" />
 
 Sandbox is the core of Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the sub-application configuration map for this application.
 
@@ -117,7 +126,7 @@ const Faun = require('faun');
 // ES 6 Module
 import Faun from 'faun';
 // or by UMD
-<script src="https://unpkg.com/faun@latest/dist/faun.min.js"></script>
+<script src="https://unpkg.com/faun@latest/dist/umd/faun.min.js"></script>
 ```
 
 Initialize the framework application with:
