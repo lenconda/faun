@@ -2,13 +2,16 @@
   "name": "faun",
   "version": "0.1.6",
   "description": "A more simple way to make micro front-end apps",
-  "main": "dist/es/index.js",
+  "main": "dist/lib/index.js",
   "module": "dist/es/index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --coverage",
     "lint": "eslint ./src",
     "clean": "rimraf dist",
-    "build": "cross-env NODE_ENV=production npm run clean && rollup -c rollup.config.js && tsc",
+    "build:umd": "cross-env NODE_ENV=production rollup -c rollup.config.js",
+    "build:es": "cross-env NODE_ENV=production tsc --module esnext --target es5 --outDir dist/es",
+    "build:cjs": "cross-env NODE_ENV=production tsc --module commonjs --target es5 --outDir dist/lib",
+    "build": "npm run clean && npm run build:umd && npm run build:es && npm run build:cjs",
     "examples:install:framework": "cd examples/framework && npm i",
     "examples:install:vue": "cd examples/vue && npm i",
     "examples:install:react": "cd examples/react && npm i",
@@ -21,17 +24,16 @@
     "examples:start:angular": "cd examples/angular && npm start",
     "examples:start:svelte": "cd examples/svelte && npm run dev",
     "examples:start": "npm-run-all --parallel examples:start:*",
-    "docs": "docsify serve docs"
+    "docs:start": "dumi dev",
+    "docs:build": "dumi build"
   },
-  "types": "dist/es/index.d.ts",
+  "typings": "dist/lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lenconda/faun.git"
   },
   "files": [
-    "src",
-    "typings/*.d.ts",
-    "dist/*.js"
+    "dist"
   ],
   "keywords": [
     "microfrontends"
@@ -76,6 +78,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cross-env": "^7.0.2",
     "docsify-cli": "^4.4.0",
+    "dumi": "^1.0.34",
     "eslint": "^6.8.0",
     "eslint-config-alloy": "^3.7.1",
     "eslint-plugin-jest": "^23.13.0",

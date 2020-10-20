@@ -27,6 +27,15 @@ module.exports = [
         banner: generateBanner(),
         exports: 'default',
       },
+      {
+        file: resolveFile('dist/amd/faun.min.js'),
+        format: 'amd',
+        amd: {
+          id: `${packageJson.name}@${packageJson.version}`,
+        },
+        banner: generateBanner(),
+        exports: 'default',
+      },
     ],
     plugins: [
       resolve({ browser: true, extensions }),
