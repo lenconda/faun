@@ -1,19 +1,19 @@
 ---
 order: 0
 toc: 'menu'
-title: 'Guide'
+title: '开发指南'
 nav:
-  title: 'Guide'
+  title: '开发指南'
   order: 0
 ---
 
-# Guide
+# 开发指南
 
-## Introduction
+## 介绍
 
-Faun (IPA: /ˈfɔːn/) is an implementation of concepts from [micro-frontends.org](https://micro-frontends.org/). It was designed to make it easier to build micro-frontend applications and at the same time be less intrusive migrating existed project to micro-frontend architecture.
+Faun (国际标准音标: /ˈfɔːn/) 是一个对 [micro-frontends.org](https://micro-frontends.org/) 规范的实现。它旨在提供更简单的构建微前端架构应用的方式，与此同时以最小侵入性将既有应用接入到微前端架构。
 
-### Concepts and Technical Terms
+### 概念与技术术语
 
 - Micro Frontend: technology, implemented methods or methodology to build micro-frontend apps
 - Micro Frontend Apps: the projects or applications build with micro-frontend technology

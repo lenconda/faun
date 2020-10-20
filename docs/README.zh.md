@@ -4,7 +4,7 @@ hero:
   title: faun
   desc: 📦 快速、通用、轻量级的微前端解决方案。
   actions:
-    - text: 快速上手
+    - text: 开发指南
       link: /guide
 footer: Open-source MIT Licensed | Copyright © 2020<br />Powered by [dumi](https://d.umijs.org)
 ---
@@ -19,7 +19,7 @@ $ npm i faun -S
 $ yarn add faun
 ```
 
-## 快速开始
+## 快速上手
 
 ```js
 import Faun from 'faun';
