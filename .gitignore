@@ -23,3 +23,6 @@ coverage
 
 index.dev.js
 index.dev.ts
+
+# umi files
+.umi

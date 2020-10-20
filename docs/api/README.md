@@ -1,3 +1,12 @@
+---
+order: 1
+toc: 'menu'
+title: 'API References'
+nav:
+  title: 'API'
+  order: 1
+---
+
 # API
 
 ## Methods & Props
