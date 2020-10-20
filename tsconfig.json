@@ -1,12 +1,10 @@
 {
   "name": "faun",
   "compilerOptions": {
-    "target": "es5",
     "jsx": "react",
     "module": "esnext",
     "lib": ["es2018", "dom"],
     "declaration": true,
-    "outDir": "./dist/es",
     "rootDir": "./src",
     "importHelpers": true,
     "typeRoots": ["typings", "node_modules/@types"],
