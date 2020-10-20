@@ -1,4 +1,5 @@
 ---
+title: faun
 hero:
   title: faun
   desc: 📦 Fast, general and light-weight library for building micro-frontend apps.
@@ -8,13 +9,13 @@ hero:
 footer: Open-source MIT Licensed | Copyright © 2020<br />Powered by [dumi](https://d.umijs.org)
 ---
 
+<div style="height: 20px;"></div>
+
 ## Installation
 
 ```bash
 $ npm i faun -S
-
 # or
-
 $ yarn add faun
 ```
 
@@ -28,32 +29,31 @@ const app = new Faun();
 app.registerSubApplications(
   [
     {
-      name: 'demo_vue_app',
-      activeWhen: '/vue',
-      scripts: [
-        '//localhost:8181/app.js',
-      ],
-      styles: [],
-      mountPointID: 'app',
-      useCSSPrefix: false,
+      name: 'app1',
+      activeWhen: '/app1',
+      entry: {
+        scripts: [
+          '//localhost:8181/app.js',
+        ],
+      },
+      container: 'app',
       assetPublicPath: '//localhost:8181',
     },
     {
-      name: 'demo_react_app',
-      activeWhen: '/react',
+      name: 'app2',
+      activeWhen: '/app2',
       scripts: [
         '//localhost:8182/static/js/main.bundle.js',
       ],
       styles: [
         '//localhost:8182/static/css/main.css',
       ],
-      mountPointID: 'root',
-      useCSSPrefix: false,
+      container: document.querySelector('#root'),
       assetPublicPath: '//localhost:8182',
     },
   ],
   {
-    loading: function(pathname) {
+    loading: pathname => {
       console.log('loading', this);
       console.log('pathname: ', pathname);
     },
