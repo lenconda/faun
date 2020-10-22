@@ -19,7 +19,7 @@ import {
   ISubApplicationConfig,
   IFaunSubApplicationConfig,
   IChildOperate,
-  IStaticResourcesReplaceRule,
+  SubApplicationAssetsConfigMatchersType,
 } from './interfaces';
 
 /**
@@ -49,8 +49,17 @@ class Sandbox {
   private cleanDOMWhenUnmounting = false;
   private container: HTMLElement;
   private mountPointElement?: HTMLElement;
-  private staticResourcesReplaceRule?: IStaticResourcesReplaceRule;
   private disableRewriteEventListeners?: Function;
+  private assetsMatchers: SubApplicationAssetsConfigMatchersType = [
+    {
+      nodeName: 'script',
+      attributes: ['src'],
+    },
+    {
+      nodeName: 'style',
+      attributes: ['href'],
+    },
+  ];
 
   constructor(name: string, useCSSPrefix = true) {
     this.name = name;
@@ -60,20 +69,7 @@ class Sandbox {
         mutations.forEach(mutation => {
           const currentAddedNodes = Array.from(mutation.addedNodes) as HTMLElement[];
           currentAddedNodes.forEach(node => {
-            const staticResourcesReplaceRule = this.staticResourcesReplaceRule;
-            const nodeNames = staticResourcesReplaceRule?.nodeNames || [];
-            const attributes = staticResourcesReplaceRule?.attributes || [];
-            const replacer = staticResourcesReplaceRule?.replacer || null;
-            const lowerCasedNodeNames = nodeNames.map((name: string) => name.toLowerCase());
             const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
-            const nodeAttributes = node.attributes && Array.from(node.attributes).map(attribute => attribute.name) || [];
-            if (
-              lowerCasedNodeNames.indexOf(nodeName) !== -1
-              && nodeAttributes.filter(attribute => attributes.indexOf(attribute) !== -1).length !== 0
-              && replacer
-            ) {
-              replacer(node);
-            }
             if (node && /^style$|^script$|^link$/.test(nodeName)) {
               this.domSnapshot.push(node);
               if (nodeName === 'style' && (this.useCSSPrefix || !this.singular)) {
@@ -105,25 +101,16 @@ class Sandbox {
           return src;
         }
       };
-      switch(nodeName) {
-      case 'script': {
-        const src = element.getAttribute('src');
-        if (src) {
-          element.setAttribute('src', getAssetsPrefix(src));
-        }
-        break;
+      const currentMatcher = this.assetsMatchers.find(matcher => matcher.nodeName === nodeName);
+      if (currentMatcher) {
+        currentMatcher.attributes.forEach(attribute => {
+          const currentAttributeValue = element.getAttribute(attribute);
+          if (currentAttributeValue) {
+            element.setAttribute(attribute, getAssetsPrefix(currentAttributeValue));
+          }
+        });
       }
-      case 'link': {
-        const href = element.getAttribute('href');
-        const rel = element.getAttribute('rel');
-        if (href && rel === 'stylesheet') {
-          element.setAttribute('href', getAssetsPrefix(href));
-        }
-        break;
-      }
-      default:
-        break;
-      }
+
       return element;
     });
 
@@ -189,7 +176,7 @@ class Sandbox {
       extra = {},
       useCSSPrefix,
       name = random(),
-      staticResourcesReplaceRule = null,
+      assetsConfig = null,
       cleanDOMWhenUnmounting = false,
     } = subApplicationConfig;
     if (!subApplicationConfig || !container) {
@@ -198,8 +185,15 @@ class Sandbox {
 
     this.name = name;
     this.singular = appConfig.singular || true;
-    if (staticResourcesReplaceRule) {
-      this.staticResourcesReplaceRule = staticResourcesReplaceRule;
+
+    if (assetsConfig) {
+      const { mode, matchers: customMatchers } = assetsConfig;
+      const currentCustomMatchers: SubApplicationAssetsConfigMatchersType = customMatchers.map(matcher => ({
+        nodeName: matcher.nodeName.toLowerCase(),
+        attributes: matcher.attributes,
+      }));
+      const matchers = mode === 'merge' ? this.assetsMatchers.concat(currentCustomMatchers) : currentCustomMatchers;
+      this.assetsMatchers = matchers;
     }
     this.cleanDOMWhenUnmounting = cleanDOMWhenUnmounting;
     if (container instanceof HTMLElement) {

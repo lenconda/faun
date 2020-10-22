@@ -3,5 +3,10 @@
  * @author lenconda<i@lenconda.top>
  */
 
-export { handleRouteChange } from './route';
-export { handleClick } from './click';
+import { handleRouteChange } from './route';
+import { handleClick } from './click';
+
+export {
+  handleRouteChange,
+  handleClick,
+};
