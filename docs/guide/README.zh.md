@@ -1,19 +1,19 @@
 ---
 order: 0
 toc: 'menu'
-title: 'Guide'
+title: '开发指南'
 nav:
-  title: 'Guide'
+  title: '开发指南'
   order: 0
 ---
 
-# Guide
+# 开发指南
 
-## Introduction
+## 介绍
 
-Faun (IPA: /ˈfɔːn/) is an implementation of concepts from [micro-frontends.org](https://micro-frontends.org/). It was designed to make it easier to build micro-frontend applications and at the same time be less intrusive migrating existed project to micro-frontend architecture.
+Faun (国际标准音标: /ˈfɔːn/) 是一个对 [micro-frontends.org](https://micro-frontends.org/) 规范的实现。它旨在提供更简单的构建微前端架构应用的方式，与此同时以最小侵入性将既有应用接入到微前端架构。
 
-### Concepts and Technical Terms
+### 概念与技术术语
 
 - Micro Frontend: technology, implemented methods or methodology to build micro-frontend apps
 - Micro Frontend Apps: the projects or applications build with micro-frontend technology
@@ -79,9 +79,11 @@ When the top-level route changing, the former sandbox will unmount, then mount n
 
 All the features are updated in [here](https://github.com/lenconda/faun/tree/docs#features)
 
-## Migrate or Create a New Faun Application
+## Quick Start
 
-### Provide a Framework Application
+> The project is still under development, it is unrealistic to install it from npm, but you can clone this project from GitHub and bundle it into your project.
+
+### Framework
 
 The simplest HTML structure Faun required is:
 
@@ -100,10 +102,10 @@ The simplest HTML structure Faun required is:
 
 Route links that could be intercepted by Faun should be added a `data-faun-link` attribute:
 
-In HTML or Vue template or JSX:
+In HTML/Vue template/JSX:
 
 ```html
-<!-- It will be intercepted by Faun's history listener -->
+<!-- It will be intercepted by Faun -->
 <a href="/foo" data-faun-link>Foo</a>
 
 <!-- It will not be intercepted by Faun, just jump to /foo/index.html -->
@@ -113,9 +115,7 @@ In HTML or Vue template or JSX:
 Install Faun:
 
 ```bash
-$ npm i faun -S
-# or
-$ yarn add faun
+$ npm install faun
 ```
 
 Import Faun in your framework:
@@ -143,7 +143,7 @@ import Faun from 'faun';
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
 <script src="https://unpkg.com/faun@latest/dist/amd/faun.min.js"></script>
-<script type="text/javascript">
+<script>
   require(['faun@$VERSION'], function(Faun) {
     // do something with Faun
   });
@@ -220,7 +220,7 @@ Finally, run the framework:
 app.run();
 ```
 
-### Migrate Sub Applications
+### Sub Application
 
 Since Faun is low invasive, we can just make a few modifications on sub-applications. The ONLY thing that you might have to pay attention to is that make sure all of the CSS and JavaScript resource URLs are right when sending to framework application.
 
@@ -249,5 +249,3 @@ app.registerSubApplications({
 ```
 
 the `assetURLMapper` method should return a new URL which is the right one to load resources.
-
-### Config the Servers
