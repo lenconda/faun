@@ -48,11 +48,7 @@ export interface ISubApplicationAssetsConfigMatcherItem {
   nodeName: string;
   attributes: Array<string>;
 }
-export type SubApplicationAssetsConfigMatchersType = Array<ISubApplicationAssetsConfigMatcherItem>;
-export interface ISubApplicationAssetsConfig {
-  mode: 'rewrite' | 'merge';
-  matchers: SubApplicationAssetsConfigMatchersType;
-}
+export type SubApplicationAssetMatchersType = Array<ISubApplicationAssetsConfigMatcherItem>;
 
 export interface ISubApplicationConfig {
   name?: string;
@@ -64,7 +60,7 @@ export interface ISubApplicationConfig {
   container: SubApplicationContainerType;
   useCSSPrefix?: boolean;
   assetPublicPath?: SubApplicationAssetPublicPathType;
-  assetsConfig?: ISubApplicationAssetsConfig;
+  assetMatchers?: SubApplicationAssetMatchersType;
   preserveChunks?: boolean;
   extra?: SubApplicationExtraType;
   cleanDOMWhenUnmounting?: boolean;

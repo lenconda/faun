@@ -19,8 +19,41 @@ import {
   ISubApplicationConfig,
   IFaunSubApplicationConfig,
   IChildOperate,
-  SubApplicationAssetsConfigMatchersType,
+  SubApplicationAssetMatchersType,
 } from './interfaces';
+
+const configMatchedNodeAssets = (
+  element: HTMLElement,
+  matchers: SubApplicationAssetMatchersType,
+  assetPublicPath: string | SandboxAssetPublicPathType | undefined,
+): HTMLElement => {
+  const nodeName = element.nodeName.toLowerCase();
+  const getAssetsPrefix = (value: string): string => {
+    if (assetPublicPath) {
+      if (typeof assetPublicPath === 'function') {
+        return `${assetPublicPath(value)}${value}`;
+      } else if (typeof assetPublicPath === 'string') {
+        return `${assetPublicPath}${value}`;
+      } else {
+        return value;
+      }
+    } else {
+      return value;
+    }
+  };
+
+  const currentMatcher = matchers.find(matcher => matcher.nodeName === nodeName);
+  if (currentMatcher) {
+    currentMatcher.attributes.forEach(attribute => {
+      const currentAttributeValue = element.getAttribute(attribute);
+      if (currentAttributeValue) {
+        element.setAttribute(attribute, getAssetsPrefix(currentAttributeValue));
+      }
+    });
+  }
+
+  return element;
+};
 
 /**
  * sandbox constructor
@@ -50,18 +83,18 @@ class Sandbox {
   private container: HTMLElement;
   private mountPointElement?: HTMLElement;
   private disableRewriteEventListeners?: Function;
-  private assetsMatchers: SubApplicationAssetsConfigMatchersType = [
+  private assetMatchers: SubApplicationAssetMatchersType = [
     {
       nodeName: 'script',
       attributes: ['src'],
     },
     {
-      nodeName: 'style',
+      nodeName: 'link',
       attributes: ['href'],
     },
   ];
 
-  constructor(name: string, useCSSPrefix = true) {
+  constructor(name: string, useCSSPrefix = true, customAssetMatchers: SubApplicationAssetMatchersType = []) {
     this.name = name;
     this.useCSSPrefix = useCSSPrefix;
     if (!this.observer) {
@@ -70,12 +103,17 @@ class Sandbox {
           const currentAddedNodes = Array.from(mutation.addedNodes) as HTMLElement[];
           currentAddedNodes.forEach(node => {
             const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
-            if (node && /^style$|^script$|^link$/.test(nodeName)) {
+            if (/^style$|^script$|^link$/.test(nodeName)) {
               this.domSnapshot.push(node);
               if (nodeName === 'style' && (this.useCSSPrefix || !this.singular)) {
                 node.innerHTML = cssPrefix(node.innerHTML, this.name);
               }
             }
+            const currentCustomMatchers: SubApplicationAssetMatchersType = customAssetMatchers.map(matcher => ({
+              nodeName: matcher.nodeName.toLowerCase(),
+              attributes: matcher.attributes,
+            }));
+            configMatchedNodeAssets(node, currentCustomMatchers, this.assetPublicPath);
           });
         });
       });
@@ -83,35 +121,8 @@ class Sandbox {
   }
 
   public takeDOMSnapshot() {
-    const _this = this;
-
     this.childNodeOperator.intercept((element: HTMLElement) => {
-      const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
-      const getAssetsPrefix = (src: string): string => {
-        const { assetPublicPath } = _this;
-        if (assetPublicPath) {
-          if (typeof assetPublicPath === 'function') {
-            return `${assetPublicPath(src)}${src}`;
-          } else if (typeof assetPublicPath === 'string') {
-            return `${assetPublicPath}${src}`;
-          } else {
-            return src;
-          }
-        } else {
-          return src;
-        }
-      };
-      const currentMatcher = this.assetsMatchers.find(matcher => matcher.nodeName === nodeName);
-      if (currentMatcher) {
-        currentMatcher.attributes.forEach(attribute => {
-          const currentAttributeValue = element.getAttribute(attribute);
-          if (currentAttributeValue) {
-            element.setAttribute(attribute, getAssetsPrefix(currentAttributeValue));
-          }
-        });
-      }
-
-      return element;
+      return configMatchedNodeAssets(element, this.assetMatchers, this.assetPublicPath);
     });
 
     this.observer && this.observer.observe(document.documentElement, {
@@ -176,7 +187,7 @@ class Sandbox {
       extra = {},
       useCSSPrefix,
       name = random(),
-      assetsConfig = null,
+      // assetMatchers = null,
       cleanDOMWhenUnmounting = false,
     } = subApplicationConfig;
     if (!subApplicationConfig || !container) {
@@ -186,15 +197,13 @@ class Sandbox {
     this.name = name;
     this.singular = appConfig.singular || true;
 
-    if (assetsConfig) {
-      const { mode, matchers: customMatchers } = assetsConfig;
-      const currentCustomMatchers: SubApplicationAssetsConfigMatchersType = customMatchers.map(matcher => ({
-        nodeName: matcher.nodeName.toLowerCase(),
-        attributes: matcher.attributes,
-      }));
-      const matchers = mode === 'merge' ? this.assetsMatchers.concat(currentCustomMatchers) : currentCustomMatchers;
-      this.assetsMatchers = matchers;
-    }
+    // if (assetMatchers) {
+    //   const currentCustomMatchers: SubApplicationAssetMatchersType = assetMatchers.map(matcher => ({
+    //     nodeName: matcher.nodeName.toLowerCase(),
+    //     attributes: matcher.attributes,
+    //   }));
+    //   this.customAssetMatchers = currentCustomMatchers;
+    // }
     this.cleanDOMWhenUnmounting = cleanDOMWhenUnmounting;
     if (container instanceof HTMLElement) {
       this.container = container;
