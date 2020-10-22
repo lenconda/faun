@@ -22,12 +22,6 @@ export type SubApplicationActiveRuleType =
   | SubApplicationActiveRuleArrayType
   | SubApplicationActiveRuleStringType;
 
-export interface IStaticResourcesReplaceRule {
-  nodeNames: Array<string>;
-  attributes: Array<string>;
-  replacer: (element: HTMLElement) => void;
-}
-
 export interface IFaunSubApplicationConfig {
   singular?: boolean;
 }
@@ -50,6 +44,11 @@ export type SubApplicationAssetPublicPathStringType = string;
 export type SubApplicationAssetPublicPathType =
   SubApplicationAssetPublicPathFunctionType
   | SubApplicationAssetPublicPathStringType;
+export interface ISubApplicationAssetsConfigMatcherItem {
+  nodeName: string;
+  attributes: Array<string>;
+}
+export type SubApplicationAssetMatchersType = Array<ISubApplicationAssetsConfigMatcherItem>;
 
 export interface ISubApplicationConfig {
   name?: string;
@@ -61,9 +60,9 @@ export interface ISubApplicationConfig {
   container: SubApplicationContainerType;
   useCSSPrefix?: boolean;
   assetPublicPath?: SubApplicationAssetPublicPathType;
+  assetMatchers?: SubApplicationAssetMatchersType;
   preserveChunks?: boolean;
   extra?: SubApplicationExtraType;
-  staticResourcesReplaceRule?: IStaticResourcesReplaceRule;
   cleanDOMWhenUnmounting?: boolean;
 }
 

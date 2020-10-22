@@ -19,8 +19,41 @@ import {
   ISubApplicationConfig,
   IFaunSubApplicationConfig,
   IChildOperate,
-  IStaticResourcesReplaceRule,
+  SubApplicationAssetMatchersType,
 } from './interfaces';
+
+const configMatchedNodeAssets = (
+  element: HTMLElement,
+  matchers: SubApplicationAssetMatchersType,
+  assetPublicPath: string | SandboxAssetPublicPathType | undefined,
+): HTMLElement => {
+  const nodeName = element.nodeName.toLowerCase();
+  const getAssetsPrefix = (value: string): string => {
+    if (assetPublicPath) {
+      if (typeof assetPublicPath === 'function') {
+        return `${assetPublicPath(value)}${value}`;
+      } else if (typeof assetPublicPath === 'string') {
+        return `${assetPublicPath}${value}`;
+      } else {
+        return value;
+      }
+    } else {
+      return value;
+    }
+  };
+
+  const currentMatcher = matchers.find(matcher => matcher.nodeName === nodeName);
+  if (currentMatcher) {
+    currentMatcher.attributes.forEach(attribute => {
+      const currentAttributeValue = element.getAttribute(attribute);
+      if (currentAttributeValue) {
+        element.setAttribute(attribute, getAssetsPrefix(currentAttributeValue));
+      }
+    });
+  }
+
+  return element;
+};
 
 /**
  * sandbox constructor
@@ -49,10 +82,19 @@ class Sandbox {
   private cleanDOMWhenUnmounting = false;
   private container: HTMLElement;
   private mountPointElement?: HTMLElement;
-  private staticResourcesReplaceRule?: IStaticResourcesReplaceRule;
   private disableRewriteEventListeners?: Function;
+  private assetMatchers: SubApplicationAssetMatchersType = [
+    {
+      nodeName: 'script',
+      attributes: ['src'],
+    },
+    {
+      nodeName: 'link',
+      attributes: ['href'],
+    },
+  ];
 
-  constructor(name: string, useCSSPrefix = true) {
+  constructor(name: string, useCSSPrefix = true, customAssetMatchers: SubApplicationAssetMatchersType = []) {
     this.name = name;
     this.useCSSPrefix = useCSSPrefix;
     if (!this.observer) {
@@ -60,26 +102,18 @@ class Sandbox {
         mutations.forEach(mutation => {
           const currentAddedNodes = Array.from(mutation.addedNodes) as HTMLElement[];
           currentAddedNodes.forEach(node => {
-            const staticResourcesReplaceRule = this.staticResourcesReplaceRule;
-            const nodeNames = staticResourcesReplaceRule?.nodeNames || [];
-            const attributes = staticResourcesReplaceRule?.attributes || [];
-            const replacer = staticResourcesReplaceRule?.replacer || null;
-            const lowerCasedNodeNames = nodeNames.map((name: string) => name.toLowerCase());
             const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
-            const nodeAttributes = node.attributes && Array.from(node.attributes).map(attribute => attribute.name) || [];
-            if (
-              lowerCasedNodeNames.indexOf(nodeName) !== -1
-              && nodeAttributes.filter(attribute => attributes.indexOf(attribute) !== -1).length !== 0
-              && replacer
-            ) {
-              replacer(node);
-            }
-            if (node && /^style$|^script$|^link$/.test(nodeName)) {
+            if (/^style$|^script$|^link$/.test(nodeName)) {
               this.domSnapshot.push(node);
               if (nodeName === 'style' && (this.useCSSPrefix || !this.singular)) {
                 node.innerHTML = cssPrefix(node.innerHTML, this.name);
               }
             }
+            const currentCustomMatchers: SubApplicationAssetMatchersType = customAssetMatchers.map(matcher => ({
+              nodeName: matcher.nodeName.toLowerCase(),
+              attributes: matcher.attributes,
+            }));
+            configMatchedNodeAssets(node, currentCustomMatchers, this.assetPublicPath);
           });
         });
       });
@@ -87,44 +121,8 @@ class Sandbox {
   }
 
   public takeDOMSnapshot() {
-    const _this = this;
-
     this.childNodeOperator.intercept((element: HTMLElement) => {
-      const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
-      const getAssetsPrefix = (src: string): string => {
-        const { assetPublicPath } = _this;
-        if (assetPublicPath) {
-          if (typeof assetPublicPath === 'function') {
-            return `${assetPublicPath(src)}${src}`;
-          } else if (typeof assetPublicPath === 'string') {
-            return `${assetPublicPath}${src}`;
-          } else {
-            return src;
-          }
-        } else {
-          return src;
-        }
-      };
-      switch(nodeName) {
-      case 'script': {
-        const src = element.getAttribute('src');
-        if (src) {
-          element.setAttribute('src', getAssetsPrefix(src));
-        }
-        break;
-      }
-      case 'link': {
-        const href = element.getAttribute('href');
-        const rel = element.getAttribute('rel');
-        if (href && rel === 'stylesheet') {
-          element.setAttribute('href', getAssetsPrefix(href));
-        }
-        break;
-      }
-      default:
-        break;
-      }
-      return element;
+      return configMatchedNodeAssets(element, this.assetMatchers, this.assetPublicPath);
     });
 
     this.observer && this.observer.observe(document.documentElement, {
@@ -189,7 +187,7 @@ class Sandbox {
       extra = {},
       useCSSPrefix,
       name = random(),
-      staticResourcesReplaceRule = null,
+      // assetMatchers = null,
       cleanDOMWhenUnmounting = false,
     } = subApplicationConfig;
     if (!subApplicationConfig || !container) {
@@ -198,9 +196,14 @@ class Sandbox {
 
     this.name = name;
     this.singular = appConfig.singular || true;
-    if (staticResourcesReplaceRule) {
-      this.staticResourcesReplaceRule = staticResourcesReplaceRule;
-    }
+
+    // if (assetMatchers) {
+    //   const currentCustomMatchers: SubApplicationAssetMatchersType = assetMatchers.map(matcher => ({
+    //     nodeName: matcher.nodeName.toLowerCase(),
+    //     attributes: matcher.attributes,
+    //   }));
+    //   this.customAssetMatchers = currentCustomMatchers;
+    // }
     this.cleanDOMWhenUnmounting = cleanDOMWhenUnmounting;
     if (container instanceof HTMLElement) {
       this.container = container;

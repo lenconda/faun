@@ -34,6 +34,12 @@ app.registerSubApplications(
       container: 'root',
       useCSSPrefix: true,
       assetPublicPath: '//localhost:8182',
+      assetMatchers: [
+        {
+          nodeName: 'img',
+          attributes: ['src'],
+        },
+      ],
     },
     {
       name: 'demo_ng_app',
