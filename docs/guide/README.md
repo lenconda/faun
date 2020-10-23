@@ -172,12 +172,14 @@ app.registerSubApplications(
     {
       name: 'app2',
       activeWhen: '/app2',
-      scripts: [
-        '//localhost:8182/static/js/main.bundle.js',
-      ],
-      styles: [
-        '//localhost:8182/static/css/main.css',
-      ],
+      entry: {
+        scripts: [
+          '//localhost:8182/static/js/main.bundle.js',
+        ],
+        styles: [
+          '//localhost:8182/static/css/main.css',
+        ],
+      },
       container: document.querySelector('#root'),
       assetPublicPath: '//localhost:8182',
     },
