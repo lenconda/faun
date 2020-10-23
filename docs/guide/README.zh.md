@@ -247,6 +247,8 @@ the `assetURLMapper` method should return a new URL which is the right one to lo
 
 ## Advanced Guide
 
+### Define a Container
+
 ### Clean DOM When Unmounting or Not
 
 ### CSS Prefixes
