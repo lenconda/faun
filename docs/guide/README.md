@@ -250,3 +250,15 @@ app.registerSubApplications({
 the `assetURLMapper` method should return a new URL which is the right one to load resources.
 
 ### Config the Servers
+
+## Advanced Guide
+
+### Define a Container
+
+### Clean DOM When Unmounting or Not
+
+### CSS Prefixes
+
+### Static Resource URL Prefixes
+
+### Event and Store
