@@ -10,7 +10,6 @@ notifications:
     on_failure: always
 node_js:
   - 10
-  - 12
 before_deploy:
   - npm run build
 deploy:
@@ -20,6 +19,5 @@ deploy:
   on:
     branch: master
     tags: true
-  skip_cleanup: true
 script:
   - npm test
