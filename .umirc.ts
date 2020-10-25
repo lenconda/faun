@@ -6,7 +6,7 @@ export default defineConfig({
   mode: 'site',
   publicPath: '/',
   base: '/',
-  hash: true,
+  hash: false,
   locales: [
     ['en', 'English'],
     ['zh', '中文'],

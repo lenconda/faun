@@ -17,8 +17,8 @@ Faun (IPA: /ˈfɔːn/) is an implementation of concepts from [micro-frontends.or
 
 - Micro Frontend: technology, implemented methods or methodology to build micro-frontend apps
 - Micro Frontend Apps: the projects or applications build with micro-frontend technology
-- Framework(or *framework-application(s), master-application(s)*), the container to load sub-applications. It also keeps and handles the global events and stores global states.
-- Sub-application(s): could be loaded by framework-application, but also be able to work independently as an independent application under certain circumstances.
+- Framework(or *framework-application(s), master-application(s)*): the container to load sub-applications. It also keeps and handles the global events and stores global states
+- Sub-application(s): could be loaded by framework-application, but also be able to work independently as an independent application under certain circumstances
 
 ### What is Micro-Frontend
 
@@ -42,6 +42,7 @@ Don’t share a runtime, even if all teams use the same framework. Build indepen
 - **Establish Team Prefixes**
 
 Agree on naming conventions where isolation is not possible yet. Namespace CSS, Events, Local Storage and Cookies to avoid collisions and clarify ownership.
+
 Favor Native Browser Features over Custom APIs
 Use Browser Events for communication instead of building a global PubSub system. If you really have to build a cross team API, try keeping it as simple as possible.
 
@@ -49,27 +50,23 @@ Use Browser Events for communication instead of building a global PubSub system.
 
 Your feature should be useful, even if JavaScript failed or hasn’t executed yet. Use Universal Rendering and Progressive Enhancement to improve perceived performance.
 
-### What's Different in Faun
-
-The only difference between Faun and principles in [Micro Frontends](https://micro-frontends.org/) is, as it will probably always be, Faun uses global states, methods, dependencies, event buses to make it easier for communication between framework and sub-applications, or between sub-applications.
-
 ### How Does Faun Works
 
-To get understand of how it works, here we put an image to show the main processes of what will Faun do when starting a micro-frontend-powered application:
+To get understand of how Faun works, here we put an image to show the main processes of what will Faun do when starting a micro-frontend-powered application:
 
 <img src="../_media/faun.png" width="40%" />
 
-Firstly, Faun uses `history` to manage the top-level routes, especially listen route changes. All the route and sandbox changes would be managed by `history` listener.
+Firstly, Faun uses `history` to manage the top-level routes, especially listens on route changes. All the route and sandbox changes would be managed by the `history` listener.
 
-Once the `history.push` is triggered, Faun will call the loaders to load resources, and finally mount the resources on framework. Faun abstracts this process as an independent component, named `sandbox`. Sandbox is the container of a sub-application in Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the sub-application configuration map for this application.
+Once the `history.push` is triggered, Faun will call the loaders to load resources, and finally mount the resources on framework. Faun abstracts this process as an independent component, named *Sandbox*. Sandbox is the container of a sub-application in Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the sub-application configuration map for this application.
 
 Then Faun would load sandbox with the top-level route. For example, if a user request a route like `https://foo.com/bar/baz` while base path was set as `http://foo.com/`, while `/bar` hits the route config, Faun will create a new sandbox to load resources, and take snapshots from `window`.
 
 In the meantime, sandbox will overwrite DOM operations on `Element.prototype` (such as `appendChild`, `insertBefore`) and `window.addEventListener` in order to catch snapshot and make some mutations.
 
-A polyfilled `MutationObserver` would be settled in order to catch the DOM changes, push them in an array. When unloading sandbox, the elements in this array would be removed.
+A polyfilled `MutationObserver` would be settled in order to catch the DOM changes and push them in an array. When unloading sandbox, the elements in this array would be removed.
 
-> It is worth paying attention that Faun will only match the first level of the route: if get a path like `/bar/baz`, it will only take `/bar` to find a matching route config. Downward routes, like `/baz`, would be taken over by sub-applications.
+> It is worth paying attention that Faun will only match the first level of the route: if get a path like `/bar/baz`, it will only take `/bar` to find a matching route config. Downward routes, like `/baz`, would be taken over by current sub-application.
 
 After finishing loading resources, sandbox will execute the bundle by `new Function()`, and the other resources by appending child nodes into targeted parent nodes.
 
@@ -175,12 +172,14 @@ app.registerSubApplications(
     {
       name: 'app2',
       activeWhen: '/app2',
-      scripts: [
-        '//localhost:8182/static/js/main.bundle.js',
-      ],
-      styles: [
-        '//localhost:8182/static/css/main.css',
-      ],
+      entry: {
+        scripts: [
+          '//localhost:8182/static/js/main.bundle.js',
+        ],
+        styles: [
+          '//localhost:8182/static/css/main.css',
+        ],
+      },
       container: document.querySelector('#root'),
       assetPublicPath: '//localhost:8182',
     },
@@ -251,3 +250,15 @@ app.registerSubApplications({
 the `assetURLMapper` method should return a new URL which is the right one to load resources.
 
 ### Config the Servers
+
+## Advanced Guide
+
+### Define a Container
+
+### Clean DOM When Unmounting or Not
+
+### CSS Prefixes
+
+### Static Resource URL Prefixes
+
+### Event and Store
