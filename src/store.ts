@@ -9,9 +9,11 @@ import {
   FaunErrorHandlerType,
 } from './interfaces';
 import {
-  FaunError,
   FaunStoreError,
 } from './errors';
+import {
+  generateErrorHandler,
+} from './utils/error';
 
 /**
  * simple key-value storage model
@@ -28,19 +30,13 @@ class Store {
   public on: Function;
   private store: StoreStateType;
   private storeEvent: Event;
-  private errorHandler: (error: FaunError) => void | FaunErrorHandlerType;
+  private errorHandler: FaunErrorHandlerType;
 
   constructor(errorHandler?: FaunErrorHandlerType) {
     this.store = {};
     this.storeEvent = new Event();
     this.on = this.storeEvent.on;
-    if (errorHandler) {
-      this.errorHandler = errorHandler;
-    } else {
-      this.errorHandler = error => {
-        throw error;
-      };
-    }
+    this.errorHandler = generateErrorHandler(errorHandler);
   }
 
   /**

@@ -14,7 +14,6 @@ import {
 } from '../../interfaces';
 
 export const install = async (Faun: FaunType, props: IFaunInstanceProps) => {
-  console.log('props: ', props);
   const errorHandler = props.appConfig.onError || undefined;
   const storeNamespace = '__FAUN_STORE__';
 

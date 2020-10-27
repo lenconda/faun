@@ -19,9 +19,11 @@ import {
   FaunErrorHandlerType,
 } from './interfaces';
 import {
-  FaunError,
   FaunPluginError,
 } from './errors';
+import {
+  generateErrorHandler,
+} from './utils/error';
 
 // internal plugins
 import Events from './plugins/events';
@@ -41,7 +43,7 @@ class Faun {
   // global dependencies
   private deps: Array<IFaunDependency> = [];
   private history: FaunHistoryType = history;
-  private errorHandler: (error: FaunError) => void | FaunErrorHandlerType;
+  private errorHandler: FaunErrorHandlerType;
 
   constructor(appConfig: IFaunSubApplicationConfig = {}) {
     this.props = {
@@ -66,13 +68,7 @@ class Faun {
     };
     this.use(Events, this.props);
     this.use(Store, this.props);
-    if (appConfig.onError) {
-      this.errorHandler = appConfig.onError;
-    } else {
-      this.errorHandler = error => {
-        throw error;
-      };
-    }
+    this.errorHandler = generateErrorHandler(appConfig.onError);
   }
 
   public async use(plugin: IFaunPlugin, options: Record<string, any> = {}) {
