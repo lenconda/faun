@@ -12,7 +12,7 @@ import {
   FaunStoreError,
 } from './errors';
 import {
-  generateErrorHandler,
+  emitError,
 } from './utils/error';
 
 /**
@@ -30,13 +30,13 @@ class Store {
   public on: Function;
   private store: StoreStateType;
   private storeEvent: Event;
-  private errorHandler: FaunErrorHandlerType;
+  private errorHandler?: FaunErrorHandlerType;
 
   constructor(errorHandler?: FaunErrorHandlerType) {
     this.store = {};
     this.storeEvent = new Event();
     this.on = this.storeEvent.on;
-    this.errorHandler = generateErrorHandler(errorHandler);
+    this.errorHandler = errorHandler;
   }
 
   /**
@@ -46,16 +46,12 @@ class Store {
    */
   public set(key: Record<string, any> | string, value: any) {
     if (typeof key !== 'string' && typeof key !== 'object') {
-      const errorMessage = 'Param `key` must be a string or an object';
-      const error = new FaunStoreError(errorMessage);
-      this.errorHandler(error);
+      emitError('Param `key` must be a string or an object', FaunStoreError, this.errorHandler);
     }
 
     if (typeof key === 'string') {
       if (!value) {
-        const errorMessage = 'Param `value` is required';
-        const error = new FaunStoreError(errorMessage);
-        this.errorHandler(error);
+        emitError('Param `value` is required', FaunStoreError, this.errorHandler);
       }
       Object.assign(this.store, { [key]: value });
       this.storeEvent.emit(key, value);
@@ -64,9 +60,7 @@ class Store {
         const currentValue = key[k];
 
         if (!currentValue) {
-          const errorMessage = 'Param `value` is required';
-          const error = new FaunStoreError(errorMessage);
-          this.errorHandler(error);
+          emitError('Param `value` is required', FaunStoreError, this.errorHandler);
         }
 
         Object.assign(this.store, { [k]: currentValue });

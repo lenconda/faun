@@ -1,15 +1,25 @@
 import {
   FaunErrorHandlerType,
 } from '../interfaces';
+import {
+  FaunError,
+} from '../errors';
 
-export const generateErrorHandler = (
-  errorHandler?: FaunErrorHandlerType,
-): FaunErrorHandlerType => {
-  if (errorHandler && typeof errorHandler === 'function') {
-    return errorHandler;
+export const emitError = (
+  message: string,
+  CurrentError: typeof FaunError,
+  handler?: FaunErrorHandlerType,
+) => {
+  let errorHandler: FaunErrorHandlerType;
+
+  if (handler && typeof handler === 'function') {
+    errorHandler = handler;
   } else {
-    return error => {
+    errorHandler = (error: FaunError) => {
       throw error;
     };
   }
+
+  const error = new CurrentError(message);
+  errorHandler(error);
 };

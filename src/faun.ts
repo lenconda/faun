@@ -16,13 +16,12 @@ import {
   IFaunLifecycleHooks,
   FaunHistoryType,
   SubApplicationsType,
-  FaunErrorHandlerType,
 } from './interfaces';
 import {
   FaunPluginError,
 } from './errors';
 import {
-  generateErrorHandler,
+  emitError,
 } from './utils/error';
 
 // internal plugins
@@ -43,7 +42,6 @@ class Faun {
   // global dependencies
   private deps: Array<IFaunDependency> = [];
   private history: FaunHistoryType = history;
-  private errorHandler: FaunErrorHandlerType;
 
   constructor(appConfig: IFaunSubApplicationConfig = {}) {
     this.props = {
@@ -58,7 +56,7 @@ class Faun {
       // stack cursor direction
       direction: 'forward',
       // lifecycle hooks
-      hooks: createHooks(),
+      hooks: createHooks(appConfig.onError),
       // app config
       appConfig: {
         ...appConfig,
@@ -68,7 +66,6 @@ class Faun {
     };
     this.use(Events, this.props);
     this.use(Store, this.props);
-    this.errorHandler = generateErrorHandler(appConfig.onError);
   }
 
   public async use(plugin: IFaunPlugin, options: Record<string, any> = {}) {
@@ -77,9 +74,11 @@ class Faun {
     }
 
     if (!plugin.install || typeof plugin.install !== 'function') {
-      const errorMessage = 'Plugin should have an `install` method, which is a instance of `Function`';
-      const error = new FaunPluginError(errorMessage);
-      this.errorHandler(error);
+      emitError(
+        'Plugin should have an `install` method, which is a instance of `Function`',
+        FaunPluginError,
+        this.props.appConfig.onError,
+      );
     }
 
     await plugin.install(Faun, this.props, options);
