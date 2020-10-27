@@ -7,6 +7,11 @@ import Event from './event';
 import {
   StoreStateType,
 } from './interfaces';
+import {
+  FaunError,
+} from './index';
+
+export class FaunStoreError extends FaunError {}
 
 /**
  * simple key-value storage model

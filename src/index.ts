@@ -10,6 +10,10 @@ import {
   FaunLifecycleError,
   FaunPluginError,
 } from './errors';
+import {
+  FaunStoreError,
+} from './store';
+
 export * from './interfaces';
 export {
   use,
@@ -18,5 +22,6 @@ export {
   FaunDependencyError,
   FaunLifecycleError,
   FaunPluginError,
+  FaunStoreError,
 };
 export default Faun;
