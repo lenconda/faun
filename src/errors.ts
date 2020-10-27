@@ -15,3 +15,5 @@ export class FaunPluginError extends FaunError {}
 export class FaunLifecycleError extends FaunError {}
 
 export class FaunDependencyError extends FaunError {}
+
+export class FaunStoreError extends FaunError {}

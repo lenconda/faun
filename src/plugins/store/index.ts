@@ -14,7 +14,7 @@ import {
 
 const storeNamespace = '__FAUN_STORE__';
 
-let store = getGlobalObject(storeNamespace);
+let store: Store = getGlobalObject(storeNamespace);
 
 if (!store) {
   store = new Store();

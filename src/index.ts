@@ -9,10 +9,8 @@ import {
   FaunDependencyError,
   FaunLifecycleError,
   FaunPluginError,
-} from './errors';
-import {
   FaunStoreError,
-} from './store';
+} from './errors';
 
 export * from './interfaces';
 export {
