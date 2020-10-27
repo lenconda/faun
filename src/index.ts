@@ -4,9 +4,19 @@
  */
 
 import Faun, { use, history } from './faun';
+import {
+  FaunError,
+  FaunDependencyError,
+  FaunLifecycleError,
+  FaunPluginError,
+} from './errors';
 export * from './interfaces';
 export {
   use,
   history,
+  FaunError,
+  FaunDependencyError,
+  FaunLifecycleError,
+  FaunPluginError,
 };
 export default Faun;
