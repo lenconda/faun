@@ -8,4 +8,10 @@ export class FaunError extends Error {
     super();
     this.message = `[faun] ${message}`;
   }
-};
+}
+
+export class FaunPluginError extends FaunError {}
+
+export class FaunLifecycleError extends FaunError {}
+
+export class FaunDependencyError extends FaunError {}
