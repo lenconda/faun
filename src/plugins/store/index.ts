@@ -10,18 +10,21 @@ import {
 } from '../../utils/global-namespace';
 import {
   FaunType,
+  IFaunInstanceProps,
 } from '../../interfaces';
 
-const storeNamespace = '__FAUN_STORE__';
+export const install = async (Faun: FaunType, props: IFaunInstanceProps) => {
+  console.log('props: ', props);
+  const errorHandler = props.appConfig.onError || undefined;
+  const storeNamespace = '__FAUN_STORE__';
 
-let store: Store = getGlobalObject(storeNamespace);
+  let store: Store = getGlobalObject(storeNamespace);
 
-if (!store) {
-  store = new Store();
-  setGlobalObject(storeNamespace, store);
-}
+  if (!store) {
+    store = new Store(errorHandler);
+    setGlobalObject(storeNamespace, store);
+  }
 
-export const install = async (Faun: FaunType) => {
   Faun.prototype.store = store;
 };
 
