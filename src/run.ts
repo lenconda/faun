@@ -36,7 +36,7 @@ const run = (
   context: FaunType,
 ) => {
   if (Array.isArray(deps) && deps.length) {
-    initGlobalDependencies(deps);
+    initGlobalDependencies(deps, props.appConfig.onError);
   }
 
   initSandbox(props);

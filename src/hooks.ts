@@ -6,12 +6,19 @@
 import { isFunction } from './utils/lodash';
 import {
   IFaunLifecycleHooks,
+  FaunErrorHandlerType,
 } from './interfaces';
+import {
+  FaunLifecycleError,
+} from './errors';
+import {
+  emitError,
+} from './utils/error';
 
 /**
  * a Proxy-based hooks creator
  */
-export default (): IFaunLifecycleHooks => {
+export default (errorHandler?: FaunErrorHandlerType): IFaunLifecycleHooks => {
   const _HOOK_NAMES = ['loading', 'loaded', 'mounted', 'beforeUnmount', 'unmounted'];
   const hooks = {};
 
@@ -20,12 +27,12 @@ export default (): IFaunLifecycleHooks => {
     set: function(target: Object, property: string, value: Function) {
       // check if the hook name is in _HOOKS
       if (_HOOK_NAMES.indexOf(property) === -1) {
-        throw new ReferenceError(`[Faun] Hook with name \`${property}\` is not allowed`);
+        emitError(`Hook with name \`${property}\` is not allowed`, FaunLifecycleError, errorHandler);
       }
 
       // check the value is a function or not
       if (!isFunction(value)) {
-        throw new TypeError('[Faun] A hook should be a function');
+        emitError('A hook should be a function', FaunLifecycleError, errorHandler);
       }
 
       Reflect.set(target, property, value);

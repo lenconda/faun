@@ -17,6 +17,12 @@ import {
   FaunHistoryType,
   SubApplicationsType,
 } from './interfaces';
+import {
+  FaunPluginError,
+} from './errors';
+import {
+  emitError,
+} from './utils/error';
 
 // internal plugins
 import Events from './plugins/events';
@@ -28,15 +34,6 @@ const history = createBrowserHistory();
 
 class Faun {
   static history: FaunHistoryType = history;
-  static async use(plugin: IFaunPlugin, options: Record<string, any> = {}) {
-    if (!plugin) {
-      return;
-    }
-    if (!plugin.install || typeof plugin.install !== 'function') {
-      return console.error('[Faun] Plugin should have an `install` method, which is a instance of `Function`');
-    }
-    await plugin.install(Faun, options);
-  }
 
   public store: StoreType;
   public events: EventType;
@@ -59,7 +56,7 @@ class Faun {
       // stack cursor direction
       direction: 'forward',
       // lifecycle hooks
-      hooks: createHooks(),
+      hooks: createHooks(appConfig.onError),
       // app config
       appConfig: {
         ...appConfig,
@@ -67,6 +64,24 @@ class Faun {
         singular: true,
       },
     };
+    this.use(Events, this.props);
+    this.use(Store, this.props);
+  }
+
+  public async use(plugin: IFaunPlugin, options: Record<string, any> = {}) {
+    if (!plugin) {
+      return;
+    }
+
+    if (!plugin.install || typeof plugin.install !== 'function') {
+      emitError(
+        'Plugin should have an `install` method, which is a instance of `Function`',
+        FaunPluginError,
+        this.props.appConfig.onError,
+      );
+    }
+
+    await plugin.install(Faun, this.props, options);
   }
 
   public run() {
@@ -87,12 +102,7 @@ class Faun {
   }
 }
 
-// install plugin `Events`
-Faun.use(Events);
-// install plugin `Store`
-Faun.use(Store);
-
-export const use = Faun.use;
+export const use = Faun.prototype.use;
 export {
   history,
 };

@@ -6,7 +6,14 @@
 import Event from './event';
 import {
   StoreStateType,
+  FaunErrorHandlerType,
 } from './interfaces';
+import {
+  FaunStoreError,
+} from './errors';
+import {
+  emitError,
+} from './utils/error';
 
 /**
  * simple key-value storage model
@@ -23,11 +30,13 @@ class Store {
   public on: Function;
   private store: StoreStateType;
   private storeEvent: Event;
+  private errorHandler?: FaunErrorHandlerType;
 
-  constructor() {
+  constructor(errorHandler?: FaunErrorHandlerType) {
     this.store = {};
     this.storeEvent = new Event();
     this.on = this.storeEvent.on;
+    this.errorHandler = errorHandler;
   }
 
   /**
@@ -37,12 +46,12 @@ class Store {
    */
   public set(key: Record<string, any> | string, value: any) {
     if (typeof key !== 'string' && typeof key !== 'object') {
-      return console.error('[Faun] Param `key` must be a string or an object');
+      emitError('Param `key` must be a string or an object', FaunStoreError, this.errorHandler);
     }
 
     if (typeof key === 'string') {
       if (!value) {
-        return console.error('[Faun] Param `value` is required');
+        emitError('Param `value` is required', FaunStoreError, this.errorHandler);
       }
       Object.assign(this.store, { [key]: value });
       this.storeEvent.emit(key, value);
@@ -51,7 +60,7 @@ class Store {
         const currentValue = key[k];
 
         if (!currentValue) {
-          return console.error('[Faun] Param `value` is required');
+          emitError('Param `value` is required', FaunStoreError, this.errorHandler);
         }
 
         Object.assign(this.store, { [k]: currentValue });

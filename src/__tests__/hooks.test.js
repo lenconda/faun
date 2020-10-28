@@ -6,6 +6,9 @@
 import createHooks from '../hooks';
 import Sandbox from '../sandbox';
 const hooks = createHooks();
+import {
+  FaunLifecycleError,
+} from '../errors';
 
 test('hooks should allow adding loading hook', async () => {
   function loading(pathname) { return pathname; }
@@ -61,11 +64,11 @@ test('hooks should allow adding unmounted hook', async () => {
 test('hooks should not allow adding not-allowed hooks', async () => {
   expect(() => {
     hooks.notAllowedHook = function() {};
-  }).toThrow(ReferenceError);
+  }).toThrow(FaunLifecycleError);
 });
 
 test('hooks should not allow adding a non-function value on hooks', async () => {
   expect(() => {
     hooks.loading = 1;
-  }).toThrow(TypeError);
+  }).toThrow(FaunLifecycleError);
 });

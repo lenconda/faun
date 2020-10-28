@@ -5,6 +5,9 @@
 import { History, Location } from 'history';
 import Faun from './faun';
 import Sandbox from './sandbox';
+import {
+  FaunError,
+} from './errors';
 
 export type FaunType = typeof Faun;
 type SubApplicationExtraType = Record<string, any>;
@@ -22,8 +25,11 @@ export type SubApplicationActiveRuleType =
   | SubApplicationActiveRuleArrayType
   | SubApplicationActiveRuleStringType;
 
+export type FaunErrorHandlerType = (error: FaunError) => void;
+
 export interface IFaunSubApplicationConfig {
   singular?: boolean;
+  onError?: FaunErrorHandlerType;
 }
 
 export interface IEntryCustomScriptConfig {
@@ -89,7 +95,7 @@ export interface IFaunDependency {
 }
 
 export interface IFaunPlugin {
-  install: (Faun: FaunType, options: Record<string, any>) => any;
+  install: (Faun: FaunType, props: IFaunInstanceProps, options?: Record<string, any>) => any;
   [key: string]: any;
 }
 
