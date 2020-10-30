@@ -279,7 +279,37 @@ Header set Access-Control-Allow-Origin framework.example.com
 
 ### Define a Container
 
-### Clean DOM When Unmounting or Not
+Each sub-application will choose a DOM node when it is being mounted, which is called *container*. When configuring sub-applications, a `container` parameter should be defined and passed a value typed as `HTMLElement`, a function that returns a `HTMLElement` value or a `string` indicates a DOM node's ID.
+
+e.g.
+
+```javascript
+app.registerSubApplications([
+  {
+    name: 'app1',
+    // ...
+    container: 'app',
+  },
+  {
+    name: 'app2',
+    // ...
+    container: document.querySelector('#app'),
+  },
+  {
+    name: 'app3',
+    // ...
+    container: (() => {
+      const el = document.createElement('div');
+      el.setAttribute('id', 'app');
+      return el;
+    })(),
+  },
+]);
+```
+
+Once the container is specified, Faun will make them reusable when the sub-applications are repeatedly mounted.
+
+### Clean DOM Nodes When Unmounting
 
 ### CSS Prefixes
 
