@@ -1,6 +1,6 @@
 # Faun
 
-![Travis Build](https://img.shields.io/travis/lenconda/faun)
+![Circle CI Build](https://circleci.com/gh/lenconda/faun/tree/dev.svg?style=svg)
 ![License](https://img.shields.io/github/license/lenconda/faun)
 ![GitHub Version](https://img.shields.io/github/package-json/v/lenconda/faun)
 
