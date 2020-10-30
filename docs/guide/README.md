@@ -311,8 +311,72 @@ Once the container is specified, Faun will make them reusable when the sub-appli
 
 ### Clean DOM Nodes When Unmounting
 
+By default, Faun directly removes container when current sub-application is being unmounted, at the meantime records the nodes inside container as a snapshot which could be used when sub-application's next lifecycle starts. However, things would be strange when your sub-application does not diff the DOM tree when mounting or does not use the Virtual DOM at all, because it might render the DOM tree even if there is an exist one just inside the container (restored as a snapshot by sandbox), e.g. Svelte.
+
+To cover the contingent behavior mentioned above, Faun provides a optional parameter on sub-application configuration, named `cleanDOMWhenUnmounting`, whose default value is `false`. If pass it with `true`, sandbox would clean all nodes inside the container by setting container's `innerHTML` with an empty string.
+
+> [NOTE] Do not use this option with your React sub-applications, or it may cause some other issues.
+
 ### CSS Prefixes
+
+Adding a prefix to CSS selectors could be a very powerful mode avoiding global style pollution. Faun provide `useCSSPrefix` to add prefixes to sub-applications' styles. But the default value of it is `false`, since it might spend a lot of time to add prefixes for all of the selectors recursively, especially the amount of the selectors are enormous. If pass a value to it with `true`, sandbox would use a string as prefix, it could be name specified in current sub-application's config or a random string if it is not specified.
+
+There is the effect when set this option as `true`:
+
+```javascript
+app.registerSubApplications([
+  // ...
+  {
+    name: 'demo_react_app',
+    // ...
+    useCSSPrefix: true,
+  },
+]);
+```
+
+<img src="../_media/css_prefix.jpg" width="36%" />
 
 ### Static Resource URL Prefixes
 
-### Event and Store
+Applications, especially built by Webpack, might have some chunked assets to lazy load components. In most circumstances, they are managed by the main bundles, usually with no URL prefixes, just like `/static/js/0.chunk.js`, when it should be load, its URL may follow current URL, like `//app1.example.com/static/js/0.chunk.js`. This may cause troubles when sub-application's origin is not the same as framework's, so sub-application's chunks might have framework's URL prefix, which might cause a 404 error.
+
+There are two solutions, the common one is adding the absolute URL prefix for chunks, in Webpack configuration, it could be:
+
+```javascript
+module.exports = {
+  // ...
+  output: {
+    // ...
+    filename: '[name].chunk.js',
+    publicPath: '//app1.example.com/static/js',
+  },
+};
+```
+
+Another one is easier, using Faun's `assetPublicPath` and `assetMatchers`. In every sub-application's configuration, pass value to `assetPublicPath` as a `string`, the chunks would be add the string as the URL for request, e.g. a `assetPublicPath` is `//app1.example.com/static/js`, and the chunk's URL is '0.chunk.js', the URL for request is `//app1.example.com/static/js/0.chunk.js`. `assetPublicPath` also accepts `Function` value, the function would receive the current URL as callback parameter, you should return a value with type `string` as the ultimate URL for Faun to request:
+
+```javascript
+app.registerSubApplications([
+  {
+    // ...
+    assetPublicPath: url => `//app1.example.com/static/js/${url}`,
+  },
+]);
+```
+
+Unfortunately, Faun only recognizes `<script>` and `<link>` tags to match `assetPublicPath` rule, but there are other resources like images and favicons also need this feature. Faun provides `assetMatchers` to add these tags for capture:
+
+```javascript
+app.registerSubApplications([
+  {
+    // ...
+    assetPublicPath: url => `//app1.example.com/static/js/${url}`,
+    assetMatchers: [
+      {
+        nodeNames: 'img',
+        attributes: ['src'],
+      },
+    ],
+  },
+]);
+```
