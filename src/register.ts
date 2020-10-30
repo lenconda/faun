@@ -19,7 +19,7 @@ const register = (
   props: IFaunInstanceProps,
   context: FaunType,
   subApplicationConfigMap: SubApplicationsType,
-  hooks: IFaunLifecycleHooks,
+  hooks?: IFaunLifecycleHooks,
 ) => {
   // only accept Object and NOT Array
   if (!Array.isArray(subApplicationConfigMap)) {

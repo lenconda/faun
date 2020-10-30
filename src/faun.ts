@@ -90,7 +90,7 @@ class Faun {
 
   public registerSubApplications(
     config: SubApplicationsType,
-    hooks: IFaunLifecycleHooks,
+    hooks?: IFaunLifecycleHooks,
   ) {
     registerSubApplications.call(this, this.props, this, config, hooks);
   }
