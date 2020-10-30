@@ -17,7 +17,7 @@ Faun (IPA: /ˈfɔːn/) is an implementation of concepts from [micro-frontends.or
 
 - Micro Frontend: technology, implemented methods or methodology to build micro-frontend apps
 - Micro Frontend Apps: the projects or applications build with micro-frontend technology
-- Framework(or *framework-application(s), master-application(s)*): the container to load sub-applications. It also keeps and handles the global events and stores global states
+- Framework (or *framework-application(s), master-application(s)*): the container to load sub-applications. It also keeps and handles the global events and stores global states
 - Sub-application(s): could be loaded by framework-application, but also be able to work independently as an independent application under certain circumstances
 
 ### What is Micro-Frontend
@@ -242,7 +242,7 @@ app.registerSubApplications({
       ],
       // ...
     },
-    assetURLMapper: url => mapURL(url),
+    assetURLMapper: url => `//example.com/${url}`,
   },
 });
 ```
@@ -250,6 +250,30 @@ app.registerSubApplications({
 the `assetURLMapper` method should return a new URL which is the right one to load resources.
 
 ### Config the Servers
+
+Since Faun loads and obtains resources by sending [Ajax](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX) requests, which would be blocked by [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) of browsers when sub-applications' origin are not the same as framework-application.
+
+In this circumstance, you should set the [HTTP CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) header: `Access-Control-Allow-Origin` and set it to your framework-application's origin or `*`.
+
+If the sub-application is served by Nginx, you can just add this parameter to the configuration file:
+
+```nginx
+server {
+  listen 80;
+  server_name app1.example.com;
+  # ...
+  location / {
+    add_header Access-Control-Allow-Origin framework.example.com;
+    # ...
+  }
+}
+```
+
+or by Apache:
+
+```apache
+Header set Access-Control-Allow-Origin framework.example.com
+```
 
 ## Advanced Guide
 
