@@ -11,17 +11,16 @@ nav:
 
 ## Methods & Props
 
-### `Faun.prototype.registerSubApplications(config)`
+### `Faun.prototype.registerSubApplications(config, hooks?)`
 
-Register sub-applications configuration.
+Register sub-applications configuration, and define lifecycle hook handlers.
 
 - Parameters
-  - `config`: `ISubApplicationConfigMap`. Required, a key-value map structure stores sub-applications configuration
+  - `config`: `SubApplicationsType`. Required, an array stores sub-applications configuration
+  - `hooks`: `IFaunLifecycleHooks`. Optional, a key-value pair defines lifecycle handlers
 - Types
-  - `ISubApplicationConfigMap`
-    - [Type definition](#doc-isubapplicationconfigmap)
-    - `key`: `string`. Required, the active route for one sub-application, each key is unique in one map. e.g. `/foo`
-    - `ISubApplicationConfig`. Required, the configuration for current sub-application
+  - `SubApplicationsType`
+    - `Array<ISubApplicationConfig>`
   - `ISubApplicationConfig`
     - [Type definition](#doc-isubapplicationconfig)
     - `container`: `string`. Required, the mount point ID for current sub-application. e.g. if pass `app` to `container`, Faun will create a `HTMLDivElement` element with ID of `app`

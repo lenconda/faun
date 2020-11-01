@@ -17,7 +17,7 @@ Faun (IPA: /ˈfɔːn/) is an implementation of concepts from [micro-frontends.or
 
 - Micro Frontend: technology, implemented methods or methodology to build micro-frontend apps
 - Micro Frontend Apps: the projects or applications build with micro-frontend technology
-- Framework(or *framework-application(s), master-application(s)*): the container to load sub-applications. It also keeps and handles the global events and stores global states
+- Framework (or *framework-application(s), master-application(s)*): the container to load sub-applications. It also keeps and handles the global events and stores global states
 - Sub-application(s): could be loaded by framework-application, but also be able to work independently as an independent application under certain circumstances
 
 ### What is Micro-Frontend
@@ -242,7 +242,7 @@ app.registerSubApplications({
       ],
       // ...
     },
-    assetURLMapper: url => mapURL(url),
+    assetURLMapper: url => `//example.com/${url}`,
   },
 });
 ```
@@ -251,14 +251,132 @@ the `assetURLMapper` method should return a new URL which is the right one to lo
 
 ### Config the Servers
 
+Since Faun loads and obtains resources by sending [Ajax](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX) requests, which would be blocked by [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) of browsers when sub-applications' origin are not the same as framework-application.
+
+In this circumstance, you should set the [HTTP CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) header: `Access-Control-Allow-Origin` and set it to your framework-application's origin or `*`.
+
+If the sub-application is served by Nginx, you can just add this parameter to the configuration file:
+
+```nginx
+server {
+  listen 80;
+  server_name app1.example.com;
+  # ...
+  location / {
+    add_header Access-Control-Allow-Origin framework.example.com;
+    # ...
+  }
+}
+```
+
+or by Apache:
+
+```apache
+Header set Access-Control-Allow-Origin framework.example.com
+```
+
 ## Advanced Guide
 
 ### Define a Container
 
-### Clean DOM When Unmounting or Not
+Each sub-application will choose a DOM node when it is being mounted, which is called *container*. When configuring sub-applications, a `container` parameter should be defined and passed a value typed as `HTMLElement`, a function that returns a `HTMLElement` value or a `string` indicates a DOM node's ID.
+
+e.g.
+
+```javascript
+app.registerSubApplications([
+  {
+    name: 'app1',
+    // ...
+    container: 'app',
+  },
+  {
+    name: 'app2',
+    // ...
+    container: document.querySelector('#app'),
+  },
+  {
+    name: 'app3',
+    // ...
+    container: (() => {
+      const el = document.createElement('div');
+      el.setAttribute('id', 'app');
+      return el;
+    })(),
+  },
+]);
+```
+
+Once the container is specified, Faun will make them reusable when the sub-applications are repeatedly mounted.
+
+### Clean DOM Nodes When Unmounting
+
+By default, Faun directly removes container when current sub-application is being unmounted, at the meantime records the nodes inside container as a snapshot which could be used when sub-application's next lifecycle starts. However, things would be strange when your sub-application does not diff the DOM tree when mounting or does not use the Virtual DOM at all, because it might render the DOM tree even if there is an exist one just inside the container (restored as a snapshot by sandbox), e.g. Svelte.
+
+To cover the contingent behavior mentioned above, Faun provides a optional parameter on sub-application configuration, named `cleanDOMWhenUnmounting`, whose default value is `false`. If pass it with `true`, sandbox would clean all nodes inside the container by setting container's `innerHTML` with an empty string.
+
+> [NOTE] Do not use this option with your React sub-applications, or it may cause some other issues.
 
 ### CSS Prefixes
 
+Adding a prefix to CSS selectors could be a very powerful mode avoiding global style pollution. Faun provide `useCSSPrefix` to add prefixes to sub-applications' styles. But the default value of it is `false`, since it might spend a lot of time to add prefixes for all of the selectors recursively, especially the amount of the selectors are enormous. If pass a value to it with `true`, sandbox would use a string as prefix, it could be name specified in current sub-application's config or a random string if it is not specified.
+
+There is the effect when set this option as `true`:
+
+```javascript
+app.registerSubApplications([
+  // ...
+  {
+    name: 'demo_react_app',
+    // ...
+    useCSSPrefix: true,
+  },
+]);
+```
+
+<img src="../_media/css_prefix.jpg" width="36%" />
+
 ### Static Resource URL Prefixes
 
-### Event and Store
+Applications, especially built by Webpack, might have some chunked assets to lazy load components. In most circumstances, they are managed by the main bundles, usually with no URL prefixes, just like `/static/js/0.chunk.js`, when it should be load, its URL may follow current URL, like `//app1.example.com/static/js/0.chunk.js`. This may cause troubles when sub-application's origin is not the same as framework's, so sub-application's chunks might have framework's URL prefix, which might cause a 404 error.
+
+There are two solutions, the common one is adding the absolute URL prefix for chunks, in Webpack configuration, it could be:
+
+```javascript
+module.exports = {
+  // ...
+  output: {
+    // ...
+    filename: '[name].chunk.js',
+    publicPath: '//app1.example.com/static/js',
+  },
+};
+```
+
+Another one is easier, using Faun's `assetPublicPath` and `assetMatchers`. In every sub-application's configuration, pass value to `assetPublicPath` as a `string`, the chunks would be add the string as the URL for request, e.g. a `assetPublicPath` is `//app1.example.com/static/js`, and the chunk's URL is '0.chunk.js', the URL for request is `//app1.example.com/static/js/0.chunk.js`. `assetPublicPath` also accepts `Function` value, the function would receive the current URL as callback parameter, you should return a value with type `string` as the ultimate URL for Faun to request:
+
+```javascript
+app.registerSubApplications([
+  {
+    // ...
+    assetPublicPath: url => `//app1.example.com/static/js/${url}`,
+  },
+]);
+```
+
+Unfortunately, Faun only recognizes `<script>` and `<link>` tags to match `assetPublicPath` rule, but there are other resources like images and favicons also need this feature. Faun provides `assetMatchers` to add these tags for capture:
+
+```javascript
+app.registerSubApplications([
+  {
+    // ...
+    assetPublicPath: url => `//app1.example.com/static/js/${url}`,
+    assetMatchers: [
+      {
+        nodeNames: 'img',
+        attributes: ['src'],
+      },
+    ],
+  },
+]);
+```

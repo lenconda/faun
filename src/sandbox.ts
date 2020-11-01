@@ -197,13 +197,6 @@ class Sandbox {
     this.name = name;
     this.singular = appConfig.singular || true;
 
-    // if (assetMatchers) {
-    //   const currentCustomMatchers: SubApplicationAssetMatchersType = assetMatchers.map(matcher => ({
-    //     nodeName: matcher.nodeName.toLowerCase(),
-    //     attributes: matcher.attributes,
-    //   }));
-    //   this.customAssetMatchers = currentCustomMatchers;
-    // }
     this.cleanDOMWhenUnmounting = cleanDOMWhenUnmounting;
     if (container instanceof HTMLElement) {
       this.container = container;

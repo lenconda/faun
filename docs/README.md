@@ -42,12 +42,14 @@ app.registerSubApplications(
     {
       name: 'app2',
       activeWhen: '/app2',
-      scripts: [
-        '//app2.example.com/static/js/main.bundle.js',
-      ],
-      styles: [
-        '//app2.example.com/static/css/main.css',
-      ],
+      entry: {
+        scripts: [
+          '//app2.example.com/static/js/main.bundle.js',
+        ],
+        styles: [
+          '//app2.example.com/static/css/main.css',
+        ],
+      },
       container: document.querySelector('#root'),
       assetPublicPath: '//app2.example.com',
     },
