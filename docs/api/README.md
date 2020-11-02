@@ -165,6 +165,7 @@ Be executed when current sub-application is successfully unmounted.
 ## `IFaunInstanceProps`
 
 - Properties
+  - `id`: `string`. A unique string to identify current Faun instance
   - `registeredSubApplications`: `Array<iSubApplicationConfig>`. Stores all the configurations for sub-applications
   - `currentLocation?`: `Location<History.PoorMansUnknown>`. The `history` instance, stores current location information
   - `routes`: `Array<IFaunRouteItem>`. A map stores the relationship between pathname and sandboxes
@@ -197,6 +198,7 @@ Be executed when current sub-application is successfully unmounted.
   - `mount`: `() => {}`. Mount the sandbox
   - `unmount`: `() => {}`. Unmount the sandbox
 - Privates
+  - `cssPrefixString`: `string`. CSS prefix for current sandbox, always start with `data-f-`
   - `domSnapshot`: `Array<HTMLElement>`. Stores DOM snapshots of current sandbox
   - `windowSnapshot`: `Partial<Window>`. Stores changes on `Window` object
   - `scriptExecutor`: `Array<Function>`. Stores all the JavaScript bundlers of current sandbox as functions

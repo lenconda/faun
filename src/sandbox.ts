@@ -8,7 +8,7 @@ import fetch from './fetch';
 import { isFunction } from './utils/lodash';
 import overwriteEventListeners from './overwrites/window-listeners';
 import createElement from './utils/create-element';
-import cssPrefix from './utils/css';
+import cssPrefix, { generateCSSPrefix } from './utils/css';
 import random from './utils/random';
 import PolyfilledMutationObserver from 'mutation-observer';
 import childNodeOperator from './overwrites/child-operate';
@@ -70,6 +70,7 @@ class Sandbox {
   public preserveChunks = false;
   public assetPublicPath?: SandboxAssetPublicPathType;
 
+  private cssPrefixString: string;
   private domSnapshot: Array<HTMLElement> = [];
   private windowSnapshot: Partial<Window> = {};
   private scriptExecutors: Array<Function> = [];
@@ -94,9 +95,16 @@ class Sandbox {
     },
   ];
 
-  constructor(name: string, useCSSPrefix = false, customAssetMatchers: SubApplicationAssetMatchersType = []) {
+  constructor(
+    name: string,
+    prefixName: string = random(),
+    useCSSPrefix = false,
+    customAssetMatchers: SubApplicationAssetMatchersType = [],
+  ) {
     this.name = name;
     this.useCSSPrefix = useCSSPrefix;
+    this.cssPrefixString = generateCSSPrefix(prefixName, name);
+
     if (!this.observer) {
       this.observer = new PolyfilledMutationObserver((mutations: MutationRecord[]) => {
         mutations.forEach(mutation => {
@@ -105,7 +113,11 @@ class Sandbox {
             const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
             if (/^style$|^script$|^link$/.test(nodeName)) {
               this.domSnapshot.push(node);
-              if (nodeName === 'style' && (this.useCSSPrefix || !this.singular)) {
+              if (
+                nodeName === 'style'
+                && (this.useCSSPrefix || !this.singular)
+                && node.innerHTML.indexOf('data-f-') === -1
+              ) {
                 node.innerHTML = cssPrefix(node.innerHTML, this.name);
               }
             }
@@ -185,7 +197,6 @@ class Sandbox {
       assetPublicPath = '',
       preserveChunks,
       extra = {},
-      useCSSPrefix,
       name = random(),
       cleanDOMWhenUnmounting = false,
     } = subApplicationConfig;
@@ -217,9 +228,9 @@ class Sandbox {
     }
 
     if (!document.getElementById(this.name)) {
-      const mountPointElement = createElement<HTMLDivElement>('div', {
-        id: (useCSSPrefix || !this.singular) ? this.name : '',
-      }, [this.container]);
+      const mountPointElement = createElement<HTMLDivElement>('div', this.useCSSPrefix ? {
+        [this.cssPrefixString]: true,
+      } : {}, [this.container]);
       if (mountPointElement) {
         this.mountPointElement = mountPointElement;
       }
@@ -273,7 +284,7 @@ class Sandbox {
         // make an ajax to load styles
         const data = await fetch(stylesURL);
         if (data) {
-          const styleData = (this.useCSSPrefix || !this.singular) ? cssPrefix(data, this.name) : data;
+          const styleData = (this.useCSSPrefix || !this.singular) ? cssPrefix(data, `div[${this.cssPrefixString}]`) : data;
           const currentStyleElement = createElement('style', { type: 'text/css' }) as HTMLStyleElement;
           if (currentStyleElement) {
             currentStyleElement.innerHTML = styleData;

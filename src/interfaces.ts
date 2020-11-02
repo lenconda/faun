@@ -81,6 +81,7 @@ export interface IFaunRouteItem {
 export type SubApplicationsType = Array<ISubApplicationConfig>;
 
 export interface IFaunInstanceProps {
+  id: string;
   registeredSubApplications: Array<ISubApplicationConfig>;
   currentLocation?: Location<History.PoorMansUnknown>;
   routes: Array<IFaunRouteItem>;

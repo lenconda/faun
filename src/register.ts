@@ -38,7 +38,7 @@ const register = (
     });
   }
 
-  const subApplicationConfigs = Array.from(subApplicationConfigMap);
+  const subApplicationConfigs = Array.from(subApplicationConfigMap) || [];
   const cachedSubApplicationNames: string[] = [];
   for (let subApplicationConfig of subApplicationConfigs) {
     const { name = '', useCSSPrefix = false } = subApplicationConfig;
@@ -62,7 +62,7 @@ const register = (
     }
   }
   // assign sub-application configs to context
-  props.registeredSubApplications = Array.from(subApplicationConfigs || []);
+  props.registeredSubApplications = Array.from(subApplicationConfigs);
   return;
 };
 
