@@ -39,7 +39,7 @@ Register sub-applications configuration, and define lifecycle hook handlers.
     - `(location: Location<History.PoorMansUnknown> | {}) => boolean | RegExp | Array<string> | string`
   - `SubApplicationContainerType`
     - `(extra: SubApplicationExtraType) => HTMLElement | HTMLElement | string`
-  - `SubApplicationAssetPublicPathType`
+  - <span id="doc_sub-application-asset-public-path-type">`SubApplicationAssetPublicPathType`</span>
     - `(url: string) => string | string`
   - `SubApplicationAssetMatchersType`
     - `Array<ISubApplicationAssetsConfigMatcherItem>`
@@ -213,6 +213,14 @@ Be executed when current sub-application is successfully unmounted.
   - `assetMatchers`: `SubApplicationAssetMatchersType`. See [here](#doc_asset-matchers) for detail
 - Types
   - `SandboxScriptsType`
+    - `Array<string | IEntryCustomScriptConfig>`
   - `SandboxStylesType`
+    - `Array<string>`
   - `SandboxAssetPublicPathType`
+    - `SubApplicationAssetPublicPathType`. See [here](#doc_sub-application-asset-public-path-type) for detail
   - `IChildOperate`
+    - `intercept`: `(callback: Function) => void`. Method to start rewrite DOM operations
+    - `stop`: `() => void`. Stop to rewrite DOM operations
+  - `IEntryCustomScriptConfig`
+    - `url`: `string`. The resource's URL
+    - `scriptExecutor`: `(data: string, defaultExecutor: Function, extra: SubApplicationExtraType) => Function`. Custom JavaScript executor
