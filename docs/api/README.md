@@ -26,25 +26,32 @@ Register sub-applications configuration, and define lifecycle hook handlers.
     - `entry`: `ISubApplicationEntry`. Optional, defines sandbox's JavaScript and CSS entries
     - `activeWhen`: `SubApplicationActiveRuleType`. Required, the active rule for sandbox. When the pathname matches current sandbox's active rule, the sandbox will be mount
     - `container`: `SubApplicationContainerType`. Required, the mount point ID or `HTMLElement` DOM node instance for current sub-application
-    - `useCSSPrefix`: `boolean`. Optional, default `false`. By default, Faun will set the `name`'s value as `data-f-*` attribute to container. e.g. `<div data-f-i8zjUoZ6__app1></div>`
+    - <span id="doc_use-css-prefix">`useCSSPrefix`: `boolean`. Optional, default `false`. By default, Faun will set the `name`'s value as `data-f-*` attribute to container. e.g. `<div data-f-i8zjUoZ6__app1></div>`</span>
     - `assetPublicPath`: `SubApplicationAssetPublicPathType`. Optional, when the [`publicPath`](https://webpack.js.org/guides/public-path/) of the sub-application is not the absolute path, such as `/` or `./`, `assetURLMapper` will help to add the proper prefix. e.g. `url => '//example.com/foo' + url` can add `//example.com/foo` to all of the chunked assets: `/0.chunk.js` -> `//example.com/foo/0.chunk.js`
-    - `assetMatchers`: `SubApplicationAssetMatchersType`. Optional, since Faun only captures `<script>` and `<link>` elements, there are other elements, like `<img>` also needs rewrite. This option helps adding custom elements and attributes to rewrite `publicPath`
-    - `preserveChunks`: `boolean`. Optional, default `false`, determine deleting chunked assets when unmounting or not
+    - <span id="doc_asset-matchers">`assetMatchers`: `SubApplicationAssetMatchersType`. Optional, since Faun only captures `<script>` and `<link>` elements, there are other elements, like `<img>` also needs rewrite. This option helps adding custom elements and attributes to rewrite `publicPath`</span>
+    - <span id="doc_preserve-chunks">`preserveChunks`: `boolean`. Optional, default `false`, determine deleting chunked assets when unmounting or not</span>
     - `extra`: `SubApplicationExtraType`. Optional, extra props for sandbox, when JavaScript entry is an executor, it will be passed as a parameter to the executor
-    - `cleanDOMWhenUnmounting`: `boolean`. Optional, default `false`, determine set container's `innerHTML` to an empty string or not when unmounting
+    - <span id="doc_clean-dom-when-unmounting">`cleanDOMWhenUnmounting`: `boolean`. Optional, default `false`, determine set container's `innerHTML` to an empty string or not when unmounting</span>
   - `ISubApplicationEntry`
     - `scripts`: `Array<string>`. Optional, default `null`. JavaScript resource URLs for current sub-application
     - `styles`: `Array<string>`. Optional, default `null`. CSS resource URLS for current sub-application
   - `SubApplicationActiveRuleType`
+    - `(location: Location<History.PoorMansUnknown> | {}) => boolean | RegExp | Array<string> | string`
   - `SubApplicationContainerType`
+    - `(extra: SubApplicationExtraType) => HTMLElement | HTMLElement | string`
   - `SubApplicationAssetPublicPathType`
+    - `(url: string) => string | string`
   - `SubApplicationAssetMatchersType`
+    - `Array<ISubApplicationAssetsConfigMatcherItem>`
+  - `ISubApplicationAssetsConfigMatcherItem`
+    - `nodeName`: `string`. Required, defines which node that have this `nodeName` should be captured
+    - `attributes`: `Array<string>`. Required, defines what attributes of the node should be rewritten.
   - `SubApplicationExtraType`
     - `Record<string, any>`
 
 ### `Faun.prototype.run()`
 
-Starts the Faun instance. When all of the configurations are finished, it should be invoked.
+Starts the Faun instance. When all of the configurations are finished, it will be invoked.
 
 ### `Faun.prototype.history` & `Faun.history`
 
@@ -155,6 +162,57 @@ Be executed when current sub-application is successfully unmounted.
 - Types
   - `Sandbox`
 
-## `FaunProps`
+## `IFaunInstanceProps`
+
+- Properties
+  - `registeredSubApplications`: `Array<iSubApplicationConfig>`. Stores all the configurations for sub-applications
+  - `currentLocation?`: `Location<History.PoorMansUnknown>`. The `history` instance, stores current location information
+  - `routes`: `Array<IFaunRouteItem>`. A map stores the relationship between pathname and sandboxes
+  - `position`: `number`. Current index in the history stack
+  - `direction`: `'forward' | 'backward'`. The direction indicates the user is forward or backward in history stack
+  - `hooks`: `IFaunLifecycleHooks`. Optional, a key-value pair defines lifecycle handlers, see [Lifecycle Hooks](#lifecycle-hooks) for detail
+  - `appConfig`: `IFaunSubApplicationConfig`. Stores Faun instance configuration passed as parameters to constructor
+- Interfaces
+  - `IFaunRouteItem`
+    - `pathname?`: `string`. A universal pathname that can trigger Faun's active rule
+    - `sandboxes`: `Array<Sandbox>`. An array stores sandboxes that could be mounted by current pathname, see [Sandbox](#sandbox) for detail
+  - `IFaunSubApplicationConfig`
 
 ## `Sandbox`
+
+- Constructor
+  - `(name: string, useCSSPrefix = true, customAssetMatchers: SubApplicationAssetMatchersType = [] => void`
+- Publics
+  - `name`: `string`. Name of the sandbox
+  - `scripts`: `SandboxScriptsType`. JavaScript entries configuration
+  - `styles`: `SandboxStylesType`. CSS entries configuration
+  - `useCSSPrefix`: `boolean`. See [here](#doc_use-css-prefix) for detail
+  - `preserveChunks`: `boolean`. See [here](#doc_preserve-chunks) for detail
+  - `assetPublicPath?`: `SandboxAssetPublicPathType`. Asset `publicPath` options
+  - `takeDOMSnapshot`: `() => {}`. Copy DOM nodes inside container before sandbox being unmounting
+  - `restoreDOMSnapshot`: `() => {}`. Put the DOM nodes inside snapshot into container after sandbox being mounted
+  - `takeWindowSnapshot`: `() => {}`. Copy `Window` object before sandbox being unmounting
+  - `restoreDOMSnapshot`: `() => {}`. Restore object to `Window` after sandbox being mounted
+  - `create`: `(subApplicationConfig: ISubApplicationConfig, appConfig: IFaunSubApplicationConfig) => {}`. Create the sandbox with loading resources
+  - `mount`: `() => {}`. Mount the sandbox
+  - `unmount`: `() => {}`. Unmount the sandbox
+- Privates
+  - `domSnapshot`: `Array<HTMLElement>`. Stores DOM snapshots of current sandbox
+  - `windowSnapshot`: `Partial<Window>`. Stores changes on `Window` object
+  - `scriptExecutor`: `Array<Function>`. Stores all the JavaScript bundlers of current sandbox as functions
+  - `styleElements`: `Array<HTMLStyleElement>`. Stores all the CSS resources as `HTMLStyleElement` DOM nodes
+  - `singular`: `boolean`. Determine whether Faun can mount only one sandbox each time or not
+  - `modifiedPropsMap`: `Record<string, any>`. Stores modified properties on `Window` object
+  - `observer?`: `MutationObserver`. An instance of `MutationObserver`
+  - `childNodeOperator`: `IChildOperate`. Child nodes operators rewriters
+  - `sandboxWindow`: `Partial<Window>`. A fake `Window` object
+  - `cleanDOMWhenUnmounting`: `boolean`. See [here](#doc_clean-dom-when-unmounting) for detail
+  - `container`: `HTMLElement`. Container element for sub-application
+  - `mountPointElement`: `HTMLElement`. Container element for current sandbox
+  - `disableRewriteEventListeners?`: `Function`. Method to disable rewrite for `EventListeners`
+  - `assetMatchers`: `SubApplicationAssetMatchersType`. See [here](#doc_asset-matchers) for detail
+- Types
+  - `SandboxScriptsType`
+  - `SandboxStylesType`
+  - `SandboxAssetPublicPathType`
+  - `IChildOperate`
