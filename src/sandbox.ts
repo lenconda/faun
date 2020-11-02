@@ -94,7 +94,7 @@ class Sandbox {
     },
   ];
 
-  constructor(name: string, useCSSPrefix = true, customAssetMatchers: SubApplicationAssetMatchersType = []) {
+  constructor(name: string, useCSSPrefix = false, customAssetMatchers: SubApplicationAssetMatchersType = []) {
     this.name = name;
     this.useCSSPrefix = useCSSPrefix;
     if (!this.observer) {
