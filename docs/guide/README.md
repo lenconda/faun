@@ -319,7 +319,7 @@ To cover the contingent behavior mentioned above, Faun provides a optional param
 
 ### CSS Prefixes
 
-Adding a prefix to CSS selectors could be a very powerful mode avoiding global style pollution. Faun provide `useCSSPrefix` to add prefixes to sub-applications' styles. But the default value of it is `false`, since it might spend a lot of time to add prefixes for all of the selectors recursively, especially the amount of the selectors are enormous. If pass a value to it with `true`, sandbox would use a string as prefix, it could be name specified in current sub-application's config or a random string if it is not specified.
+Adding a prefix to CSS selectors could be a very powerful mode avoiding global style pollution. Faun provide `useCSSPrefix` to add prefixes to sub-applications' styles. But the default value of it is `false`, since it might spend a lot of time to add prefixes for all of the selectors recursively, especially the amount of the selectors are enormous. If pass a value to it with `true`, sandbox would use a the name of current config as prefix.
 
 There is the effect when set this option as `true`:
 

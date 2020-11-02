@@ -187,7 +187,6 @@ class Sandbox {
       extra = {},
       useCSSPrefix,
       name = random(),
-      // assetMatchers = null,
       cleanDOMWhenUnmounting = false,
     } = subApplicationConfig;
     if (!subApplicationConfig || !container) {

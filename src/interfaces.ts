@@ -55,13 +55,14 @@ export interface ISubApplicationAssetsConfigMatcherItem {
   attributes: Array<string>;
 }
 export type SubApplicationAssetMatchersType = Array<ISubApplicationAssetsConfigMatcherItem>;
+export interface ISubApplicationEntry {
+  scripts?: SubApplicationScriptConfigType;
+  styles?: SubApplicationStyleConfigType;
+}
 
 export interface ISubApplicationConfig {
   name?: string;
-  entry?: {
-    scripts?: SubApplicationScriptConfigType,
-    styles?: SubApplicationStyleConfigType,
-  };
+  entry?: ISubApplicationEntry;
   activeWhen: SubApplicationActiveRuleType;
   container: SubApplicationContainerType;
   useCSSPrefix?: boolean;
