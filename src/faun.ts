@@ -23,6 +23,7 @@ import {
 import {
   emitError,
 } from './utils/error';
+import generateRandomString from './utils/random';
 
 // internal plugins
 import Events from './plugins/events';
@@ -45,6 +46,7 @@ class Faun {
 
   constructor(appConfig: IFaunSubApplicationConfig = {}) {
     this.props = {
+      id: generateRandomString(),
       // registered sub-applications information
       registeredSubApplications: [],
       // current location object

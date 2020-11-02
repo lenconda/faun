@@ -51,7 +51,7 @@ export const loadSubApplication = async (
 
     if (actionLowerCase === 'push') {
       const sandboxesList = currentRouteResources.map(resource => ({
-        sandbox: new Sandbox(pathname, resource.useCSSPrefix, resource.assetMatchers),
+        sandbox: new Sandbox(resource.name || pathname.replace('/', ''), props.id, resource.useCSSPrefix, resource.assetMatchers),
         resource,
       }));
 

@@ -20,7 +20,7 @@ const createElement = <T extends HTMLElement>(
 
   const element = document.createElement(tagName);
   Object.keys(attributes).forEach(key => {
-    element[key] = attributes[key];
+    element.setAttribute(key, attributes[key]);
   });
 
   if (children.length > 0) {

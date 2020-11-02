@@ -10,8 +10,11 @@ import {
   Rule,
 } from 'css';
 
+export const generateCSSPrefix =
+  (prefixName: string, sandboxName: string) => `data-f-${prefixName}__${sandboxName}`;
+
 /**
- * Stringfy the given AST `node`.
+ * Stringify the given AST `node`.
  *
  * Options:
  *
@@ -82,15 +85,11 @@ const css = (
     }
 
     rule.selectors = rule?.selectors?.map((selector: string) => {
-      if (
-        excludeSelector(selector, ['html', 'body', '*', ...excludes])
-        || selector.startsWith(`#${prefix}`)
-        || selector.indexOf(`#${prefix}`) !== -1
-      ) {
+      if (excludeSelector(selector, ['html', 'body', '*', ...excludes])) {
         return selector;
       }
 
-      return '#' + prefixWithSpace + selector;
+      return prefixWithSpace + selector;
     });
     return rule;
   });
