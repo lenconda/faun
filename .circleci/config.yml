@@ -31,6 +31,10 @@ jobs:
       - run: ls -al
       - run: npm run build
       - run: ls -al
+      - save_cache:
+          paths:
+            - node_modules
+            - dist
   deploy:
     <<: *defaults
     steps:
