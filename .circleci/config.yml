@@ -30,13 +30,15 @@ jobs:
           at: ~/repo
       - run: ls -al
       - run: npm run build
+      - run: ls -al
   deploy:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/repo
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
-      - run: npm publish
+      - run: ls -al
+      # - run: npm publish
 
 workflows:
   version: 2
@@ -48,7 +50,6 @@ workflows:
             - test
       - deploy:
           requires:
-            - test
             - build
           filters:
             tags:
