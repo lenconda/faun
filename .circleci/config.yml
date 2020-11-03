@@ -34,8 +34,11 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-            - dist
           key: v1-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - dist
+          key: faun-dist-dir
   deploy:
     <<: *defaults
     steps:
@@ -43,6 +46,7 @@ jobs:
           at: ~/repo
       - restore_cache:
           keys:
+            - faun-dist-dir
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
