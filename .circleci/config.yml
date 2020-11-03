@@ -51,16 +51,22 @@ jobs:
             - v1-dependencies-
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
       - run: ls -al
-      # - run: npm publish
+      - run: npm publish
 
 workflows:
   version: 2
   build_test_and_deploy:
     jobs:
-      - test
+      - test:
+          filters:
+            tags:
+              only: /.*/
       - build:
           requires:
             - test
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           requires:
             - build
