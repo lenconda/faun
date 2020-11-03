@@ -35,6 +35,7 @@ jobs:
           paths:
             - node_modules
             - dist
+          key: v1-dependencies-{{ checksum "package.json" }}
   deploy:
     <<: *defaults
     steps:
