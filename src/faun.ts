@@ -10,7 +10,7 @@ import Sandbox from './sandbox';
 import createHooks from './hooks';
 import {
   IFaunInstanceProps,
-  IFaunSubApplicationConfig,
+  IFaunInstanceConfig,
   IFaunDependency,
   IFaunPlugin,
   IFaunLifecycleHooks,
@@ -44,7 +44,7 @@ class Faun {
   private deps: Array<IFaunDependency> = [];
   private history: FaunHistoryType = history;
 
-  constructor(appConfig: IFaunSubApplicationConfig = {}) {
+  constructor(appConfig: IFaunInstanceConfig = {}) {
     this.props = {
       id: generateRandomString(),
       // registered sub-applications information

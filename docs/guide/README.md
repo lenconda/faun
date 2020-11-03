@@ -60,17 +60,17 @@ Firstly, Faun uses `history` to manage the top-level routes, especially listens 
 
 Once the `history.push` is triggered, Faun will call the loaders to load resources, and finally mount the resources on framework. Faun abstracts this process as an independent component, named *Sandbox*. Sandbox is the container of a sub-application in Faun, which provides a pure environment for each sub-application. When the user request a path of the application, the framework would make a request to a server to obtain the sub-application configuration map for this application.
 
-Then Faun would load sandbox with the top-level route. For example, if a user request a route like `https://foo.com/bar/baz` while base path was set as `http://foo.com/`, while `/bar` hits the route config, Faun will create a new sandbox to load resources, and take snapshots from `window`.
+Faun loads sandbox with the top-level route. For example, if a user request a route like `https://foo.com/bar/baz` while base path was set as `https://foo.com/`. If `/bar` hits the route config, Faun will create a new sandbox to load resources, and take snapshots from `window`.
 
 In the meantime, sandbox will overwrite DOM operations on `Element.prototype` (such as `appendChild`, `insertBefore`) and `window.addEventListener` in order to catch snapshot and make some mutations.
 
-A polyfilled `MutationObserver` would be settled in order to catch the DOM changes and push them in an array. When unloading sandbox, the elements in this array would be removed.
+A polyfilled `MutationObserver` would be settled in order to catch the DOM changes and push them in an array. When unmounting sandbox, the elements in this array would be removed.
 
-> It is worth paying attention that Faun will only match the first level of the route: if get a path like `/bar/baz`, it will only take `/bar` to find a matching route config. Downward routes, like `/baz`, would be taken over by current sub-application.
+> It is worth paying attention that Faun only matches the first level of the route: if get a path like `/bar/baz`, it will only take `/bar` to find a matching route config. Downward routes, like `/baz`, would be taken over by current sub-application.
 
 After finishing loading resources, sandbox will execute the bundle by `new Function()`, and the other resources by appending child nodes into targeted parent nodes.
 
-When the top-level route changing, the former sandbox will unmount, then mount next sandbox with the new path. The `loading`, `loaded`, `mounted`, `beforeUnmount` and `umounted` lifecycle hooks will be triggered when changing route.
+When the top-level route changing, the former sandbox will be unmounted, then mount next sandbox with the new path. The `loading`, `loaded`, `mounted`, `beforeUnmount` and `unmounted` lifecycle hooks will be triggered when changing route.
 
 ### Features
 
@@ -225,7 +225,7 @@ Since Faun is low invasive, we can just make a few modifications on sub-applicat
 
 It is usually seen that many Webpack applications has assets' `output.publicPath` like `/`. Since the application's URL is not the same as framework's, it could cause `404` errors when loading chunked assets.
 
-To avoid this, we recommend to modify `output.publicPath` with absolute hostname. For example, an application is deployed at `example.com`, the `output.publicPath` could be `//example.com`.
+To avoid this, we recommend to modify `output.publicPath` with absolute path. For example, an application is deployed at `example.com`, the `output.publicPath` could be `//example.com`.
 
 Faun's sandbox also provide a more perfect method: `assetURLMapper` to modify URLs, just add it in your sub-application config map:
 
@@ -251,9 +251,7 @@ the `assetURLMapper` method should return a new URL which is the right one to lo
 
 ### Config the Servers
 
-Since Faun loads and obtains resources by sending [Ajax](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX) requests, which would be blocked by [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) of browsers when sub-applications' origin are not the same as framework-application.
-
-In this circumstance, you should set the [HTTP CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) header: `Access-Control-Allow-Origin` and set it to your framework-application's origin or `*`.
+Since Faun loads and obtains resources by sending [Ajax](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX) requests, which would be blocked by [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) of browsers when sub-applications' origin are not the same as framework-application. In this circumstance, you should set the [HTTP CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) header: `Access-Control-Allow-Origin` and set it to your framework-application's origin or `*`.
 
 If the sub-application is served by Nginx, you can just add this parameter to the configuration file:
 
@@ -307,7 +305,7 @@ app.registerSubApplications([
 ]);
 ```
 
-Once the container is specified, Faun will make them reusable when the sub-applications are repeatedly mounted.
+If the container is specified, Faun will make them reusable when the sub-applications are repeatedly mounted.
 
 ### Clean DOM Nodes When Unmounting
 

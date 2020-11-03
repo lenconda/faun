@@ -27,14 +27,14 @@ Register sub-applications configuration, and define lifecycle hook handlers.
     - `activeWhen`: `SubApplicationActiveRuleType`. Required, the active rule for sandbox. When the pathname matches current sandbox's active rule, the sandbox will be mount
     - `container`: `SubApplicationContainerType`. Required, the mount point ID or `HTMLElement` DOM node instance for current sub-application
     - <span id="doc_use-css-prefix">`useCSSPrefix`: `boolean`. Optional, default `false`. By default, Faun will set the `name`'s value as `data-f-*` attribute to container. e.g. `<div data-f-i8zjUoZ6__app1></div>`</span>
-    - `assetPublicPath`: `SubApplicationAssetPublicPathType`. Optional, when the [`publicPath`](https://webpack.js.org/guides/public-path/) of the sub-application is not the absolute path, such as `/` or `./`, `assetURLMapper` will help to add the proper prefix. e.g. `url => '//example.com/foo' + url` can add `//example.com/foo` to all of the chunked assets: `/0.chunk.js` -> `//example.com/foo/0.chunk.js`
-    - <span id="doc_asset-matchers">`assetMatchers`: `SubApplicationAssetMatchersType`. Optional, since Faun only captures `<script>` and `<link>` elements, there are other elements, like `<img>` also needs rewrite. This option helps adding custom elements and attributes to rewrite `publicPath`</span>
+    - `assetPublicPath`: `SubApplicationAssetPublicPathType`. Optional, when the [`publicPath`](https://webpack.js.org/guides/public-path/) of the sub-application is not the absolute path, such as `/` or `./`, `assetPublicPath` will help to add the proper prefix. e.g. `url => '//example.com/foo' + url` can add `//example.com/foo` to all of the chunked assets: `/0.chunk.js` -> `//example.com/foo/0.chunk.js`
+    - <span id="doc_asset-matchers">`assetMatchers`: `SubApplicationAssetMatchersType`. Optional, since Faun only captures <code>&lt;script&gt;</code> and `<link>` elements, there are other elements, like `<img>` also needs rewrite. This option helps adding custom elements and attributes to rewrite `publicPath`</span>
     - <span id="doc_preserve-chunks">`preserveChunks`: `boolean`. Optional, default `false`, determine deleting chunked assets when unmounting or not</span>
     - `extra`: `SubApplicationExtraType`. Optional, extra props for sandbox, when JavaScript entry is an executor, it will be passed as a parameter to the executor
     - <span id="doc_clean-dom-when-unmounting">`cleanDOMWhenUnmounting`: `boolean`. Optional, default `false`, determine set container's `innerHTML` to an empty string or not when unmounting</span>
   - `ISubApplicationEntry`
     - `scripts`: `Array<string>`. Optional, default `null`. JavaScript resource URLs for current sub-application
-    - `styles`: `Array<string>`. Optional, default `null`. CSS resource URLS for current sub-application
+    - `styles`: `Array<string>`. Optional, default `null`. CSS resource URLs for current sub-application
   - `SubApplicationActiveRuleType`
     - `(location: Location<History.PoorMansUnknown> | {}) => boolean | RegExp | Array<string> | string`
   - `SubApplicationContainerType`
@@ -45,7 +45,7 @@ Register sub-applications configuration, and define lifecycle hook handlers.
     - `Array<ISubApplicationAssetsConfigMatcherItem>`
   - `ISubApplicationAssetsConfigMatcherItem`
     - `nodeName`: `string`. Required, defines which node that have this `nodeName` should be captured
-    - `attributes`: `Array<string>`. Required, defines what attributes of the node should be rewritten.
+    - `attributes`: `Array<string>`. Required, defines what attributes of the node should be rewritten
   - `SubApplicationExtraType`
     - `Record<string, any>`
 
@@ -83,7 +83,7 @@ Fire a specified event, and call all of its handlers.
 - `key`: `string`. Required, name of event that want to be fired
 - `data`: `any`. Optional, data passed to the event handler
 
-#### `on(key, callback)` :id=doc-events-on
+#### `on(key, callback)`
 
 Add an event handler to a specified event.
 
@@ -92,28 +92,28 @@ Add an event handler to a specified event.
 
 #### `off(key, callback)`
 
-Remove specified callback of specified event
+Remove specified callback of specified event.
 
 - `key`: `string`. Required, name of event
-- `callback`: `(data?) => any`. Required, traverse all the handlers of specified event, in the meantime remove the specified callback
+- `callback`: `(data?) => any`. Required, specified handler in specified event that to be deleted
 
 #### `has(key, callback)`
 
 - `key`: `string`. Required, name of event
-- `callback`: `(data?) => any`. Required, traverse all the handlers of specified event, in the meantime find the specified callback and return it
+- `callback`: `(data?) => any`. Required, specified handler in specified event that to be searched
 
 ### `Faun.prototype.store`
 
 #### `set(key, value)`
 
-Set a record to store.
+Add a record to store.
 
 - `key`: `string`. Required, name of a store record
 - `value`: `any`. Required, value of a store record
 
 #### `get(key)`
 
-Get a record to store.
+Get a record from store.
 
 - `key`: `string`. Required, name of a store record
 
@@ -171,13 +171,15 @@ Be executed when current sub-application is successfully unmounted.
   - `routes`: `Array<IFaunRouteItem>`. A map stores the relationship between pathname and sandboxes
   - `position`: `number`. Current index in the history stack
   - `direction`: `'forward' | 'backward'`. The direction indicates the user is forward or backward in history stack
-  - `hooks`: `IFaunLifecycleHooks`. Optional, a key-value pair defines lifecycle handlers, see [Lifecycle Hooks](#lifecycle-hooks) for detail
-  - `appConfig`: `IFaunSubApplicationConfig`. Stores Faun instance configuration passed as parameters to constructor
+  - `hooks?`: `IFaunLifecycleHooks`. A key-value pair defines lifecycle handlers, see [Lifecycle Hooks](#lifecycle-hooks) for detail
+  - `appConfig`: `IFaunInstanceConfig`. Stores Faun instance configuration passed as parameters to constructor
 - Interfaces
   - `IFaunRouteItem`
-    - `pathname?`: `string`. A universal pathname that can trigger Faun's active rule
+    - `pathname?`: `string`. A string that can trigger Faun's active rule
     - `sandboxes`: `Array<Sandbox>`. An array stores sandboxes that could be mounted by current pathname, see [Sandbox](#sandbox) for detail
-  - `IFaunSubApplicationConfig`
+  - `IFaunInstanceConfig`
+    - `singular?`: `boolean`. Determine whether Faun can mount only one sandbox each time or not
+    - `onError?`: `(error: FaunError) => void`. Faun global error handler
 
 ## `Sandbox`
 
@@ -190,27 +192,27 @@ Be executed when current sub-application is successfully unmounted.
   - `useCSSPrefix`: `boolean`. See [here](#doc_use-css-prefix) for detail
   - `preserveChunks`: `boolean`. See [here](#doc_preserve-chunks) for detail
   - `assetPublicPath?`: `SandboxAssetPublicPathType`. Asset `publicPath` options
-  - `takeDOMSnapshot`: `() => {}`. Copy DOM nodes inside container before sandbox being unmounting
+  - `takeDOMSnapshot`: `() => {}`. Copy DOM nodes inside container before sandbox being unmounted
   - `restoreDOMSnapshot`: `() => {}`. Put the DOM nodes inside snapshot into container after sandbox being mounted
-  - `takeWindowSnapshot`: `() => {}`. Copy `Window` object before sandbox being unmounting
-  - `restoreDOMSnapshot`: `() => {}`. Restore object to `Window` after sandbox being mounted
-  - `create`: `(subApplicationConfig: ISubApplicationConfig, appConfig: IFaunSubApplicationConfig) => {}`. Create the sandbox with loading resources
+  - `takeWindowSnapshot`: `() => {}`. Copy `window` object before sandbox being unmounted
+  - `restoreDOMSnapshot`: `() => {}`. Restore object to `window` after sandbox being mounted
+  - `create`: `(subApplicationConfig: ISubApplicationConfig, appConfig: IFaunInstanceConfig) => {}`. Create the sandbox with loading resources
   - `mount`: `() => {}`. Mount the sandbox
   - `unmount`: `() => {}`. Unmount the sandbox
 - Privates
   - `cssPrefixString`: `string`. CSS prefix for current sandbox, always start with `data-f-`
   - `domSnapshot`: `Array<HTMLElement>`. Stores DOM snapshots of current sandbox
-  - `windowSnapshot`: `Partial<Window>`. Stores changes on `Window` object
+  - `windowSnapshot`: `Partial<Window>`. Stores changes on `window` object
   - `scriptExecutor`: `Array<Function>`. Stores all the JavaScript bundlers of current sandbox as functions
   - `styleElements`: `Array<HTMLStyleElement>`. Stores all the CSS resources as `HTMLStyleElement` DOM nodes
   - `singular`: `boolean`. Determine whether Faun can mount only one sandbox each time or not
-  - `modifiedPropsMap`: `Record<string, any>`. Stores modified properties on `Window` object
+  - `modifiedPropsMap`: `Record<string, any>`. Stores modified properties on `window` object
   - `observer?`: `MutationObserver`. An instance of `MutationObserver`
   - `childNodeOperator`: `IChildOperate`. Child nodes operators rewriters
-  - `sandboxWindow`: `Partial<Window>`. A fake `Window` object
+  - `sandboxWindow`: `Partial<Window>`. A fake `window` object
   - `cleanDOMWhenUnmounting`: `boolean`. See [here](#doc_clean-dom-when-unmounting) for detail
   - `container`: `HTMLElement`. Container element for sub-application
-  - `mountPointElement`: `HTMLElement`. Container element for current sandbox
+  - `mountPointElement`: `HTMLElement`. Mount point element for current sandbox
   - `disableRewriteEventListeners?`: `Function`. Method to disable rewrite for `EventListeners`
   - `assetMatchers`: `SubApplicationAssetMatchersType`. See [here](#doc_asset-matchers) for detail
 - Types
@@ -224,5 +226,5 @@ Be executed when current sub-application is successfully unmounted.
     - `intercept`: `(callback: Function) => void`. Method to start rewrite DOM operations
     - `stop`: `() => void`. Stop to rewrite DOM operations
   - `IEntryCustomScriptConfig`
-    - `url`: `string`. The resource's URL
+    - `url`: `string`. The JavaScript resource's URL
     - `scriptExecutor`: `(data: string, defaultExecutor: Function, extra: SubApplicationExtraType) => Function`. Custom JavaScript executor

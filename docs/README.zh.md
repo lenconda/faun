@@ -6,7 +6,7 @@ hero:
   actions:
     - text: 开发指南
       link: /zh/guide
-footer: Open-source MIT Licensed | Copyright © 2020<br />Powered by [dumi](https://d.umijs.org)
+footer: 遵循 MIT 开源协议 | 版权所有 © 2020<br />由 [dumi](https://d.umijs.org) 提供支持
 ---
 
 <div style="height: 20px;"></div>
@@ -33,29 +33,36 @@ app.registerSubApplications(
       activeWhen: '/app1',
       entry: {
         scripts: [
-          '//localhost:8181/app.js',
+          '//app1.example.com/app.js',
         ],
       },
       container: 'app',
-      assetPublicPath: '//localhost:8181',
+      assetPublicPath: '//app1.example.com',
     },
     {
       name: 'app2',
       activeWhen: '/app2',
-      scripts: [
-        '//localhost:8182/static/js/main.bundle.js',
-      ],
-      styles: [
-        '//localhost:8182/static/css/main.css',
-      ],
+      entry: {
+        scripts: [
+          '//app2.example.com/static/js/main.bundle.js',
+        ],
+        styles: [
+          '//app2.example.com/static/css/main.css',
+        ],
+      },
       container: document.querySelector('#root'),
-      assetPublicPath: '//localhost:8182',
+      assetPublicPath: '//app2.example.com',
     },
   ],
   {
     loading: pathname => {
-      console.log('loading', this);
+      console.log('loading: ', this);
       console.log('pathname: ', pathname);
+    },
+    beforeUnmount: (prev, next) => {
+      console.log('prev: ', prev);
+      console.log('next: ', next);
+      return true;
     },
     // ...
   },
