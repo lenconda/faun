@@ -8,7 +8,7 @@ import fetch from './fetch';
 import { isFunction } from './utils/lodash';
 import overwriteEventListeners from './overwrites/window-listeners';
 import createElement from './utils/create-element';
-import cssPrefix from './utils/css';
+import cssPrefix, { generateCSSPrefix } from './utils/css';
 import random from './utils/random';
 import PolyfilledMutationObserver from 'mutation-observer';
 import childNodeOperator from './overwrites/child-operate';
@@ -17,10 +17,43 @@ import {
   SandboxStylesType,
   SandboxAssetPublicPathType,
   ISubApplicationConfig,
-  IFaunSubApplicationConfig,
+  IFaunInstanceConfig,
   IChildOperate,
-  IStaticResourcesReplaceRule,
+  SubApplicationAssetMatchersType,
 } from './interfaces';
+
+const configMatchedNodeAssets = (
+  element: HTMLElement,
+  matchers: SubApplicationAssetMatchersType,
+  assetPublicPath: string | SandboxAssetPublicPathType | undefined,
+): HTMLElement => {
+  const nodeName = element.nodeName.toLowerCase();
+  const getAssetsPrefix = (value: string): string => {
+    if (assetPublicPath) {
+      if (typeof assetPublicPath === 'function') {
+        return `${assetPublicPath(value)}${value}`;
+      } else if (typeof assetPublicPath === 'string') {
+        return `${assetPublicPath}${value}`;
+      } else {
+        return value;
+      }
+    } else {
+      return value;
+    }
+  };
+
+  const currentMatcher = matchers.find(matcher => matcher.nodeName === nodeName);
+  if (currentMatcher) {
+    currentMatcher.attributes.forEach(attribute => {
+      const currentAttributeValue = element.getAttribute(attribute);
+      if (currentAttributeValue) {
+        element.setAttribute(attribute, getAssetsPrefix(currentAttributeValue));
+      }
+    });
+  }
+
+  return element;
+};
 
 /**
  * sandbox constructor
@@ -37,6 +70,7 @@ class Sandbox {
   public preserveChunks = false;
   public assetPublicPath?: SandboxAssetPublicPathType;
 
+  private cssPrefixString: string;
   private domSnapshot: Array<HTMLElement> = [];
   private windowSnapshot: Partial<Window> = {};
   private scriptExecutors: Array<Function> = [];
@@ -49,37 +83,49 @@ class Sandbox {
   private cleanDOMWhenUnmounting = false;
   private container: HTMLElement;
   private mountPointElement?: HTMLElement;
-  private staticResourcesReplaceRule?: IStaticResourcesReplaceRule;
   private disableRewriteEventListeners?: Function;
+  private assetMatchers: SubApplicationAssetMatchersType = [
+    {
+      nodeName: 'script',
+      attributes: ['src'],
+    },
+    {
+      nodeName: 'link',
+      attributes: ['href'],
+    },
+  ];
 
-  constructor(name: string, useCSSPrefix = true) {
+  constructor(
+    name: string,
+    prefixName: string = random(),
+    useCSSPrefix = false,
+    customAssetMatchers: SubApplicationAssetMatchersType = [],
+  ) {
     this.name = name;
     this.useCSSPrefix = useCSSPrefix;
+    this.cssPrefixString = generateCSSPrefix(prefixName, name);
+
     if (!this.observer) {
       this.observer = new PolyfilledMutationObserver((mutations: MutationRecord[]) => {
         mutations.forEach(mutation => {
           const currentAddedNodes = Array.from(mutation.addedNodes) as HTMLElement[];
           currentAddedNodes.forEach(node => {
-            const staticResourcesReplaceRule = this.staticResourcesReplaceRule;
-            const nodeNames = staticResourcesReplaceRule?.nodeNames || [];
-            const attributes = staticResourcesReplaceRule?.attributes || [];
-            const replacer = staticResourcesReplaceRule?.replacer || null;
-            const lowerCasedNodeNames = nodeNames.map((name: string) => name.toLowerCase());
             const nodeName = node.nodeName && node.nodeName.toLowerCase() || '';
-            const nodeAttributes = node.attributes && Array.from(node.attributes).map(attribute => attribute.name) || [];
-            if (
-              lowerCasedNodeNames.indexOf(nodeName) !== -1
-              && nodeAttributes.filter(attribute => attributes.indexOf(attribute) !== -1).length !== 0
-              && replacer
-            ) {
-              replacer(node);
-            }
-            if (node && /^style$|^script$|^link$/.test(nodeName)) {
+            if (/^style$|^script$|^link$/.test(nodeName)) {
               this.domSnapshot.push(node);
-              if (nodeName === 'style' && (this.useCSSPrefix || !this.singular)) {
+              if (
+                nodeName === 'style'
+                && (this.useCSSPrefix || !this.singular)
+                && node.innerHTML.indexOf('data-f-') === -1
+              ) {
                 node.innerHTML = cssPrefix(node.innerHTML, this.name);
               }
             }
+            const currentCustomMatchers: SubApplicationAssetMatchersType = customAssetMatchers.map(matcher => ({
+              nodeName: matcher.nodeName.toLowerCase(),
+              attributes: matcher.attributes,
+            }));
+            configMatchedNodeAssets(node, currentCustomMatchers, this.assetPublicPath);
           });
         });
       });
@@ -87,44 +133,8 @@ class Sandbox {
   }
 
   public takeDOMSnapshot() {
-    const _this = this;
-
     this.childNodeOperator.intercept((element: HTMLElement) => {
-      const nodeName = element.nodeName && element.nodeName.toLowerCase() || '';
-      const getAssetsPrefix = (src: string): string => {
-        const { assetPublicPath } = _this;
-        if (assetPublicPath) {
-          if (typeof assetPublicPath === 'function') {
-            return `${assetPublicPath(src)}${src}`;
-          } else if (typeof assetPublicPath === 'string') {
-            return `${assetPublicPath}${src}`;
-          } else {
-            return src;
-          }
-        } else {
-          return src;
-        }
-      };
-      switch(nodeName) {
-      case 'script': {
-        const src = element.getAttribute('src');
-        if (src) {
-          element.setAttribute('src', getAssetsPrefix(src));
-        }
-        break;
-      }
-      case 'link': {
-        const href = element.getAttribute('href');
-        const rel = element.getAttribute('rel');
-        if (href && rel === 'stylesheet') {
-          element.setAttribute('href', getAssetsPrefix(href));
-        }
-        break;
-      }
-      default:
-        break;
-      }
-      return element;
+      return configMatchedNodeAssets(element, this.assetMatchers, this.assetPublicPath);
     });
 
     this.observer && this.observer.observe(document.documentElement, {
@@ -180,16 +190,14 @@ class Sandbox {
 
   public async create(
     subApplicationConfig: ISubApplicationConfig,
-    appConfig: IFaunSubApplicationConfig,
+    appConfig: IFaunInstanceConfig,
   ) {
     const {
       container,
       assetPublicPath = '',
       preserveChunks,
       extra = {},
-      useCSSPrefix,
       name = random(),
-      staticResourcesReplaceRule = null,
       cleanDOMWhenUnmounting = false,
     } = subApplicationConfig;
     if (!subApplicationConfig || !container) {
@@ -198,9 +206,7 @@ class Sandbox {
 
     this.name = name;
     this.singular = appConfig.singular || true;
-    if (staticResourcesReplaceRule) {
-      this.staticResourcesReplaceRule = staticResourcesReplaceRule;
-    }
+
     this.cleanDOMWhenUnmounting = cleanDOMWhenUnmounting;
     if (container instanceof HTMLElement) {
       this.container = container;
@@ -222,9 +228,9 @@ class Sandbox {
     }
 
     if (!document.getElementById(this.name)) {
-      const mountPointElement = createElement<HTMLDivElement>('div', {
-        id: (useCSSPrefix || !this.singular) ? this.name : '',
-      }, [this.container]);
+      const mountPointElement = createElement<HTMLDivElement>('div', this.useCSSPrefix ? {
+        [this.cssPrefixString]: true,
+      } : {}, [this.container]);
       if (mountPointElement) {
         this.mountPointElement = mountPointElement;
       }
@@ -278,7 +284,7 @@ class Sandbox {
         // make an ajax to load styles
         const data = await fetch(stylesURL);
         if (data) {
-          const styleData = (this.useCSSPrefix || !this.singular) ? cssPrefix(data, this.name) : data;
+          const styleData = (this.useCSSPrefix || !this.singular) ? cssPrefix(data, `div[${this.cssPrefixString}]`) : data;
           const currentStyleElement = createElement('style', { type: 'text/css' }) as HTMLStyleElement;
           if (currentStyleElement) {
             currentStyleElement.innerHTML = styleData;

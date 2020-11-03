@@ -36,20 +36,20 @@ const run = (
   context: FaunType,
 ) => {
   if (Array.isArray(deps) && deps.length) {
-    initGlobalDependencies(deps);
+    initGlobalDependencies(deps, props.appConfig.onError);
   }
 
   initSandbox(props);
 
   initRoute(history.location, function(location: FaunLocationType, pathname: string) {
-    refreshLocation.call(props, location);
+    refreshLocation(props, location);
     loadSubApplication(props, pathname, context, 'PUSH');
   });
 
   // listen history change to load and unload sandboxes
   history.listen((location, action) => {
     handleRouteChange(props, location, function(prev: string, next: string) {
-      refreshLocation.call(props, history.location);
+      refreshLocation(props, history.location);
       if (!unloadSubApplication(props, prev, next, context)) {
         return;
       }

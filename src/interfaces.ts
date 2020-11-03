@@ -5,6 +5,9 @@
 import { History, Location } from 'history';
 import Faun from './faun';
 import Sandbox from './sandbox';
+import {
+  FaunError,
+} from './errors';
 
 export type FaunType = typeof Faun;
 type SubApplicationExtraType = Record<string, any>;
@@ -22,14 +25,11 @@ export type SubApplicationActiveRuleType =
   | SubApplicationActiveRuleArrayType
   | SubApplicationActiveRuleStringType;
 
-export interface IStaticResourcesReplaceRule {
-  nodeNames: Array<string>;
-  attributes: Array<string>;
-  replacer: (element: HTMLElement) => void;
-}
+export type FaunErrorHandlerType = (error: FaunError) => void;
 
-export interface IFaunSubApplicationConfig {
+export interface IFaunInstanceConfig {
   singular?: boolean;
+  onError?: FaunErrorHandlerType;
 }
 
 export interface IEntryCustomScriptConfig {
@@ -50,20 +50,26 @@ export type SubApplicationAssetPublicPathStringType = string;
 export type SubApplicationAssetPublicPathType =
   SubApplicationAssetPublicPathFunctionType
   | SubApplicationAssetPublicPathStringType;
+export interface ISubApplicationAssetsConfigMatcherItem {
+  nodeName: string;
+  attributes: Array<string>;
+}
+export type SubApplicationAssetMatchersType = Array<ISubApplicationAssetsConfigMatcherItem>;
+export interface ISubApplicationEntry {
+  scripts?: SubApplicationScriptConfigType;
+  styles?: SubApplicationStyleConfigType;
+}
 
 export interface ISubApplicationConfig {
   name?: string;
-  entry?: {
-    scripts?: SubApplicationScriptConfigType,
-    styles?: SubApplicationStyleConfigType,
-  };
+  entry?: ISubApplicationEntry;
   activeWhen: SubApplicationActiveRuleType;
   container: SubApplicationContainerType;
   useCSSPrefix?: boolean;
   assetPublicPath?: SubApplicationAssetPublicPathType;
+  assetMatchers?: SubApplicationAssetMatchersType;
   preserveChunks?: boolean;
   extra?: SubApplicationExtraType;
-  staticResourcesReplaceRule?: IStaticResourcesReplaceRule;
   cleanDOMWhenUnmounting?: boolean;
 }
 
@@ -75,13 +81,14 @@ export interface IFaunRouteItem {
 export type SubApplicationsType = Array<ISubApplicationConfig>;
 
 export interface IFaunInstanceProps {
+  id: string;
   registeredSubApplications: Array<ISubApplicationConfig>;
   currentLocation?: Location<History.PoorMansUnknown>;
   routes: Array<IFaunRouteItem>;
   position: number;
   direction: 'forward' | 'backward';
   hooks: IFaunLifecycleHooks;
-  appConfig: IFaunSubApplicationConfig;
+  appConfig: IFaunInstanceConfig;
 }
 
 export interface IFaunDependency {
@@ -90,7 +97,7 @@ export interface IFaunDependency {
 }
 
 export interface IFaunPlugin {
-  install: (Faun: FaunType, options: Record<string, any>) => any;
+  install: (Faun: FaunType, props: IFaunInstanceProps, options?: Record<string, any>) => any;
   [key: string]: any;
 }
 

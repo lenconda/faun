@@ -1,6 +1,6 @@
 # Faun
 
-![Travis Build](https://img.shields.io/travis/lenconda/faun)
+![Circle CI Build](https://circleci.com/gh/lenconda/faun/tree/dev.svg?style=svg)
 ![License](https://img.shields.io/github/license/lenconda/faun)
 ![GitHub Version](https://img.shields.io/github/package-json/v/lenconda/faun)
 
@@ -26,7 +26,7 @@ To avoid making the rules for every applications repeatedly, we made a common ru
 
 ## Features
 
-- Light weight: only 54 kB with terser
+- Light weight: only 57 kB with terser
 - COMPLETELY framework-independent
 - Control the sub-applications by sandboxes and snapshots
 - Load sub-applications based on JavaScript entries
@@ -73,15 +73,15 @@ $ npm i
 Then you would have to install the dependencies for framework application and sub-applications:
 
 ```bash
-$ npm run install:vue
-$ npm run install:react
-$ npm run install:framework
+$ npm run examples:install:vue
+$ npm run examples:install:react
+$ npm run examples:install:framework
 ```
 
 If it is a mode that you think is troublesome and makes you dislike it, just run:
 
 ```bash
-$ npm run example:install
+$ npm run examples:install
 ```
 
 This command will serially install all dependencies for those applications.
@@ -89,15 +89,17 @@ This command will serially install all dependencies for those applications.
 It is the time to run the examples:
 
 ```bash
-$ npm run start:vue
-$ npm run start:react
-$ npm run start:framework
+$ npm run examples:start:vue
+$ npm run examples:start:react
+$ npm run examples:start:angular
+$ npm run examples:start:svelte
+$ npm run examples:start:framework
 ```
 
 Or by executing a simpler command:
 
 ```bash
-$ npm start
+$ npm examples:start
 ```
 
 This command will start framework and sub-applications in parallel.
@@ -107,8 +109,10 @@ After finishing the steps above, and if everything goes well, these examples may
 - Framework App: `http://localhost:8080`, if there is another process listening on it, the framework will look backward to find a free port, such as `http://localhost:8081`
 - Vue App: `http://localhost:8181`
 - React App: `http://localhost:8182`
+- Angular App: `http://localhost:8183`
+- Svelte App: `http://localhost:8184`
 
-Make sure `8181` and `8182` are not listening by another process.
+Make sure `8181` to `8184` are not listened by other processes.
 
 You just open the browser and visit the framework's address.
 
@@ -119,7 +123,7 @@ You just open the browser and visit the framework's address.
 - [ ] Global interceptors support
 - [ ] Development kit support
 - [ ] Higher test coverage
-- [ ] API docs
+- [x] API docs
 
 ## FAQ
 

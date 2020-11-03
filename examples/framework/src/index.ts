@@ -1,7 +1,7 @@
 import Faun from '../../../src';
 import axios, { AxiosInstance } from 'axios';
 
-const app = new Faun({ singular: false });
+const app = new Faun({ singular: false, onError: e => console.log(e) });
 
 app.addGlobalDependence<AxiosInstance>('axios', axios);
 
@@ -34,6 +34,12 @@ app.registerSubApplications(
       container: 'root',
       useCSSPrefix: true,
       assetPublicPath: '//localhost:8182',
+      assetMatchers: [
+        {
+          nodeName: 'img',
+          attributes: ['src'],
+        },
+      ],
     },
     {
       name: 'demo_ng_app',

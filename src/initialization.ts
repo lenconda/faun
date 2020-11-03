@@ -9,7 +9,14 @@ import {
   IFaunInstanceProps,
   FaunLocationType,
   IFaunDependency,
+  FaunErrorHandlerType,
 } from './interfaces';
+import {
+  emitError,
+} from './utils/error';
+import {
+  FaunDependencyError,
+} from './errors';
 
 /**
  * initialize the default sandbox on context
@@ -45,20 +52,23 @@ export const initRoute = (
  * initialize the global dependencies
  * @param deps
  */
-export const initGlobalDependencies = (deps: Array<IFaunDependency>) => {
+export const initGlobalDependencies = (
+  deps: Array<IFaunDependency>,
+  errorHandler?: FaunErrorHandlerType,
+) => {
   if (!Array.isArray) {
-    throw new TypeError('[Faun] Param `deps` should be an array');
+    emitError('Param `deps` should be an array', FaunDependencyError, errorHandler);
   }
 
   const globalDeps = deps.reduce((current, next) => {
     const { name, dep } = next;
 
     if (!name || !dep || typeof name !== 'string') {
-      throw new TypeError('[Faun] Params is in a wrong type');
+      emitError('Params is in a wrong type', FaunDependencyError, errorHandler);
     }
 
     if (window[name]) {
-      throw new ReferenceError(`[Faun] Dependence \`${name}\` already exist on \`window\``);
+      emitError(`Dependence \`${name}\` already exist on \`window\``, FaunDependencyError, errorHandler);
     }
 
     current[name] = dep;

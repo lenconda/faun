@@ -21,9 +21,7 @@ const refreshLocation = (
     return;
   }
 
-  if (props.currentLocation) {
-    Object.assign(props.currentLocation, cloneDeep(location));
-  }
+  props.currentLocation = cloneDeep(location);
 };
 
 export default refreshLocation;

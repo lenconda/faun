@@ -1,20 +1,21 @@
 ---
+title: faun
 hero:
   title: faun
   desc: 📦 快速、通用、轻量级的微前端解决方案。
   actions:
-    - text: 快速上手
-      link: /guide
-footer: Open-source MIT Licensed | Copyright © 2020<br />Powered by [dumi](https://d.umijs.org)
+    - text: 开发指南
+      link: /zh/guide
+footer: 遵循 MIT 开源协议 | 版权所有 © 2020<br />由 [dumi](https://d.umijs.org) 提供支持
 ---
+
+<div style="height: 20px;"></div>
 
 ## 安装
 
 ```bash
 $ npm i faun -S
-
-# 或
-
+# 或者
 $ yarn add faun
 ```
 
@@ -28,34 +29,40 @@ const app = new Faun();
 app.registerSubApplications(
   [
     {
-      name: 'demo_vue_app',
-      activeWhen: '/vue',
-      scripts: [
-        '//localhost:8181/app.js',
-      ],
-      styles: [],
-      mountPointID: 'app',
-      useCSSPrefix: false,
-      assetPublicPath: '//localhost:8181',
+      name: 'app1',
+      activeWhen: '/app1',
+      entry: {
+        scripts: [
+          '//app1.example.com/app.js',
+        ],
+      },
+      container: 'app',
+      assetPublicPath: '//app1.example.com',
     },
     {
-      name: 'demo_react_app',
-      activeWhen: '/react',
-      scripts: [
-        '//localhost:8182/static/js/main.bundle.js',
-      ],
-      styles: [
-        '//localhost:8182/static/css/main.css',
-      ],
-      mountPointID: 'root',
-      useCSSPrefix: false,
-      assetPublicPath: '//localhost:8182',
+      name: 'app2',
+      activeWhen: '/app2',
+      entry: {
+        scripts: [
+          '//app2.example.com/static/js/main.bundle.js',
+        ],
+        styles: [
+          '//app2.example.com/static/css/main.css',
+        ],
+      },
+      container: document.querySelector('#root'),
+      assetPublicPath: '//app2.example.com',
     },
   ],
   {
-    loading: function(pathname) {
-      console.log('loading', this);
+    loading: pathname => {
+      console.log('loading: ', this);
       console.log('pathname: ', pathname);
+    },
+    beforeUnmount: (prev, next) => {
+      console.log('prev: ', prev);
+      console.log('next: ', next);
+      return true;
     },
     // ...
   },
