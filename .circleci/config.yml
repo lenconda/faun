@@ -57,10 +57,16 @@ workflows:
   version: 2
   build_test_and_deploy:
     jobs:
-      - test
+      - test:
+          filters:
+            tags:
+              only: /.*/
       - build:
           requires:
             - test
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           requires:
             - build
