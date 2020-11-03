@@ -10,10 +10,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
       - run: npm install
       - run: npm test
       - save_cache:
@@ -28,6 +24,10 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run: ls -al
       - run: npm run build
       - run: ls -al
@@ -41,6 +41,10 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
       - run: ls -al
       # - run: npm publish
