@@ -31,6 +31,11 @@ jobs:
       - run: ls -al
       - run: npm run build
       - run: ls -al
+      - save_cache:
+          paths:
+            - node_modules
+            - dist
+          key: v1-dependencies-{{ checksum "package.json" }}
   deploy:
     <<: *defaults
     steps:
