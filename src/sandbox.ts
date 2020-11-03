@@ -17,7 +17,7 @@ import {
   SandboxStylesType,
   SandboxAssetPublicPathType,
   ISubApplicationConfig,
-  IFaunSubApplicationConfig,
+  IFaunInstanceConfig,
   IChildOperate,
   SubApplicationAssetMatchersType,
 } from './interfaces';
@@ -190,7 +190,7 @@ class Sandbox {
 
   public async create(
     subApplicationConfig: ISubApplicationConfig,
-    appConfig: IFaunSubApplicationConfig,
+    appConfig: IFaunInstanceConfig,
   ) {
     const {
       container,

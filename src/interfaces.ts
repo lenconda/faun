@@ -27,7 +27,7 @@ export type SubApplicationActiveRuleType =
 
 export type FaunErrorHandlerType = (error: FaunError) => void;
 
-export interface IFaunSubApplicationConfig {
+export interface IFaunInstanceConfig {
   singular?: boolean;
   onError?: FaunErrorHandlerType;
 }
@@ -88,7 +88,7 @@ export interface IFaunInstanceProps {
   position: number;
   direction: 'forward' | 'backward';
   hooks: IFaunLifecycleHooks;
-  appConfig: IFaunSubApplicationConfig;
+  appConfig: IFaunInstanceConfig;
 }
 
 export interface IFaunDependency {
