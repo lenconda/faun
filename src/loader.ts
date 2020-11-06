@@ -73,16 +73,17 @@ export const loadSubApplication = async (
     }
 
     if (actionLowerCase === 'pop') {
-      let routeIndex;
+      let routeIndex: number;
       if (props.direction === 'forward') {
         routeIndex = props.routes.findIndex((item, index) => {
           return item.pathname === pathname && index >= props.position;
         });
-      }
-      if (props.direction === 'backward') {
+      } else if (props.direction === 'backward') {
         routeIndex = findLastIndex(props.routes.slice(0, props.position), (item, index) => {
           return item.pathname === pathname && index <= props.position;
         });
+      } else {
+        routeIndex = -1;
       }
 
       if (routeIndex && routeIndex !== -1) {
@@ -136,7 +137,6 @@ export const unloadSubApplication = (
   }
 
   currentSandboxes.forEach(sandbox => sandbox.unmount());
-  // await PromisecurrentSandbox.unmount();
   // call unmounted hook
   hooks && hooks.unmounted && hooks.unmounted.call(context, prev, next, currentSandboxes);
 
