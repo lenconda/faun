@@ -75,6 +75,8 @@ Then you would have to install the dependencies for framework application and su
 ```bash
 $ npm run examples:install:vue
 $ npm run examples:install:react
+$ npm run examples:install:angular
+$ npm run examples:install:svelte
 $ npm run examples:install:framework
 ```
 
@@ -99,7 +101,7 @@ $ npm run examples:start:framework
 Or by executing a simpler command:
 
 ```bash
-$ npm examples:start
+$ npm run examples:start
 ```
 
 This command will start framework and sub-applications in parallel.
