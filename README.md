@@ -53,7 +53,7 @@ Another way to install it is link the AMD-bundled `faun.min.js` through `script`
 
 ## Documentation
 
-Seriously coming soon, now part of the documentation is already in `docs` folder.
+[https://faun.lenconda.top](https://faun.lenconda.top)
 
 ## Getting Started
 
