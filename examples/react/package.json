@@ -68,7 +68,7 @@
     "ali-oss-deploy": "^1.0.4",
     "antd": "^3.26.12",
     "autoprefixer": "^9.6.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "history": "^4.10.1",
     "js-base64": "^2.5.2",
     "js-file-download": "^0.4.10",
